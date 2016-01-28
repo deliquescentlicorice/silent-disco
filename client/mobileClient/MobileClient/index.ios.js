@@ -8,6 +8,7 @@ import React, {
   Text
 } from 'react-native';
 import Listen from './Listen.js';
+import Broadcast from './Broadcast.js';
 
 class MobileClient extends Component {  constructor(props) {
     super(props);
@@ -41,7 +42,7 @@ class MobileClient extends Component {  constructor(props) {
           onPress={() => {
             this.setTab('broadcast');
           }}>
-          <Text>Hello!</Text>
+          <Broadcast />
         </TabBarIOS.Item>
       </TabBarIOS>
     );
