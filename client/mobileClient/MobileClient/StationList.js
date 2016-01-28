@@ -28,7 +28,7 @@ var FAKE_STATION_DATA = [
     stationInfo: {
       name: 'Sketchy Music',
       broadcaster: "DJ Gravity",
-      uri: "http://10.6.32.127:8000/listen.m3u"
+      uri: "http://10.6.32.127:3000/listen"
     }
   }
 ];
