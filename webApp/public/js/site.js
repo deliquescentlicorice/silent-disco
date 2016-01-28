@@ -1,19 +1,22 @@
 /**
  * Created by noamc on 8/31/14.
  */
-
-$(function () {
+$(function() {
     var client,
         recorder,
         context,
         bStream,
-        contextSampleRate = (new AudioContext()).sampleRate;
-        resampleRate = 44100,
+        contextSampleRate = (new AudioContext()).sampleRate,
+        resampleRate = 88200,
         worker = new Worker('js/worker/resampler-worker.js');
 
-    worker.postMessage({cmd:"init",from:contextSampleRate,to:resampleRate});
+    worker.postMessage({
+        cmd: "init",
+        from: contextSampleRate,
+        to: resampleRate
+    });
 
-    worker.addEventListener('message', function (e) {
+    worker.addEventListener('message', function(e) {
         if (bStream && bStream.writable)
             bStream.write(convertFloat32ToInt16(e.data.buffer));
     }, false);
@@ -23,17 +26,12 @@ $(function () {
     function gotSources(sourceInfos) {
         for (var i = 0; i !== sourceInfos.length; ++i) {
             var sourceInfo = sourceInfos[i];
-            var option = document.createElement('option');
-            option.value = sourceInfo.id;
             if (sourceInfo.kind === 'audio') {
+                var option = document.createElement('option');
+                option.value = sourceInfo.id;
                 option.text = sourceInfo.label || 'microphone ' +
                     (audioSelect.length + 1);
                 audioSelect.appendChild(option);
-            } else if (sourceInfo.kind === 'video') {
-                // option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
-                // videoSelect.appendChild(option);
-            } else {
-                console.log('Some other kind of source: ', sourceInfo);
             }
         }
     }
@@ -45,10 +43,12 @@ $(function () {
         MediaStreamTrack.getSources(gotSources);
     }
 
-    $("#start-rec-btn").click(function () {
+    $("#start-rec-btn").click(function() {
         client = new BinaryClient('ws://localhost:9001');
-        client.on('open', function () {
-            bStream = client.createStream({sampleRate: resampleRate});
+        client.on('open', function() {
+            bStream = client.createStream({
+                sampleRate: resampleRate
+            });
         });
 
         if (context) {
@@ -56,44 +56,40 @@ $(function () {
             return;
         }
 
-        var session = {
-            audio: true,
+        var audioSource = audioSelect.value;
+
+        var constraints = {
+            audio: {
+                optional: [{
+                    sourceId: audioSource
+                }]
+            },
             video: false
         };
 
-         var audioSource = audioSelect.value;
-
-         var constraints = {
-            audio: {
-              optional: [{
-                sourceId: audioSource
-              }]
-            },
-            video: false
-          };
-
-        navigator.getUserMedia(constraints, function (stream) {
+        navigator.getUserMedia(constraints, function(stream) {
             context = new AudioContext();
             var audioInput = context.createMediaStreamSource(stream);
+            contextSampleRate = context.sampleRate;
             var bufferSize = 0; // let implementation decide
-
             recorder = context.createScriptProcessor(bufferSize, 1, 1);
-
             recorder.onaudioprocess = onAudio;
-
             audioInput.connect(recorder);
-
             recorder.connect(context.destination);
 
-        }, function (e) {
-
+        }, function(e) {
+            console.log('error connectiing to audio source');
+            throw e;
         });
     });
 
     function onAudio(e) {
         var left = e.inputBuffer.getChannelData(0);
 
-        worker.postMessage({cmd: "resample", buffer: left});
+        worker.postMessage({
+            cmd: "resample",
+            buffer: left
+        });
 
         drawBuffer(left);
     }
@@ -114,7 +110,7 @@ $(function () {
             height = canvas.height,
             context = canvas.getContext('2d');
 
-        context.clearRect (0, 0, width, height);
+        context.clearRect(0, 0, width, height);
         var step = Math.ceil(data.length / width);
         var amp = height / 2;
         for (var i = 0; i < width; i++) {
@@ -131,7 +127,7 @@ $(function () {
         }
     }
 
-    $("#stop-rec-btn").click(function () {
+    $("#stop-rec-btn").click(function() {
         recorder.disconnect();
         client.close();
     });
