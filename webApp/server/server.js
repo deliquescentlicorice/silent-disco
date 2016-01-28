@@ -1,8 +1,29 @@
 /**
- * Created by noamc on 8/31/14.
+ * Created on 1/28/16
  */
 var express = require('express');
+var path = require('path');
+var webpack = require('webpack');
+var config = require('../webpack.config.dev');
 var app = express();
+var port = process.env.PORT || 3000;
+
+var compiler = webpack(config);
+
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: config.output.publicPath
+}));
+
+app.use(require('webpack-hot-middleware')(compiler));
+
+app.use(express.static(__dirname + '/../src'))
+app.get('/broadcast', function(req, res) {
+  res.sendFile(path.join(__dirname + '/../public', 'index.html'));
+});
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname+ '/../src', 'index.html'));
+});
 
 var throttle = require('throttle'),
   encoder = require('./encoder');
@@ -78,7 +99,6 @@ encoder.metadata = metadata = {};
 encoder.currentTrack = currentTrack = "unknown";
 var currentTrackStartTime, duration, dId;
 
-app.use(express.static(__dirname + '/../public'));
 
 app.use(encoder.Encoder('/listen', 'audio/mpeg', "lame", [
     "-S" // Operate silently (nothing to stderr)
@@ -88,8 +108,8 @@ app.use(encoder.Encoder('/listen', 'audio/mpeg', "lame", [
   , "-" // Output to stderr
 ]));
 
-app.listen(3000);
-console.log('listening on port 3000...')
+app.listen(port);
+console.log('Listening on port:' + port);
 
 // opener("http://localhost:8080");
 
