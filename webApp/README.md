@@ -1,16 +1,17 @@
-AudioStreamer
-=============
+Silent Disco Readme
+=========
 
-HTML5 realtime audio streaming to nodejs
-----------------------------------------
+Taken (with love) from Devin Pastoor's awesome [react-webpack-hot-transform boilerplate](https://github.com/dpastoor/react-webpack-hot-transform)
 
+but tweaked to personal preference. 
 
-install dependencies:
+get started by installing dependencies via
 
-    npm install
-   
-run:
+```
+npm i --dev
+```
 
-    npm start
-    
-    
+then start with:
+
+```
+npm start
