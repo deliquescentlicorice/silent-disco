@@ -30,7 +30,7 @@ var FAKE_STATION_DATA = [
     name: 'Sketchy Site',
     broadcaster: "DJ Gravity",
     streamImgUri: "",
-    uri: "10.6.32.127:3000/listen"
+    uri: "http://10.6.32.127:3000/listen"
   }, {
     id: 4,
     name: 'Christmas 365',
