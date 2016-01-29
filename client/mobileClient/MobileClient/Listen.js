@@ -14,7 +14,9 @@ class Listen extends Component {
         style={styles.container}
         initialRoute={{
           title: 'On Air',
-          component: StationList
+          component: StationList,
+          barTintColor: 'teal',
+          titleTextColor: 'white'
         }}
       />
     );
