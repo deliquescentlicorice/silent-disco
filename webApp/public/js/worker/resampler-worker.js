@@ -9,7 +9,7 @@ var _resampler;
 self.addEventListener('message', function(e) {
     if(e.data.cmd=="init"){
         var info = e.data;
-        _resampler = new Resampler({originalSampleRate:info.from,resampledRate:info.to,numberOfChannels:1})
+        _resampler = new Resampler({originalSampleRate:info.from,resampledRate:info.to,numberOfChannels:2})
     }
     if(e.data.cmd=="resample"){
         var resampled = _resampler.resample(e.data.buffer,0);
