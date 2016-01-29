@@ -2,7 +2,7 @@
   "name": "SilentDisco",
   "version": "1.0.0",
   "description": "Silent Disco Web Server",
-  "main": "js-server/server.js",
+  "main": "server/server.js",
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
@@ -39,14 +39,10 @@
     "webpack-hot-middleware": "^2.6.0"
   },
   "dependencies": {
-    "icecast-stack": "0.2.x",
-    "throttle": "0.0.x",
     "binaryjs": "^0.2.1",
-    "connect": "^3.3.4",
     "nodemon": "^1.8.1",
     "opener": "^1.4.1",
     "serve-static": "^1.9.1",
-    "wav": "^0.1.2",
     "history": "^1.17.0",
     "lodash": "latest",
     "material-ui": "^0.14.2",
