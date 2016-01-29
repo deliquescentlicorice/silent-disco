@@ -15,6 +15,7 @@ import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
 import Play from '../../node_modules/material-ui/lib/svg-icons/av/play-arrow';
 import Pause from '../../node_modules/material-ui/lib/svg-icons/av/pause';
+import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favorite';
 import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
@@ -49,23 +50,30 @@ class SongPlayer extends React.Component {
     
   }
 
+  addHeart() {
+    console.log("adding heart!")
+  }
+
   render() {
     return (
-      <div>
+      <div className="container">
         <AppBar title={'Now Playing'} />
-        <Card>
+        <Card className="playerCard">
           
           <CardMedia>
             <img src={this.props.location.state.song.image} />
           </CardMedia>
           <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
           <CardActions>
-            <FloatingActionButton onClick={this.playSong.bind(this)} disabled={this.state.disabled}>
+            <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
               <Play />
             </FloatingActionButton>
             <span></span>
-            <FloatingActionButton onClick={this.stopSong.bind(this)} disabled={!this.state.disabled}>
+            <FloatingActionButton onClick={this.stopSong.bind(this)} secondary={true}  disabled={!this.state.disabled}>
               <Pause />
+            </FloatingActionButton>
+            <FloatingActionButton onClick={this.addHeart.bind(this)}>
+              <Favorite />
             </FloatingActionButton>
           </CardActions>
         </Card>
