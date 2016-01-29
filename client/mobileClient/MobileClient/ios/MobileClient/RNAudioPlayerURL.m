@@ -4,8 +4,6 @@
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
 
-@import MediaPlayer;
-
 @implementation RNAudioPlayerURL
 
 @synthesize bridge = _bridge;
@@ -19,7 +17,6 @@ RCT_EXPORT_METHOD(initWithURL:(NSString *)url){
   self.audioPlayer = [AVPlayer playerWithPlayerItem:self.audioItem];
 
   [self setBackgroundAudio];
-  [self registerRemoteControlEvents];
 
   [[NSNotificationCenter defaultCenter]
   	addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.audioItem];
@@ -57,29 +54,6 @@ RCT_EXPORT_METHOD(seekToTime:(nonnull NSNumber *)toTime){
   if (categoryError) {
     NSLog(@"Error setting category!");
   }
-}
-
--(void)registerRemoteControlEvents{
-  MPRemoteCommandCenter *controlCenter = [MPRemoteCommandCenter sharedCommandCenter];
-  [controlCenter.playCommand addTarget:self action:@selector(receivedPlayCommand:)];
-  [controlCenter.pauseCommand addTarget:self action:@selector(receivedPauseCommand:)];
-  controlCenter.stopCommand.enabled = NO;
-  controlCenter.nextTrackCommand.enabled = NO;
-  controlCenter.previousTrackCommand.enabled = NO;
-}
-
-- (void)receivedPlayCommand:(MPRemoteCommand *)event{
-  [self play];
-}
-
-- (void)receivedPauseCommand:(MPRemoteCommand *)event{
-  [self pause];
-}
-
-- (void)unregisterRemoteControlEvents{
-  MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-  [commandCenter.playCommand removeTarget:self];
-  [commandCenter.pauseCommand removeTarget:self];
 }
 
 @end
