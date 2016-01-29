@@ -34,6 +34,7 @@ app.use(encoder.Encoder('/listen', 'audio/mpeg', "lame", [
   , "-s", encoder.SAMPLE_RATE / 1000 // Input sampling rate
   , "-"// Input from stdin
   , "-" // Output to stderr
+  , "-V 5" //variable bit rate
 ]));
 
 app.get('*', function(req, res) {

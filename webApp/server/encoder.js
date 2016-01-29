@@ -4,9 +4,9 @@ exports.stdin = {};
 
 // Stdin is expecting raw PCM data of the format:
 var SAMPLE_SIZE = 16; // 16-bit samples, Little-Endian, Signed
-var CHANNELS = 1; // 2 channels (left and right)
+var CHANNELS = 2; // 2 channels (left and right)
 
-exports.SAMPLE_RATE = 22050; // 44,100 Hz sample rate.
+exports.SAMPLE_RATE = 44100; // 44,100 Hz sample rate.
 
 // If we're getting raw PCM data as expected, calculate the number of bytes
 // that need to be read for `1 Second` of audio data.

@@ -72,7 +72,7 @@ $(function() {
             var audioInput = context.createMediaStreamSource(stream);
             contextSampleRate = context.sampleRate;
             var bufferSize = 0; // let implementation decide
-            recorder = context.createScriptProcessor(bufferSize, 1, 1);
+            recorder = context.createScriptProcessor(bufferSize, 2, 2);
             recorder.onaudioprocess = onAudio;
             audioInput.connect(recorder);
             recorder.connect(context.destination);
@@ -85,10 +85,13 @@ $(function() {
 
     function onAudio(e) {
         var left = e.inputBuffer.getChannelData(0);
+        var right = e.inputBuffer.getChannelData(1);
+
+        var stereoBuff = interleave(left, right);
 
         worker.postMessage({
             cmd: "resample",
-            buffer: left
+            buffer: stereoBuff
         });
 
         drawBuffer(left);
@@ -103,6 +106,20 @@ $(function() {
         return buf.buffer;
     }
 
+    function interleave(leftChannel, rightChannel) {
+        var length = leftChannel.length + rightChannel.length;
+        var result = new Float32Array(length);
+
+        var inputIndex = 0;
+
+        for (var index = 0; index < length;) {
+            result[index++] = leftChannel[inputIndex];
+            result[index++] = rightChannel[inputIndex];
+            inputIndex++;
+        }
+        return result;
+    }
+    
     //https://github.com/cwilso/Audio-Buffer-Draw/blob/master/js/audiodisplay.js
     function drawBuffer(data) {
         var canvas = document.getElementById("canvas"),
