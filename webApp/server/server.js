@@ -20,14 +20,14 @@ var userSchema = mongoose.Schema({
 //heartCount = [number, time]
 var streamSchema = mongoose.Schema({
   name: String,
+  description: String,
   heartCountNum: Number,
   listenerMaxCount: Number,
   listenerLiveCount: Number,
   playing: Boolean,
-  image: String,
+  // image: String,
   timestamp: Date,
   location: [{type: Number}],
-  description: String,
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
@@ -38,6 +38,14 @@ connection.once('open', function() {
 
 var User = connection.model('User', userSchema);
 var johndoe = new User({name: 'John Doe'});
+johndoe.save(function(err) {
+  if (err) {
+    throw (err)
+  }
+  else {
+    console.log('John Doe saved');
+  }
+});
 
 var Stream = connection.model('Stream', streamSchema);
 var muzak = new Stream({name: 'Generic 90s Song', heartCountNum: 0, 
@@ -84,18 +92,20 @@ app.post('/api/:stream', function(req, res) {
   var streamDesc = req.body.desc;
   var streamLocation = req.body.loc;
   var streamCreator = req.body.creator;
+  console.log(req.body);
 
-  User.find({name: streamCreator}, function(err, docs) {
-    if (docs.length > 0) {
-      var creatorId = docs[0]._id;
-      var newStream = new Stream({name: streamName, description: streamDesc,
+  User.findOne({name: streamCreator}, function(err, docs) {
+    if (docs) {
+      var creatorId = docs._id;
+      var newStream = new Stream({name: streamName, 
+        description: streamDesc,
         heartCountNum: 0,
         listenerMaxCount: 0,
         listenerLiveCount: 0,
-        timestamp: Date.now,
+        timestamp: Date.now(),
         playing: true,
         location: streamLocation,
-        creator: creatorId;
+        creator: creatorId
       });
       newStream.save(function(err) {
         if (err) {
