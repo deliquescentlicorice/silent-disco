@@ -14,7 +14,6 @@ var Admin = mongoose.mongo.Admin;
 var localMongo = 'mongodb://localhost:27017/silentdisco';
 mongoose.connect(localMongo);
 
-
 var app = express();
 var port = process.env.PORT || 3000;
 var compiler = webpack(config);
@@ -28,10 +27,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath
 }));
 
-//static routes
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.use(express.static(__dirname + '/../src'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
