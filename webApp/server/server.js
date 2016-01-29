@@ -23,6 +23,7 @@ var streamSchema = mongoose.Schema({
   heartCountNum: Number,
   listenerMaxCount: Number,
   listenerLiveCount: Number,
+  playing: Boolean,
   image: String,
   timestamp: Date,
   location: [{type: Number}],
@@ -35,10 +36,10 @@ connection.once('open', function() {
   console.log('database is active');
 });
 
-var User = mongoose.model('User', userSchema);
+var User = connection.model('User', userSchema);
 var johndoe = new User({name: 'John Doe'});
 
-var Stream = mongoose.model('Stream', streamSchema);
+var Stream = connection.model('Stream', streamSchema);
 var muzak = new Stream({name: 'Generic 90s Song', heartCountNum: 0, 
   listenerMaxCount: 0, listenerLiveCount: 0, description: 'you hear it in elevators'
 });
@@ -77,54 +78,108 @@ app.get('/broadcast', function(req, res) {
   res.sendFile(path.join(__dirname + '/../public', 'index.html'));
 });
 
-app.post('/song', function(req, res) {
+app.post('/api/:stream', function(req, res) {
   //here we create a new stream and add it to the database
-  var streamName = req.body.name;
+  var streamName = req.params.stream;
   var streamDesc = req.body.desc;
   var streamLocation = req.body.loc;
   var streamCreator = req.body.creator;
 
   User.find({name: streamCreator}, function(err, docs) {
     if (docs.length > 0) {
-      console.log('found it!');
+      var creatorId = docs[0]._id;
+      var newStream = new Stream({name: streamName, description: streamDesc,
+        heartCountNum: 0,
+        listenerMaxCount: 0,
+        listenerLiveCount: 0,
+        timestamp: Date.now,
+        playing: true,
+        location: streamLocation,
+        creator: creatorId;
+      });
+      newStream.save(function(err) {
+        if (err) {
+          throw err;
+          console.log('problem saving the new stream');
+        }
+        else {
+          console.log('saved new stream');
+          res.send('stream saved to db');
+        }
+      });
     }
     else {
+      //for now, let's assume the user exists
       console.log('not found');
+      res.send('not found');
     }
   });
+});
 
-  //what I need to do is: initialize heartCountNum at 0
-  //set the listener counts to 0
-  //set timestamp to now
-  //pull creator id from database and assign it to the new stream
-  var newStream = new Stream({name: streamName, description: streamDesc,
-      heartCountNum: 0,
-  listenerMaxCount: 0,
-  listenerLiveCount: 0,
-  timestamp: Date.now,
-  location: streamLocation,
-  creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+app.get('/api/:stream', function(req, res) {
+  //I need to extract the song name or id from the params.id
+  //then I query the database and send the whole stream to the client
+  var streamName = req.params.stream;
+  Stream.findOne({name: streamName}, function(err, docs) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.send(docs);
+    }
   });
 });
 
-app.get('/song', function(req, res) {
-  //I need to extract the song name or id from the params.id
-  //then I query the database and send the whole stream to the client
-});
-
-app.put('/song', function(req, res) {
+app.put('/api/listen/:stream', function(req, res) {
   //and for the listener to upheart -> we have to extract the change from the
   //req.body anyway
+  var streamName = req.params.stream;
+  //this is complicated enough, and I don't trust the findOneandUpdate method
+  Stream.findOne({name: streamName}, function(err, stream) {
+    stream.heartCountNum++;
+    stream.save(function(err) {
+      if (err) {
+        return err;
+      }
+      else {
+        res.send('uphearted');
+      }
+    });
+  });
 });
 
-app.put('/broadcastsong', function(req, res) {
+app.put('/api/broadcast/:stream', function(req, res) {
   //for the broadcaster to modify or change
     //we'll do a find/change query on the database here
+  //how can I extract the data from the req?
+  var streamName = req.params.stream;
+  var streamDesc = req.body.desc;
+  var streamLocation = req.body.loc;
+  Stream.findOneAndUpdate({name: streamName}, {description: streamDesc, location: streamLocation}, 
+    function(err, doc) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.send(doc);
+      }
+    });
 });
 
-app.get('/songs', function(req, res) {
+app.get('/api/streams', function(req, res) {
   //send back the whole database
   //I'm hoping we can refactor that later
+  //send all current streams
+  Stream.find({playing: true}, function(err, docs) {
+    if (err) {
+      throw err;
+    }
+    else {
+      //sending an array of objects, each one has info
+        //but if we want the creator's info, we'll have to do that separately
+      res.send(docs);
+    }
+  });
 });
 
 app.get('*', function(req, res) {
