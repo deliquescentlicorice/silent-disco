@@ -10,30 +10,43 @@ import React, {
   View
 } from 'react-native';
 import Station from './Station';
+import Loading from './Loading';
 
 var FAKE_STATION_DATA = [
   {
-    stationInfo: {
-      name: 'Smooth Jazz 23/6',
-      broadcaster: "Jazz Boatman",
-      uri: "http://dir.xiph.org/listen/5197238/listen.m3u"
-    }
+    id: 1,
+    name: 'Smooth Jazz 23/6',
+    broadcaster: "Yazz Boatman",
+    streamImgUri: "",
+    uri: "http://dir.xiph.org/listen/4642557/listen.m3u"
   }, {
-    stationInfo: {
-      name: 'Feast on the Blood of the Fallen',
-      broadcaster: "DJ Sunshine",
-      uri: "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3"
-    }
+    id: 2,
+    name: 'Feast on the Blood of the Fallen',
+    broadcaster: "Radio Sunshine",
+    streamImgUri: "",
+    uri: "http://dir.xiph.org/listen/2050679/listen.m3u"
   }, {
-    stationInfo: {
-      name: 'Sketchy Music',
-      broadcaster: "DJ Gravity",
-      uri: "http://10.6.32.127:3000/listen"
-    }
+    id: 3,
+    name: 'Sketchy Site',
+    broadcaster: "DJ Gravity",
+    streamImgUri: "",
+    uri: "10.6.32.127:3000/listen"
+  }, {
+    id: 4,
+    name: 'Christmas 365',
+    broadcaster: "Sick Nick",
+    streamImgUri: "",
+    uri: "http://dir.xiph.org/listen/4913295/listen.m3u"
+  }, {
+    id: 5,
+    name: 'Classical Orchestral Music',
+    broadcaster: "P.D.Q. Bach",
+    streamImgUri: "",
+    uri: "http://dir.xiph.org/listen/5231626/listen.m3u"
   }
 ];
 
-var REQUEST_URL = '';
+var REQUEST_URL_ALL = '';
 
 
 class StationList extends Component {
@@ -57,10 +70,9 @@ class StationList extends Component {
   }
 
   fetchData() {
-    fetch(REQUEST_URL)
+    fetch(REQUEST_URL_ALL)
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData);
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(responseData.items),
           isLoading: false
@@ -71,20 +83,22 @@ class StationList extends Component {
 
   listenToStation(station) {
     this.props.navigator.push({
-      title: station.stationInfo.name,
+      title: station.name,
       component: Station,
-      passProps: {station}
+      passProps: {station},
+      barTintColor: 'teal',
+      titleTextColor: 'white',
+      tintColor: 'white'
     });
   }
 
   renderStation(station) {
-    console.log(station)
     return (
       <TouchableHighlight onPress={() => this.listenToStation(station)} underlayColor='#dddddd'>
         <View>
           <View style={styles.container}>
-            <Text style={styles.name}>{station.stationInfo.name}</Text>
-            <Text style={styles.broadcaster}>{station.stationInfo.broadcaster}</Text>
+            <Text style={styles.name}>{station.name}</Text>
+            <Text style={styles.broadcaster}>{station.broadcaster}</Text>
           </View>
           <View style={styles.separator}/>
         </View>
@@ -92,29 +106,15 @@ class StationList extends Component {
     );
   }
 
-  renderLoadingView() {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicatorIOS 
-          size='large'
-        />
-        <Text>
-          Loading stations...
-        </Text>
-      </View>
-    )
-  }
-
   render() {
     if (this.state.isLoading) {
-      return this.renderLoadingView();
+      return <Loading />
     }
 
     return (
       <ListView
         dataSource={this.state.dataSource}
         renderRow={this.renderStation.bind(this)}
-        style={styles.listView}
       />
     );
   }
@@ -128,24 +128,22 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10
   },
+  thumbnail: {
+
+  },
+  rightContainer: {
+
+  },
   name: {
     fontSize: 20,
     marginBottom: 8
   },
   broadcaster: {
-    color: '#656565'
+    color: '#555555'
   },
   separator: {
     height: 1,
-    backgroundColor: '#a0a0a0'
-  },
-  listView: {
-    backgroundColor: '#F5F5F5'
-  },
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#cccccc'
   }
 });
 
