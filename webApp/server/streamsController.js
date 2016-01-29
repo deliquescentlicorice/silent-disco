@@ -79,7 +79,7 @@ module.exports = {
   },
 
   getAllStreams: function(req, res, next) {
-      Stream.find({playing: true}, function(err, docs) {
+      Stream.find({}, function(err, docs) {
         if (err) {
           throw err;
       }

@@ -11,28 +11,8 @@ var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
 
-var localMongo = 'mongodb://localhost:27017/';
-
-var connection = mongoose.createConnection(localMongo);
-connection.once('open', function() {
-  console.log('database is active');
-});
-
-// var User = connection.model('User', userSchema);
-// var johndoe = new User({name: 'John Doe'});
-// johndoe.save(function(err) {
-//   if (err) {
-//     throw (err)
-//   }
-//   else {
-//     console.log('John Doe saved');
-//   }
-// });
-
-// var Stream = connection.model('Stream', streamSchema);
-// var muzak = new Stream({name: 'Generic 90s Song', heartCountNum: 0, 
-//   listenerMaxCount: 0, listenerLiveCount: 0, description: 'you hear it in elevators'
-// });
+var localMongo = 'mongodb://localhost:27017/silentdisco';
+mongoose.connect(localMongo);
 
 
 var app = express();
