@@ -7,7 +7,7 @@ $(function() {
         context,
         bStream,
         contextSampleRate = (new AudioContext()).sampleRate,
-        resampleRate = 88200,
+        resampleRate = 44100,
         worker = new Worker('js/worker/resampler-worker.js');
 
     worker.postMessage({
