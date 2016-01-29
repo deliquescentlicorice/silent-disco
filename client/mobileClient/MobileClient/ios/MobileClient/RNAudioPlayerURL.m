@@ -15,6 +15,9 @@ RCT_EXPORT_METHOD(initWithURL:(NSString *)url){
   NSURL *soundUrl = [[NSURL alloc] initWithString:url];
   self.audioItem = [AVPlayerItem playerItemWithURL:soundUrl];
   self.audioPlayer = [AVPlayer playerWithPlayerItem:self.audioItem];
+
+  [self setBackgroundAudio];
+
   [[NSNotificationCenter defaultCenter]
   	addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.audioItem];
 }
@@ -41,6 +44,16 @@ RCT_EXPORT_METHOD(pause){
 
 RCT_EXPORT_METHOD(seekToTime:(nonnull NSNumber *)toTime){
 	[self.audioPlayer seekToTime: CMTimeMakeWithSeconds([toTime floatValue], NSEC_PER_SEC)];
+}
+
+- (void)setBackgroundAudio {
+  NSError *categoryError = nil;
+  [[AVAudioSession sharedInstance]
+   setCategory:AVAudioSessionCategoryPlayback
+   error:&categoryError];
+  if (categoryError) {
+    NSLog(@"Error setting category!");
+  }
 }
 
 @end
