@@ -103,7 +103,7 @@ class Station extends Component {
               <Text style={styles.heartNum}>
                 {this.state.heartCount}
               </Text>
-              <TouchableHighlight style={styles.button} onPress={this.upheart.bind(this)}>
+              <TouchableHighlight onPress={this.upheart.bind(this)}>
                 <Image style={styles.hearts} source={require("./assets/Like-Filled-40.png")}/>
               </TouchableHighlight>
             </View>
