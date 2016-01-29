@@ -364,6 +364,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = R7MRW44HVY;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
