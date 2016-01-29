@@ -6,6 +6,10 @@ var path = require('path');
 var webpack = require('webpack');
 var config = require('../webpack.config.dev');
 
+var MongoClient = require('mongodb');
+var mongoose = require('mongoose');
+var Admin = mongoose.mongo.Admin;
+
 var app = express();
 var port = process.env.PORT || 3000;
 var compiler = webpack(config);
