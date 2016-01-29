@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "binaryjs": "^0.2.1",
+    "body-parser": "^1.14.2",
     "connect": "^3.3.4",
     "history": "^1.17.0",
     "icecast-stack": "0.2.x",
