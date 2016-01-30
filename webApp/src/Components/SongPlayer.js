@@ -15,12 +15,13 @@ import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
 import Play from '../../node_modules/material-ui/lib/svg-icons/av/play-arrow';
 import Pause from '../../node_modules/material-ui/lib/svg-icons/av/pause';
+import Upheart from '../../node_modules/material-ui/lib/svg-icons/av/pause';
 import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
 
 class SongPlayer extends React.Component {
-  
+
   constructor(props){
     super(props);
 
@@ -49,35 +50,52 @@ class SongPlayer extends React.Component {
     
   }
 
+  upHeartSong() {
+    console.log('upHeartSong');
+    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.song.name;
+    fetch(PUT_HEART, {
+      method: 'PUT',
+      body: JSON.stringify()
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({heartCount: responseData.heartCount.length > 5 ? '> 9 999' : responseData.heartCount
+    });
+    })
+  }
+
   render() {
     return (
       <div>
-        <AppBar title={'Now Playing'} />
-        <Card>
-          
-          <CardMedia>
-            <img src={this.props.location.state.song.image} />
-          </CardMedia>
-          <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
-          <CardActions>
-            <FloatingActionButton onClick={this.playSong.bind(this)} disabled={this.state.disabled}>
-              <Play />
-            </FloatingActionButton>
-            <span></span>
-            <FloatingActionButton onClick={this.stopSong.bind(this)} disabled={!this.state.disabled}>
-              <Pause />
-            </FloatingActionButton>
-          </CardActions>
-        </Card>
-        <Sound
-          url={this.props.location.state.song.url}
-          playStatus={this.state.status}
-          onLoading={this.handleSongLoading}
-          onPlaying={this.handleSongPlaying}
-          onFinishedPlaying={this.handleSongFinishedPlaying} />
+      <AppBar title={'Now Playing'} />
+      <Card>
+
+      <CardMedia>
+      <img src={this.props.location.state.song.image} />
+      </CardMedia>
+      <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
+      <CardActions>
+      <FloatingActionButton onClick={this.playSong.bind(this)} disabled={this.state.disabled}>
+      <Play />
+      </FloatingActionButton>
+      <span></span>
+      <FloatingActionButton onClick={this.stopSong.bind(this)} disabled={!this.state.disabled}>
+      <Pause />
+      </FloatingActionButton>
+      <FloatingActionButton onClick={this.upHeartSong.bind(this)}>
+      <Upheart />
+      </FloatingActionButton>
+      </CardActions>
+      </Card>
+      <Sound
+      url={this.props.location.state.song.url}
+      playStatus={this.state.status}
+      onLoading={this.handleSongLoading}
+      onPlaying={this.handleSongPlaying}
+      onFinishedPlaying={this.handleSongFinishedPlaying} />
       </div>
-    )
-  }
+      )
+}
 }
 
 export default SongPlayer;

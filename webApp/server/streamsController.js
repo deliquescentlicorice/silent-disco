@@ -58,7 +58,7 @@ module.exports = {
           return err;
         }
         else {
-          res.send('uphearted');
+          res.send({heartCount: stream.heartCountNum});
         }
       });
     });
