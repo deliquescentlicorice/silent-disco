@@ -1,9 +1,10 @@
-var request = require('supertest');
+var supertest = require('supertest');
+var api = supertest('http://localhost:3000');
 var express = require('express');
 var expect = require('chai').expect;
 var mongoose = require('mongoose');
 var Stream = require('../server/streamsModel');
-var User = require('./usersModel');
+var User = require('../server/usersModel');
 var controller = require('../server/streamsController');
 
 var dbURI = 'mongodb://localhost/silentdisco';
@@ -13,7 +14,7 @@ var clearDB = function (done) {
   mongoose.connection.collections['streams'].remove(done);
 };
 
-var app = express();
+// var app = express();
 
 describe('Stream Controller', function () {
 
@@ -28,73 +29,40 @@ describe('Stream Controller', function () {
   beforeEach(function (done) {
     clearDB(function () {
       var streams = [
-      {
-        name: 'muzak',
+      ['muzak', {
         description: 'what you hear in elevators',
-        heartCountNum: 0,
-        listenerLiveCount: 10000,
-        listenerMaxCount: 30000,
-        playing: true,
-        timestamp: new Date(1995, 7, 3),
         location: [40, 2],
-        creator: '56abed8eb64080841ec81823'
-      },
-      {
-        name: 'Paul Simon',
+        creator: 'John Doe'
+      }],
+      ['simon', {
         description: 'after he left Garfunkel',
-        heartCountNum: 10000,
-        listenerLiveCount: 200,
-        listenerMaxCount: 2000,
-        playing: true,
-        timestamp: new Date(1970, 1, 15),
         location: [40, 2],
-        creator: '56abed8eb64080841ec81823'
-      },
-      {
-        name: 'electronica',
+        creator: 'John Doe'
+      }],
+      ['electronica', {
         description: 'something to dance to with a pacifier in your mouth',
-        heartCountNum: 100000,
-        listenerLiveCount: 2000,
-        listenerMaxCount: 2300,
-        playing: true,
-        timestamp: new Date(2003, 8, 23),
         location: [40, 2],
-        creator: '56abed8eb64080841ec81823'
-      },
-      {
-        name: 'roommate tunes',
+        creator: 'John Doe'
+      }],
+      ['roommatetunes', {
         description: 'not a roommate for long',
-        heartCountNum: 0,
-        listenerLiveCount: 0,
-        listenerMaxCount: 3,
-        playing: true,
-        timestamp: new Date(2014, 9, 3),
         location: [40, 2],
-        creator: '56abed8eb64080841ec81823'
-      },
-      {
-        name: 'baroque opera',
+        creator: 'John Doe'
+      }],
+      ['baroqueopera', {
         description: 'for the kind of people who like that sort of thing',
-        heartCountNum: 6,
-        listenerLiveCount: 6,
-        listenerMaxCount: 3000,
-        playing: true,
-        timestamp: new Date(1650, 3, 15),
         location: [40, 2],
-        creator: '56abed8eb64080841ec81823'
-      }
+        creator: 'John Doe'
+      }]
       ];
 
       for (var i = 0; i < streams.length; i++) {
-        request(app)
-        .post('/api/' + streams[i].name)
-        .send(streams[i])
+        api.post('/api/' + streams[i][0])
+        .set('Accept', 'application/json')
+        .send(streams[i][1])
         .end(function(err, res) {
           if (err) {
             throw err;
-          }
-          else {
-            console.log(res.body);
           }
         });
       }
@@ -106,31 +74,47 @@ it('should have a method that given a request to a name path, finds that stream 
 
     //I added this method for testing purposes, so I could test createJob.
     //but it's useful functionality on its own
-    expect(controller.getStream).to.exist;
+    // expect(controller.getStream).to.exist;
 
+    // var muzak = {
+    //   description: 'what you hear in elevators',
+    //   location: [40, 2],
+    //   creator: 'John Doe'
+    // };
 
-    request(app)
-    .get('localhost:3000/api/muzak')
-    .expect(200, {
-      name: 'muzak',
-      description: 'what you hear in elevators',
-      heartCountNum: 0,
-      listenerLiveCount: 10000,
-      listenerMaxCount: 30000,
-      playing: true,
-      timestamp: new Date(1995, 7, 3),
-      location: [40, 2],
-      creator: '56abed8eb64080841ec81823'
+    // api.post('/api/muzak')
+    // .send(muzak)
+    // .end(function(err, res) {
+    //   expect(res.status).to.equal(200);
+    // });
+
+    api
+    .get('/api/listen/muzak')
+    .set('Accept', 'application/json')
+    .expect(function(res) {
+      console.log(res.text);
     })
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-    });
+    .expect(200, done);
+    // .end(function(err, res) {
+    //   console.log(Object.keys(res));
+    //   console.log(res.headers);
+    //   expect(res.status).to.equal(200);
+      // expect(res.body.name).to.equal('muzak');
+      // expect(res.body.description).to.equal('what you hear in elevators');
+      // expect(res.body.location).to.deep.equal([40, 2]);
+      // expect(res.body.heartCountNum).to.equal(0);
+      // expect(res.body.listenerLiveCount).to.equal(0);
+      // expect(res.body.listenerMaxCount).to.equal(0);
+      // expect(res.body.creator).to.equal('56abed8eb64080841ec81823');
+      // expect(res.body.playing).to.equal(true);
+      // done();
 
-    request(app)
-    .get('localhost:3000/api/arglebargle')
-    .expect(404, done);
+
+    // api.get('/api/listen/arglebargle')
+    // .set('Accept', 'application/json')
+    // .end(function(err, res) {
+    //   expect(res.status).to.equal(404);
+    // }, done);
     
   });
 
@@ -138,31 +122,20 @@ it('should have a method that given a stream object, adds that record to the dat
   expect(controller.createStream).to.exist;
 
 
-  var gospel = {
-    name: 'gospel',
-    description: 'played twice-weekly in church',
-    heartCountNum: 200,
-    listenerLiveCount: 0,
-    listenerMaxCount: 7000,
-    playing: true,
-    timestamp: new Date(1940, 6, 13),
-    location: [40, 2],
-    creator: '56abed8eb64080841ec81823'
-  };
+  // var gospel = {
+  //   description: 'played twice-weekly in church',
+  //   location: [40, 2],
+  //   creator: 'John Doe'
+  // };
+
+  // request(app)
+  // .post('/api/gospel')
+  // .send(gospel)
+  // .expect(200);
 
   request(app)
-  .post('/api/gospel')
-  .send(gospel)
-  .expect(200, done)
-
-  request(app)
-  .get('/api/listen/gospel')
-  .expect(200, gospel)
-  .end(function(err, res) {
-    if (err) {
-      throw err;
-    }
-  });
+  .get('/api/listen/muzak')
+  .expect(200, done);
 
 });
 
