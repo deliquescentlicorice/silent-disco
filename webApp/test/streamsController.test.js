@@ -3,6 +3,7 @@ var express = require('express');
 var expect = require('chai').expect;
 var mongoose = require('mongoose');
 var Stream = require('../server/streamsModel');
+var User = require('./usersModel');
 var controller = require('../server/streamsController');
 
 var dbURI = 'mongodb://localhost/silentdisco';
@@ -85,8 +86,16 @@ describe('Stream Controller', function () {
       ];
 
       for (var i = 0; i < streams.length; i++) {
-        controller.createStream(streams[i], function(err, doc) {
-          return doc;
+        request(app)
+        .post('/api/' + streams[i].name)
+        .send(streams[i])
+        .end(function(err, res) {
+          if (err) {
+            throw err;
+          }
+          else {
+            console.log(res.body);
+          }
         });
       }
       done();
@@ -154,6 +163,8 @@ it('should have a method that given a stream object, adds that record to the dat
       throw err;
     }
   });
+
+});
 
   // });
 
@@ -228,20 +239,6 @@ it('should have a method that responds to a GET request with all streams in the 
   request(app)
   .get('/api/streams')
   .expect(200, done)
-
-  request(app)
-  .get('/api/listen/muzak')
-  .expect(200, {
-    name: 'muzak',
-    description: 'best music ever',
-    heartCountNum: 0,
-    listenerLiveCount: 10000,
-    listenerMaxCount: 30000,
-    playing: true,
-    timestamp: new Date(1995, 7, 3),
-    location: [40, 2],
-    creator: '56abed8eb64080841ec81823'
-  })
   .end(function(err, res) {
     if (err) {
       throw err;
