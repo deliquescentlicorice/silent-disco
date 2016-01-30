@@ -22,8 +22,8 @@ class App extends React.Component {
         {
           name : "Weathered",
           artist : "Jack Garratt",
-          // url: "http://10.6.32.127:3000/listen",
-          url: "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3",
+          url: "http://10.6.32.127:3000/listen",
+          // url: "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3",
           image: "https://i1.sndcdn.com/artworks-000121805716-1715so-t500x500.jpg"
         },
         {
@@ -54,7 +54,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <TitleBar title="Silent Disco" />
+        <TitleBar title="Silent Disco" showMenuIconButton={false} />
         <List>
           {Object.keys(this.state.songs).map(this.renderSong.bind(this))}
         </List>

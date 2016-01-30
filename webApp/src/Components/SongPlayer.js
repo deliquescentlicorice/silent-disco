@@ -7,6 +7,9 @@ import TitleBar from './TitleBar.js';
 // MEDIA PLAYER
 import Sound from '../../node_modules/react-sound';
 
+//  RESPONSIVE CSS
+import MediaQuery from '../../node_modules/react-responsive';
+
 // MATERIAL DESIGN
 import Card from '../../node_modules/material-ui/lib/card/card';
 import CardActions from '../../node_modules/material-ui/lib/card/card-actions';
@@ -56,27 +59,37 @@ class SongPlayer extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <AppBar title={'Now Playing'} />
-        <Card className="playerCard">
+      <div style={styles.mainContainer}>
+          <AppBar title={'Now Playing'} showMenuIconButton={false}/>
+        <div style={styles.playerContainer}>
+          <MediaQuery minWidth={1081}>
+            <div style={styles.padding}></div>
+          </MediaQuery>
           
-          <CardMedia>
-            <img src={this.props.location.state.song.image} />
-          </CardMedia>
-          <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
-          <CardActions>
-            <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
-              <Play />
-            </FloatingActionButton>
-            <span></span>
-            <FloatingActionButton onClick={this.stopSong.bind(this)} secondary={true}  disabled={!this.state.disabled}>
-              <Pause />
-            </FloatingActionButton>
-            <FloatingActionButton onClick={this.addHeart.bind(this)}>
-              <Favorite />
-            </FloatingActionButton>
-          </CardActions>
-        </Card>
+            <Card style={styles.card}>
+              <CardMedia style={styles.image}>
+                <img src={this.props.location.state.song.image} />
+              </CardMedia>
+              <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
+              <CardActions>
+                <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
+                  <Play />
+                </FloatingActionButton>
+                <span></span>
+                <FloatingActionButton onClick={this.stopSong.bind(this)} secondary={true}  disabled={!this.state.disabled}>
+                  <Pause />
+                </FloatingActionButton>
+                <FloatingActionButton onClick={this.addHeart.bind(this)}>
+                  <Favorite />
+                </FloatingActionButton>
+              </CardActions>
+            </Card>
+        
+          <MediaQuery minWidth={1081}>
+            <div style={styles.padding}></div>
+          </MediaQuery>
+        </div>
+        
         <Sound
           url={this.props.location.state.song.url}
           playStatus={this.state.status}
@@ -85,6 +98,37 @@ class SongPlayer extends React.Component {
           onFinishedPlaying={this.handleSongFinishedPlaying} />
       </div>
     )
+  }
+}
+
+var styles = {
+  
+  mainContainer: {
+    'display': 'flex',
+    'flex-direction':'column',
+    'border': '10px solid purple',
+    'height': '100%',
+    'width': 'auto'
+
+  },
+
+  playerContainer: {
+    'display': 'flex',
+    'flex-direction':'row',
+    'justify-content':'center',
+    'border': '10px solid goldenrod',
+  },
+
+  card: {
+    'flex':2,
+    'align-content': 'center',
+    'border': '10px solid yellow',
+    'height': '100vh'
+  },
+
+  padding: {
+    'flex':1,
+    'border': '10px solid red',
   }
 }
 

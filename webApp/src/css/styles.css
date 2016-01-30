@@ -1,15 +1,16 @@
 .container {
   display: flex;
-  border:10px solid goldenrod;
   /*Full Height*/
   height: 100vh;
   /*Set Main Axis Direction (Row or Column +/-reverse)*/
-  flex-direction:column;
-  flex-wrap:wrap;
+  flex-direction:row;
+  align-items:center;
+  /*flex-wrap:wrap;*/
+
+  border: 10px solid goldenrod;
 
 }
 
 .box {
-  width: 50px;
-  border: 10px;
+  flex:1;
 }
