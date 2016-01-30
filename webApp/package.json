@@ -58,6 +58,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-mixin": "^3.0.3",
+    "react-responsive": "^1.1.0",
     "react-router": "^1.0.3",
     "react-sound": "^0.3.0",
     "react-tap-event-plugin": "^0.2.1",
