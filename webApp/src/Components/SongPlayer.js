@@ -24,7 +24,7 @@ import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
 
 class SongPlayer extends React.Component {
-  
+
   constructor(props){
     super(props);
 
@@ -53,8 +53,18 @@ class SongPlayer extends React.Component {
     
   }
 
+
   addHeart() {
-    console.log("adding heart!")
+    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.song.name;
+    fetch(PUT_HEART, {
+      method: 'PUT',
+      body: JSON.stringify()
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({heartCount: responseData.heartCount.length > 5 ? '> 9 999' : responseData.heartCount
+    });
+    })
   }
 
   render() {
@@ -97,8 +107,8 @@ class SongPlayer extends React.Component {
           onPlaying={this.handleSongPlaying}
           onFinishedPlaying={this.handleSongFinishedPlaying} />
       </div>
-    )
-  }
+      )
+}
 }
 
 var styles = {
