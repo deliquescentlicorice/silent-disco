@@ -44,7 +44,7 @@ $(function() {
     }
 
     $("#start-rec-btn").click(function() {
-        client = new BinaryClient('ws://localhost:9001');
+        var client = new BinaryClient('ws://' + document.location.host);
         client.on('open', function() {
             bStream = client.createStream({
                 sampleRate: resampleRate

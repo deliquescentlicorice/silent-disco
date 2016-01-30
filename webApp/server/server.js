@@ -62,11 +62,10 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/../src', 'index.html'));
 });
 
-app.listen(port);
+var server = app.listen(port);
+
 console.log('Listening on port:' + port);
 
-var server = binaryServer({
-  port: 9001
-});
+var bServer = binaryServer({server: server});
 
-server.on('connection', binarySocketHandler.connect);
+bServer.on('connection', binarySocketHandler.connect);
