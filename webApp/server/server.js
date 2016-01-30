@@ -31,6 +31,8 @@ if (version === 'DEV') {
     noInfo: true,
     publicPath: config.output.publicPath
   }));
+  
+  app.use(require('webpack-hot-middleware')(compiler));
 }
 
 app.use(bodyParser.json());
@@ -40,7 +42,6 @@ app.use(bodyParser.urlencoded({
 
 require('./routes.js')(app, express);
 
-app.use(require('webpack-hot-middleware')(compiler));
 
 app.use(express.static(__dirname + '/../src'));
 
