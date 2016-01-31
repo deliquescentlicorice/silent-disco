@@ -44,7 +44,10 @@ $(function() {
     }
 
     $("#start-rec-btn").click(function() {
-        var client = new BinaryClient('ws://' + document.location.host);
+
+        var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+        var client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
+        
         client.on('open', function() {
             bStream = client.createStream({
                 sampleRate: resampleRate
