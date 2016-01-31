@@ -5,7 +5,9 @@ module.exports = {
   createStream: function(req, res, next) {
     var streamName = req.params.stream;
     var streamDesc = req.body.desc;
-    var streamLocation = req.body.loc;
+    //to make location into array
+    var streamLongitude = req.body.lng;
+    var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
 
     User.findOne({name: streamCreator}, function(err, doc) {
@@ -18,7 +20,8 @@ module.exports = {
           listenerLiveCount: 0,
           timestamp: Date.now(),
           playing: true,
-          // location: streamLocation,
+          latitude: streamLatitude,
+          longitude: streamLongitude,
           creator: creatorId
         });
         newStream.save(function(err) {
@@ -43,7 +46,6 @@ module.exports = {
         throw err;
       }
       else {
-        console.log(doc);
         res.status(200).send(doc);
       }
     });
