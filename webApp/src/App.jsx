@@ -27,6 +27,7 @@ class App extends React.Component {
           artist : "Jack Garratt",
           url: "http://10.6.32.127:3000/listen",
           // url: "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3",
+
           image: "https://i1.sndcdn.com/artworks-000121805716-1715so-t500x500.jpg"
         },
         {
@@ -75,6 +76,7 @@ class App extends React.Component {
     renderSong(key){
       return <ListedSong goToSong={this.goToSong} state = {this.state} history={this.history} key={key} index={key} details={this.state.songs[key]} />
     }
+
 
   render() {
     return (
