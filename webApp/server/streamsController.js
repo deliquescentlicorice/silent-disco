@@ -18,7 +18,7 @@ module.exports = {
           listenerLiveCount: 0,
           timestamp: Date.now(),
           playing: true,
-          location: streamLocation,
+          // location: streamLocation,
           creator: creatorId
         });
         newStream.save(function(err) {
@@ -26,12 +26,12 @@ module.exports = {
             throw err;
           }
           else {
-            res.send('stream saved to db');
+            res.status(201).send('stream saved to db');
           }
         });
       }
       else {
-        res.send('user not found');
+        res.status(500).send('user not found');
       }
     });
   },
@@ -58,7 +58,7 @@ module.exports = {
           return err;
         }
         else {
-          res.send({heartCount: stream.heartCountNum});
+          res.status(200).send({heartCount: stream.heartCountNum});
         }
       });
     });
@@ -74,7 +74,7 @@ module.exports = {
           throw err;
         }
         else {
-          res.send(doc);
+          res.status(200).send(doc);
         }
       });
   },

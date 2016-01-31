@@ -13,6 +13,10 @@ var Admin = mongoose.mongo.Admin;
 var localMongo = 'mongodb://localhost:27017/silentdisco';
 mongoose.connect(localMongo);
 
+// var stream = require('./streamsModel');
+// var user = require('./usersModel');
+// console.log(stream.schema);
+
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -69,3 +73,5 @@ console.log('Listening on port:' + port);
 var bServer = binaryServer({server: server});
 
 bServer.on('connection', binarySocketHandler.connect);
+
+module.exports = app;

@@ -1,6 +1,7 @@
+var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
 
-var streamSchema = mongoose.Schema({
+var streamSchema = new mongoose.Schema({
   name: String,
   description: String,
   heartCountNum: Number,
@@ -9,7 +10,7 @@ var streamSchema = mongoose.Schema({
   playing: Boolean,
   // image: String,
   timestamp: Date,
-  location: [{type: Number}],
+  // location: [{type: Number}],
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
