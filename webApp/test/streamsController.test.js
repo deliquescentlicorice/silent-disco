@@ -17,12 +17,6 @@ var clearDB = function (done) {
   mongoose.connection.collections['streams'].remove(done);
 };
 
-// var app = express();
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
-
 describe('Stream Controller', function () {
 
   // Connect to database before any tests
@@ -40,27 +34,32 @@ describe('Stream Controller', function () {
       var streams = [
       ['muzak', {
         desc: 'what you hear in elevators',
-        loc: [40, 2],
+        lat: 40,
+        lng: 2,
         creator: 'John Doe'
       }],
       ['simon', {
         desc: 'after he left Garfunkel',
-        loc: [40, 2],
+        lat: 40,
+        lng: 2,
         creator: 'John Doe'
       }],
       ['electronica', {
         desc: 'something to dance to with a pacifier in your mouth',
-        loc: [40, 2],
+        lat: 40,
+        lng: 2,
         creator: 'John Doe'
       }],
       ['roommatetunes', {
         desc: 'not a roommate for long',
-        loc: [40, 2],
+        lat: 40,
+        lng: 2,
         creator: 'John Doe'
       }],
       ['baroqueopera', {
         desc: 'for the kind of people who like that sort of thing',
-        loc: [40, 2],
+        lat: 40,
+        lng: 2,
         creator: 'John Doe'
       }]
       ];
@@ -77,46 +76,45 @@ describe('Stream Controller', function () {
       }
       done();
     });
-  });
+});
 
 it('should have a method that given a request to a name path, finds that stream in the database', function (done) {
 
-    //I added this method for testing purposes, so I could test createJob.
-    //but it's useful functionality on its own
-    expect(controller.getStream).to.exist;
+  expect(controller.getStream).to.exist;
 
-    var muzak = {
-      desc: 'what you hear in elevators',
-      loc: [40, 2],
-      creator: 'John Doe'
-    };
+  var muzak = {
+    desc: 'what you hear in elevators',
+    lat: 40,
+    lng: 2,
+    creator: 'John Doe'
+  };
 
+  request(app)
+  .post('/api/muzak')
+  .send(muzak)
+  .end(function(err, res) {
+    expect(res.status).to.equal(201);
     request(app)
-    .post('/api/muzak')
-    .send(muzak)
-    .end(function(err, res) {
-      expect(res.status).to.equal(201);
-      request(app)
-      .get('/api/listen/muzak')
-      .set('Accept', 'application/json')
-      .expect(function(res) {
-        console.log(res.body);
-      })
-      .expect(200)
-      .expect(function(res) {
-        expect(res.body.name).to.equal('muzak');
-        expect(res.body.description).to.equal('what you hear in elevators');
-      // expect(res.body.location).to.deep.equal([40, 2]);
+    .get('/api/listen/muzak')
+    .set('Accept', 'application/json')
+    .expect(function(res) {
+      console.log(res.body);
+    })
+    .expect(200)
+    .expect(function(res) {
+      expect(res.body.name).to.equal('muzak');
+      expect(res.body.description).to.equal('what you hear in elevators');
+      expect(res.body.latitude).to.equal(40);
+      expect(res.body.longitude).to.equal(2);
 
-      //async with other tests not yet figured out
       expect(res.body.heartCountNum).to.equal(0);
       expect(res.body.listenerLiveCount).to.equal(0);
       expect(res.body.listenerMaxCount).to.equal(0);
       expect(res.body.creator).to.equal('56abed8eb64080841ec81823');
       expect(res.body.playing).to.equal(true);
     })
-      .end(done);
-    });
+    .end(done);
+  });
 
 
 
@@ -133,7 +131,8 @@ it('should have a method that given a stream object, adds that record to the dat
 
   var gospel = {
     desc: 'played twice-weekly in church',
-    loc: [40, 2],
+    lat: 40,
+    lng: 2,
     creator: 'John Doe'
   };
 
@@ -164,7 +163,8 @@ it('should have a method that adds one heart to a given stream', function (done)
 
   var muzak = {
     desc: 'what you hear in elevators',
-    loc: [40, 2],
+    lat: 40,
+    lng: 2,
     creator: 'John Doe'
   };
 
@@ -196,35 +196,37 @@ it('should have a method that adds one heart to a given stream', function (done)
 
 });
 
-// it('should have a method that modifies the details of a given stream', function (done) {
+it('should have a method that modifies the details of a given stream', function (done) {
 
-  // expect(controller.modifyStreamDetails).to.exist;
+  expect(controller.modifyStreamDetails).to.exist;
 
-  // request(app)
-  // .put('/api/broadcast/muzak')
-  // .send({desc: 'best music ever'})
-  // .expect(200, done)
+  var muzak = {
+    desc: 'what you hear in elevators',
+    lat: 40,
+    lng: 2,
+    creator: 'John Doe'
+  };
 
-  // request(app)
-  // .get('/api/listen/muzak')
-  // .expect(200, {
-  //   name: 'muzak',
-  //   description: 'best music ever',
-  //   heartCountNum: 0,
-  //   listenerLiveCount: 10000,
-  //   listenerMaxCount: 30000,
-  //   playing: true,
-  //   timestamp: new Date(1995, 7, 3),
-  //   location: [40, 2],
-  //   creator: '56abed8eb64080841ec81823'
-  // })
-  // .end(function(err, res) {
-  //   if (err) {
-  //     throw err;
-  //   }
-  // });
+  request(app)
+  .post('/api/muzak')
+  .send(muzak)
+  .end(function(err, res) {
+    request(app)
+    .put('/api/broadcast/muzak')
+    .send({desc: 'best music ever'})
+    .expect(200)
+    .end(function(err, res) {
+      request(app)
+      .get('/api/listen/muzak')
+      .expect(200)
+      .expect(function(res) {
+        expect(res.body.description).to.equal('best music ever');
+      })
+      .end(done);
+    });
+  });
 
-// });
+});
 
 it('should have a method that responds to a GET request with all streams in the database', function (done) {
 

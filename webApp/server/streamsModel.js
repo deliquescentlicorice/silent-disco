@@ -10,7 +10,8 @@ var streamSchema = new mongoose.Schema({
   playing: Boolean,
   // image: String,
   timestamp: Date,
-  // location: [{type: Number}],
+  latitude: Number,
+  longitude: Number,
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
