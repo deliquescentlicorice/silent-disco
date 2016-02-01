@@ -5,9 +5,9 @@ var expect = chai.expect;
 //we have to turn the server off before testing
 var app = require('../server/server.js');
 var mongoose = require('mongoose');
-var Stream = require('../server/streamsModel');
-var User = require('../server/usersModel');
-var controller = require('../server/streamsController');
+var Stream = require('../server/models/streamsModel');
+var User = require('../server/models/usersModel');
+var controller = require('../server/controllers/streamsController');
 var bodyParser = require('body-parser');
 
 var dbURI = 'mongodb://localhost:27017/silentdisco';

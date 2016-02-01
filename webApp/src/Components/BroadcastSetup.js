@@ -63,9 +63,49 @@ class BroadcastSetup extends React.Component {
     console.log("station name", this.state.name)
     console.log("station broadcaster", this.state.broadcaster)
     console.log("station description", this.state.desc)
-    this.props.history.push({
-      pathname: '/broadcast/live'
-    })
+    /* copy-paste from site.js for recording functionality */
+            var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+        var client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
+        
+        client.on('open', function() {
+            bStream = client.createStream({
+                sampleRate: resampleRate
+            });
+        });
+
+        if (context) {
+            recorder.connect(context.destination);
+            return;
+        }
+
+        var audioSource = audioSelect.value;
+
+        var constraints = {
+            audio: {
+                optional: [{
+                    sourceId: audioSource
+                }]
+            },
+            video: false
+        };
+
+        navigator.getUserMedia(constraints, function(stream) {
+            context = new AudioContext();
+            var audioInput = context.createMediaStreamSource(stream);
+            contextSampleRate = context.sampleRate;
+            var bufferSize = 0; // let implementation decide
+            recorder = context.createScriptProcessor(bufferSize, 2, 2);
+            recorder.onaudioprocess = onAudio;
+            audioInput.connect(recorder);
+            recorder.connect(context.destination);
+
+        }, function(e) {
+            console.log('error connectiing to audio source');
+            throw e;
+        });
+    // this.props.history.push({
+    //   pathname: '/broadcast/live'
+    // })
     // var serverURL = "http://10.6.32.108:8000/testpost";
     
     // this.setState({
