@@ -1,5 +1,5 @@
-var streamsController = require('./streamsController');
-var usersController = require('./usersController');
+var streamsController = require('./controllers/streamsController');
+var usersController = require('./controllers/usersController');
 var path = require('path');
 var express = require('express');
 

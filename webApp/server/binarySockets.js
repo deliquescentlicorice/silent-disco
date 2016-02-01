@@ -1,5 +1,5 @@
 
-var encoder = require('./encoder');
+var encoder = require('./controllers/encoder');
 
 exports.connect = function(client) {
   console.log("new binary socket connection...");
