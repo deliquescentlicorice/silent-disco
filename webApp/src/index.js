@@ -5,7 +5,7 @@ import { createHistory } from 'history';
 import injectTapEventPlugin from '../node_modules/react-tap-event-plugin';
 
 import App from './App.jsx';
-import SongPlayer from './Components/SongPlayer.js';
+import StreamLive from './Components/StreamLive.js';
 import Broadcast from './Components/Broadcast.js'
 import BroadcastLive from './Components/BroadcastLive.js'
 
@@ -19,7 +19,7 @@ injectTapEventPlugin();
 var routes = (
   <Router history={createHistory()}>
     <Route path="/" component={App}/>
-    <Route path="/song/:songId" component={SongPlayer}/>
+    <Route path="/stream/:streamId" component={StreamLive}/>
     <Route path='broadcast/setup' component={Broadcast}/>
     <Route path='broadcast/live' component={BroadcastLive}/>
     

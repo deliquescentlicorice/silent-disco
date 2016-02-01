@@ -7,7 +7,7 @@ import reactMixin from 'react-mixin';
 import _ from 'lodash';
 
 // COMPONENTS
-import ListedSong from './Components/ListedSong.js';
+import StreamEntry from './Components/StreamEntry.js';
 import TitleBar from './Components/TitleBar.js';
 
 // MATERIAL UI
@@ -21,7 +21,7 @@ class App extends React.Component {
     super();
 
     this.state = {
-      songs : [
+      streams : [
         {
           name : "Weathered",
           artist : "Jack Garratt",
@@ -56,37 +56,38 @@ class App extends React.Component {
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({
-          songs: responseData
+          streams: responseData
         });
       });
     }
 
-    goToSong() {
-      var songId= this.props.index;
-      console.log("Going To Song " + songId);
+    goToStream() {
+      var streamId= this.props.index;
+      console.log("Going To Stream " + streamId);
 
       this.props.history.push({
-        pathname: '/song/' + songId,
+        pathname: '/stream/' + streamId,
+
         //so we get which song from the state; a single GET request
         //we could also send a new request to the server to get each individual song
           //i'll look at this for testing purposes
-        state: { song : this.props.state.songs[songId] }
+        state: { stream : this.props.state.streams[streamId] }
       });
     }
 
-    renderSong(key){
-      return <ListedSong goToSong={this.goToSong} state = {this.state} history={this.history} key={key} index={key} details={this.state.songs[key]} />
+    renderStream(key){
+      return <StreamEntry goToStream={this.goToStream} state = {this.state} history={this.history} key={key} index={key} details={this.state.streams[key]} />
     }
 
 
   render() {
     return (
       <div>
-      
+
         <TitleBar title="Silent Disco" history={this.history}/>
 
         <List>
-        {Object.keys(this.state.songs).map(this.renderSong.bind(this))}
+        {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
         </List>
         </div>
         )

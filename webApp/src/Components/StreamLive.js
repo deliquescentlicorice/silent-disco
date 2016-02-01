@@ -23,7 +23,7 @@ import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
 
-class SongPlayer extends React.Component {
+class StreamLive extends React.Component {
 
   constructor(props){
     super(props);
@@ -55,7 +55,7 @@ class SongPlayer extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.song.name;
+    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.stream.name;
     fetch(PUT_HEART, {
       method: 'PUT',
       body: JSON.stringify()
@@ -78,9 +78,9 @@ class SongPlayer extends React.Component {
           
             <Card style={styles.card}>
               <CardMedia style={styles.image}>
-                <img src={this.props.location.state.song.image} />
+                <img src={this.props.location.state.stream.image} />
               </CardMedia>
-              <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
+              <CardTitle title={this.props.location.state.stream.name} subtitle={this.props.location.state.stream.artist}  />
               <CardActions>
                 <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
                   <Play />
@@ -99,7 +99,7 @@ class SongPlayer extends React.Component {
         </div>
         
         <Sound
-          url={this.props.location.state.song.url}
+          url={this.props.location.state.stream.url}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}
@@ -138,4 +138,4 @@ var styles = {
   }
 }
 
-export default SongPlayer;
+export default StreamLive;
