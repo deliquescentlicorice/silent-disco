@@ -1,6 +1,7 @@
+var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
 
-var userSchema = mongoose.Schema({
+var userSchema = new mongoose.Schema({
   name: String
 });
 
