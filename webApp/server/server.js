@@ -10,8 +10,8 @@ var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
 
-// var localMongo = 'mongodb://localhost:27017/silentdisco';
-// mongoose.connect(localMongo);
+var localMongo = 'mongodb://localhost:27017/silentdisco';
+mongoose.connect(localMongo);
 
 var app = express();
 var port = process.env.PORT || 3000;
