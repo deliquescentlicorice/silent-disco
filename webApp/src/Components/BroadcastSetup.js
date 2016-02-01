@@ -87,6 +87,7 @@ class BroadcastSetup extends React.Component {
     console.log("station broadcaster", this.state.broadcaster)
     console.log("station description", this.state.desc)
     /* copy-paste from site.js for recording functionality */
+
     var context;
     var bStream;
     var  contextSampleRate = (new AudioContext()).sampleRate;
@@ -169,6 +170,7 @@ Broadcaster.prototype.start = function() {
     
     var bufferSize = 0; // let implementation decide
     this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
+
     
     this.recorder.onaudioprocess = function(e) {
       this.onAudio(e);
