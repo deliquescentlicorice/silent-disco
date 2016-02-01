@@ -70,11 +70,11 @@ class SongPlayer extends React.Component {
   render() {
     return (
       <div style={styles.mainContainer}>
+        <div>  
           <AppBar title={'Now Playing'} showMenuIconButton={false}/>
+        </div>
         <div style={styles.playerContainer}>
-          <MediaQuery minWidth={1081}>
-            <div style={styles.padding}></div>
-          </MediaQuery>
+          
           
             <Card style={styles.card}>
               <CardMedia style={styles.image}>
@@ -95,9 +95,7 @@ class SongPlayer extends React.Component {
               </CardActions>
             </Card>
         
-          <MediaQuery minWidth={1081}>
-            <div style={styles.padding}></div>
-          </MediaQuery>
+          
         </div>
         
         <Sound
@@ -115,30 +113,28 @@ var styles = {
   
   mainContainer: {
     'display': 'flex',
-    'flex-direction':'column',
-    'border': '10px solid purple',
-    'height': '100%',
-    'width': 'auto'
-
+    'flexDirection':'column',
+    // 'border': '10px solid purple',
+    // 'height': '100vh'
   },
 
   playerContainer: {
     'display': 'flex',
-    'flex-direction':'row',
-    'justify-content':'center',
-    'border': '10px solid goldenrod',
+    'flexDirection':'row',
+    'justifyContent':'center',
+    // 'border': '10px solid goldenrod',
   },
 
   card: {
-    'flex':2,
-    'align-content': 'center',
-    'border': '10px solid yellow',
-    'height': '100vh'
+    'flex-grow':1,
+    'alignContent': 'center',
+    // 'border': '10px solid yellow',
+    // 'height': '100vh'
   },
 
   padding: {
-    'flex':1,
-    'border': '10px solid red',
+    // 'flex':1,
+    // 'border': '10px solid red',
   }
 }
 
