@@ -66,11 +66,7 @@ function currentBocSize() {
 
 exports.Encoder = function(stream, contentType, spawnName, spawnOpts) {
 
-  console.log('encoder was invoked');
-
   return function(req, res, next) {
-
-    console.log('enconder child function was invoked');
     var parsed = require('url').parse(req.url, true);
 
     if (parsed.pathname == stream) {
@@ -93,7 +89,7 @@ exports.Encoder = function(stream, contentType, spawnName, spawnOpts) {
 
       var encoder = spawn(spawnName, spawnOpts);
       encoder.stdout.on("data", function(chunk) {
-        console.log('data event fired within encoder');
+
         res.write(chunk);
       });
 
@@ -104,7 +100,6 @@ exports.Encoder = function(stream, contentType, spawnName, spawnOpts) {
 
       // Then start sending the incoming PCM data to the MP3 encoder
       var callback = function(chunk) {
-        console.log('pcm chunk sent to mp3');
         encoder.stdin.write(chunk);
       }
 
