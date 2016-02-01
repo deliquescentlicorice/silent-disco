@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
+import BinaryClient from './binary';
 
 // HELPERS
 import _ from 'lodash';
