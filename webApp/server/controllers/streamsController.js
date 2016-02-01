@@ -1,5 +1,5 @@
-var Stream = require('./streamsModel');
-var User = require('./usersModel');
+var Stream = require('../models/streamsModel');
+var User = require('../models/usersModel');
 
 module.exports = {
   createStream: function(req, res, next) {
