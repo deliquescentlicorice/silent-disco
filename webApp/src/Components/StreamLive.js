@@ -23,7 +23,7 @@ import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
 
-class SongPlayer extends React.Component {
+class StreamLive extends React.Component {
 
   constructor(props){
     super(props);
@@ -55,7 +55,7 @@ class SongPlayer extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.song.name;
+    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.stream.name;
     fetch(PUT_HEART, {
       method: 'PUT',
       body: JSON.stringify()
@@ -70,17 +70,17 @@ class SongPlayer extends React.Component {
   render() {
     return (
       <div style={styles.mainContainer}>
+        <div>  
           <AppBar title={'Now Playing'} showMenuIconButton={false}/>
+        </div>
         <div style={styles.playerContainer}>
-          <MediaQuery minWidth={1081}>
-            <div style={styles.padding}></div>
-          </MediaQuery>
+          
           
             <Card style={styles.card}>
               <CardMedia style={styles.image}>
-                <img src={this.props.location.state.song.image} />
+                <img src={this.props.location.state.stream.image} />
               </CardMedia>
-              <CardTitle title={this.props.location.state.song.name} subtitle={this.props.location.state.song.artist}  />
+              <CardTitle title={this.props.location.state.stream.name} subtitle={this.props.location.state.stream.artist}  />
               <CardActions>
                 <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
                   <Play />
@@ -95,13 +95,11 @@ class SongPlayer extends React.Component {
               </CardActions>
             </Card>
         
-          <MediaQuery minWidth={1081}>
-            <div style={styles.padding}></div>
-          </MediaQuery>
+          
         </div>
         
         <Sound
-          url={this.props.location.state.song.url}
+          url={this.props.location.state.stream.url}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}
@@ -115,31 +113,29 @@ var styles = {
   
   mainContainer: {
     'display': 'flex',
-    'flex-direction':'column',
-    'border': '10px solid purple',
-    'height': '100%',
-    'width': 'auto'
-
+    'flexDirection':'column',
+    // 'border': '10px solid purple',
+    // 'height': '100vh'
   },
 
   playerContainer: {
     'display': 'flex',
-    'flex-direction':'row',
-    'justify-content':'center',
-    'border': '10px solid goldenrod',
+    'flexDirection':'row',
+    'justifyContent':'center',
+    // 'border': '10px solid goldenrod',
   },
 
   card: {
-    'flex':2,
-    'align-content': 'center',
-    'border': '10px solid yellow',
-    'height': '100vh'
+    'flex-grow':1,
+    'alignContent': 'center',
+    // 'border': '10px solid yellow',
+    // 'height': '100vh'
   },
 
   padding: {
-    'flex':1,
-    'border': '10px solid red',
+    // 'flex':1,
+    // 'border': '10px solid red',
   }
 }
 
-export default SongPlayer;
+export default StreamLive;
