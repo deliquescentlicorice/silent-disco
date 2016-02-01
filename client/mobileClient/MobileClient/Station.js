@@ -3,6 +3,7 @@
 import React, {
   Component,
   Image,
+  NativeModules,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -10,7 +11,7 @@ import React, {
 } from 'react-native';
 import Loading from './Loading';
 
-var audio = require('react-native').NativeModules.RNAudioPlayerURL;
+var audio = NativeModules.RNAudioPlayerURL;
 
 var FAKE_STATION_DATUM = {
   heartCount: 1000,
