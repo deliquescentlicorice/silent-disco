@@ -7,12 +7,8 @@ module.exports = function(app, express) {
 
 
     app.post('/api/:stream', streamsController.createStream);
-    app.get('/api/listen/:stream', streamsController.getStream);
-    app.put('/api/listen/:stream', streamsController.upHeart);
-    app.put('/api/broadcast/:stream', streamsController.modifyStreamDetails);
+    app.get('/api/stream/:stream', streamsController.getStream);
+    app.put('/api/stream/:stream', streamsController.upHeart);
+    app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
     app.get('/api/streams', streamsController.getAllStreams);
-
-    app.get('/broadcast', function(req, res) {
-      res.sendFile(path.join(__dirname + '/../public', 'index.html'));
-  });
 };
