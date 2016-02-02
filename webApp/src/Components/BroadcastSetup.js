@@ -4,6 +4,7 @@ import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import {BinaryClient} from 'binaryjs-client';
+import $ from '../../public/js/jquery-1.11.1.min';
 
 class BroadcastSetup extends React.Component {
   constructor(props) {
@@ -151,23 +152,26 @@ class BroadcastSetup extends React.Component {
     //   isInitializing: true
     // });
 
-  //hardcoding John Doe for now
-    fetch(serverURL, {
-      method: 'POST',
-      body: {
+  //fetch can't run JSON
+    $.ajax({
+    url: serverURL,
+    dataType: 'json',
+    method: 'POST',
+    contentType:"application/x-www-form-urlencoded",
+    data: {
         // name: this.state.name,
-        "creator": "John Doe",
-        "desc": this.state.desc,
-        "lng": 40,
-        "lat": 30
-      }
-    })
-    .then((response) => response.json())
-    .then((responseData) => {
-      this.setState({
-        isInitializing: false
-      });
-    });
+        creator: "John Doe",
+        desc: this.state.desc,
+        lng: 40,
+        lat: 30
+      },
+    success: function(data) {
+      console.log(data);
+    },
+    error: function(xhr, status, err) {
+      console.error(status, err.toString());
+    }
+  });
 
     //   console.log(responseData);
 
