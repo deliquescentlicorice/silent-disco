@@ -55,7 +55,7 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.stream.name;
+    var PUT_HEART = 'http://localhost:3000/api/stream/' + this.props.location.state.stream.name;
     fetch(PUT_HEART, {
       method: 'PUT',
       body: JSON.stringify()
