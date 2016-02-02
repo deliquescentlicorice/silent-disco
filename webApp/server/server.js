@@ -35,7 +35,7 @@ if (version === 'DEV') {
     noInfo: true,
     publicPath: config.output.publicPath
   }));
-  
+
   app.use(require('webpack-hot-middleware')(compiler));
 }
 
@@ -46,21 +46,13 @@ app.use(bodyParser.urlencoded({
 
 require('./routes.js')(app, express);
 
-
 app.use(express.static(__dirname + '/../src'));
 
 //broadcasting client
 app.use("/broadcast", express.static(__dirname + '/../public'));
 
 //listen API route
-app.use(encoder.Encoder('/listen', 'audio/mpeg', "lame", [
-  "-S" // Operate silently (nothing to stderr)
-  , "-r" // Input is raw PCM
-  , "-s", encoder.SAMPLE_RATE / 1000 // Input sampling rate
-  , "-" // Input from stdin
-  , "-" // Output to stderr
-  , "-V 5" //variable bit rate
-]));
+app.get('/listen/:id', encoder.listenHandler);
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/../src', 'index.html'));
@@ -70,7 +62,9 @@ var server = app.listen(port);
 
 console.log('Listening on port:' + port);
 
-var bServer = binaryServer({server: server});
+var bServer = binaryServer({
+  server: server
+});
 
 bServer.on('connection', binarySocketHandler.connect);
 
