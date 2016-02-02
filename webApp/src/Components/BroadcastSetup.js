@@ -4,7 +4,6 @@ import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 
-
 class BroadcastSetup extends React.Component {
   constructor(props) {
     super(props);
@@ -12,8 +11,33 @@ class BroadcastSetup extends React.Component {
       name: (new Date).getTime().toString() + Math.random().toFixed(2),
       broadcaster: 'anonymous',
       desc: 'Hi, I\'m anonymous and you\'re listening to QuantumRadio',
-      isInitializing: false
+      isInitializing: false,
+      isLoggedIn: false
     };
+  }
+
+  componentDidMount() {
+    if (!this.state.isLoggedIn) {
+      SC.initialize({
+        client_id: '67e4bbe5a2b1b64416b0ed84366b34ca',
+        redirect_uri: 'http://localhost:3000/auth/soundcloud'
+      });
+
+      // initiate auth popup
+      SC.connect()
+      // .then(function(err, result) {
+      //   return SC.get('/me');
+      // })
+      // .then(function(me) {
+      //   this.setState({
+      //     isLoggedIn: true
+      //   })
+      //   .catch(function(error) {
+
+      //   alert(error);
+      //   })
+      // });
+    }
   }
 
   stationNameInput(event) {
@@ -75,24 +99,35 @@ class BroadcastSetup extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <p style={styles.title}>Tell us about your station...</p>
-        <TextField onChange={this.stationNameInput.bind(this)}
-          hintText="Station Name"
-          floatingLabelText="Station Name"
-        /><br/>
-        <TextField onChange={this.stationBroadcasterInput.bind(this)}
-          hintText="Broadcast Name"
-          floatingLabelText="Broadcast Name"
-        /><br/>
-        <TextField onChange={this.stationDescriptionInput.bind(this)}
-          hintText="Description"
-          floatingLabelText="Description"
-        /><br/><br/>
-        <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
-      </div>
-    )
+    var partial;
+    if (this.state.isLoggedIn) {
+      partial = (
+        <div>
+          <p style={styles.title}>Tell us about your station...</p>
+          <TextField onChange={this.stationNameInput.bind(this)}
+            hintText="Station Name"
+            floatingLabelText="Station Name"
+          /><br/>
+          <TextField onChange={this.stationBroadcasterInput.bind(this)}
+            hintText="Broadcast Name"
+            floatingLabelText="Broadcast Name"
+          /><br/>
+          <TextField onChange={this.stationDescriptionInput.bind(this)}
+            hintText="Description"
+            floatingLabelText="Description"
+          /><br/><br/>
+          <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
+        </div>
+      )
+    } else {
+      partial = (
+        <div>
+          <p style={styles.title}>Please log in with your SoundCloud account!</p>
+        </div>
+      )
+    }
+
+    return partial;
   } 
 }
 
