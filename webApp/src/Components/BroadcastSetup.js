@@ -163,7 +163,6 @@ Broadcaster.prototype.start = function() {
     },
     video: false
   };
-
   navigator.getUserMedia(constraints, function(stream) {
     var audioInput = this.context.createMediaStreamSource(stream);
     
@@ -289,7 +288,6 @@ Broadcaster.prototype._interleave = function(leftChannel, rightChannel) {
 
 var serverURL = "http://localhost:3000/api/" + this.state.name;
 
-
     // this.setState({
     //   isInitializing: true
     // });
@@ -311,7 +309,6 @@ var serverURL = "http://localhost:3000/api/" + this.state.name;
       },
       error: function(xhr, status, err) {
       }
-
     });
 
     //   console.log(responseData);
@@ -345,6 +342,7 @@ var serverURL = "http://localhost:3000/api/" + this.state.name;
             <MenuItem value={false} primaryText="SoundCloud"/>
           </DropDownMenu><br/><br/>
           <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
+          <Canvas />
         </div>
       )
     } else {
@@ -357,6 +355,7 @@ var serverURL = "http://localhost:3000/api/" + this.state.name;
 
     return partial;
   } 
+
 }
 
 var styles = {
