@@ -8,7 +8,6 @@ import reactMixin from 'react-mixin';
 import {BinaryClient} from 'binaryjs-client';
 import $ from '../../public/js/jquery-1.11.1.min';
 
-
 class BroadcastSetup extends React.Component {
   constructor(props) {
     super(props);
@@ -290,9 +289,11 @@ Broadcaster.prototype._interleave = function(leftChannel, rightChannel) {
 
 var serverURL = "http://localhost:3000/api/" + this.state.name;
 
+
     // this.setState({
     //   isInitializing: true
     // });
+
 
   //fetch can't run JSON
   $.ajax({
@@ -310,6 +311,7 @@ var serverURL = "http://localhost:3000/api/" + this.state.name;
       },
       error: function(xhr, status, err) {
       }
+
     });
 
     //   console.log(responseData);
