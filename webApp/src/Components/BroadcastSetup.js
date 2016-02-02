@@ -116,9 +116,9 @@ class BroadcastSetup extends React.Component {
     var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
   //handle web audio api not supported
   navigator.getUserMedia = navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia;
+  navigator.webkitGetUserMedia ||
+  navigator.mozGetUserMedia ||
+  navigator.msGetUserMedia;
 
 
   this.stream;
@@ -143,11 +143,11 @@ class BroadcastSetup extends React.Component {
   if (typeof MediaStreamTrack === 'undefined' ||
     typeof MediaStreamTrack.getSources === 'undefined') {
     alert('This browser does not support MediaStreamTrack.\n\nTry Chrome.');
-  } else {
-    MediaStreamTrack.getSources(inputSourcesCB);
-  }
+} else {
+  MediaStreamTrack.getSources(inputSourcesCB);
+}
 
-  this.renderAudioCallback = renderAudioCallback;
+this.renderAudioCallback = renderAudioCallback;
 }
 
 Broadcaster.prototype.start = function() {
@@ -205,8 +205,8 @@ Broadcaster.prototype.onAudio = function(e) {
   //     cmd: "resample",
   //     buffer: stereoBuff
   // });
-  
-  if (this.renderAudioCallback) {
+
+if (this.renderAudioCallback) {
     this.renderAudioCallback(left); //callback to render audio value
   }
 }
@@ -233,60 +233,102 @@ Broadcaster.prototype._interleave = function(leftChannel, rightChannel) {
   }
   return result;
 }
-    var audioSelect = document.querySelector('select#audioSource');
+}
+    }
 
-        var gotSources = function(sourceInfos) {
-        for (var i = 0; i !== sourceInfos.length; ++i) {
-            var sourceInfo = sourceInfos[i];
-            if (sourceInfo.kind === 'audio') {
-                var option = document.createElement('option');
-                option.value = sourceInfo.id;
-                option.text = sourceInfo.label || 'microphone ' +
-                    (audioSelect.length + 1);
-                audioSelect.appendChild(option);
-            }
-        }
-    };
+  stationNameInput(event) {
+    this.setState({
+      name: event.target.value
+    });
+  }
+
+  stationBroadcasterInput(event) {
+    this.setState({
+      broadcaster: event.target.value
+    });
+  }
+
+  stationDescriptionInput(event) {
+    this.setState({
+      desc: event.target.value
+    });
+  }
+
+stationNameInput(event) {
+  this.setState({
+    name: event.target.value
+  });
+}
+
+stationBroadcasterInput(event) {
+  this.setState({
+    broadcaster: event.target.value
+  });
+}
+
+stationDescriptionInput(event) {
+  this.setState({
+    desc: event.target.value
+  });
+}
+
+
+startBroadcast() {
+
+  var audioSelect = document.querySelector('select#audioSource');
+
+  var gotSources = function(sourceInfos) {
+    for (var i = 0; i !== sourceInfos.length; ++i) {
+      var sourceInfo = sourceInfos[i];
+      if (sourceInfo.kind === 'audio') {
+        var option = document.createElement('option');
+        option.value = sourceInfo.id;
+        option.text = sourceInfo.label || 'microphone ' +
+        (audioSelect.length + 1);
+        audioSelect.appendChild(option);
+      }
+    }
+  };
 
 
     // this.props.history.push({
     //   pathname: '/broadcast/live'
     // })
 
-    var renderAudio = function(data) {
-        var canvas = document.getElementById("canvas"),
-            width = canvas.width,
-            height = canvas.height,
-            context = canvas.getContext('2d');
+var renderAudio = function(data) {
+  var canvas = document.getElementById("canvas"),
+  width = canvas.width,
+  height = canvas.height,
+  context = canvas.getContext('2d');
 
-        context.clearRect(0, 0, width, height);
-        var step = Math.ceil(data.length / width);
-        var amp = height / 2;
-        for (var i = 0; i < width; i++) {
-            var min = 1.0;
-            var max = -1.0;
-            for (var j = 0; j < step; j++) {
-                var datum = data[(i * step) + j];
-                if (datum < min)
-                    min = datum;
-                if (datum > max)
-                    max = datum;
-            }
-            context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
-        }
+  context.clearRect(0, 0, width, height);
+  var step = Math.ceil(data.length / width);
+  var amp = height / 2;
+  for (var i = 0; i < width; i++) {
+    var min = 1.0;
+    var max = -1.0;
+    for (var j = 0; j < step; j++) {
+      var datum = data[(i * step) + j];
+      if (datum < min)
+        min = datum;
+      if (datum > max)
+        max = datum;
     }
+    context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+  }
+}
 
-        var streamId = 1;
-    var bc = new Broadcaster(streamId, gotSources, renderAudio);
+var streamId = 1;
+var bc = new Broadcaster(streamId, gotSources, renderAudio);
 
-        var audioSource = audioSelect.value;
+var audioSource = audioSelect.value;
         //need to set audio source before calling start
         bc.audioSource = audioSource;
         console.log('my audio Source is: ', audioSource);
         bc.start();
 
 
-var serverURL = "http://localhost:3000/api/" + this.state.name;
+        var serverURL = "http://localhost:3000/api/" + this.state.name;
 
     // this.setState({
     //   isInitializing: true
@@ -355,7 +397,6 @@ var serverURL = "http://localhost:3000/api/" + this.state.name;
 
     return partial;
   } 
-
 }
 
 var styles = {
