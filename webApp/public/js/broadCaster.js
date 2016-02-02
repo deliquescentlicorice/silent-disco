@@ -1,26 +1,26 @@
-var Broadcaster = function(streamId, inputSourcesCB) {
+var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
   //handle web audio api not supported
-  this._getUserMedia = navigator.getUserMedia ||
+  navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia;
 
   var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
 
-  //binaryJS client - make server/socket connection
+  //binaryJS client - server/socket connection
   this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
   this.stream;
-  this.streamId = streamId;
+  
   this.context = new AudioContext();
-  this.contextSampleRate = this.context.sampleRate;
+  // this.contextSampleRate = this.context.sampleRate;
 
   this.client.on('open', function() {
     this.stream = this.client.createStream({
-      sampleRate: this.contextSampleRate,
+      sampleRate: this.context.SampleRate,
       streamID: this.streamId
     });
-  });
+  }.bind(this));
 
   this.audioSource;
   this.recorder;
@@ -33,17 +33,13 @@ var Broadcaster = function(streamId, inputSourcesCB) {
   } else {
     MediaStreamTrack.getSources(inputSourcesCB);
   }
+
+  this.renderAudioCallback = renderAudioCallback;
 }
 
 Broadcaster.prototype.start = function() {
   if (!this.audioSource) {
     return 'Broadcast source not set!';
-  }
-
-  //???
-  if (context) {
-    recorder.connect(context.destination);
-    return;
   }
 
   var constraints = {
@@ -55,15 +51,18 @@ Broadcaster.prototype.start = function() {
     video: false
   };
 
-  this._getUserMedia(constraints, function(stream) {
-    //context = new AudioContext();
+  navigator.getUserMedia(constraints, function(stream) {
     var audioInput = this.context.createMediaStreamSource(stream);
-    // contextSampleRate = context.sampleRate;
+    
     var bufferSize = 0; // let implementation decide
-    this.recorder = context.createScriptProcessor(bufferSize, 2, 2);
-    this.recorder.onaudioprocess = this.onAudio;
-    this.audioInput.connect(recorder);
-    this.recorder.connect(context.destination);
+    this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
+    
+    this.recorder.onaudioprocess = function(e) {
+      this.onAudio(e);
+    }.bind(this);
+
+    audioInput.connect(this.recorder);
+    this.recorder.connect(this.context.destination);
 
   }.bind(this), function(e) {
     console.log('error connectiing to audio source');
@@ -80,7 +79,7 @@ Broadcaster.prototype.setAudioSource = function(value) {
   this.audioSource = value;
 }
 
-Broadcaster.prototype.onAudio = function(e, callback) {
+Broadcaster.prototype.onAudio = function(e) {
   var left = e.inputBuffer.getChannelData(0);
   var right = e.inputBuffer.getChannelData(1);
 
@@ -93,8 +92,10 @@ Broadcaster.prototype.onAudio = function(e, callback) {
   //     cmd: "resample",
   //     buffer: stereoBuff
   // });
-
-  callback(left); //callback to render audio value
+  
+  if (this.renderAudioCallback) {
+    this.renderAudioCallback(left); //callback to render audio value
+  }
 }
 
 Broadcaster.prototype._convertFloat32ToInt16 = function(buffer) {
