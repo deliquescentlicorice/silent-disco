@@ -10,6 +10,7 @@ module.exports = function(app, express, ensureAuth) {
   app.put('/api/stream/:stream', streamsController.upHeart);
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
   app.get('/api/streams', streamsController.getAllStreams);
+  app.post('/api/users/:user', usersController.createUser);
 
   app.get('/broadcast', function(req, res) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));

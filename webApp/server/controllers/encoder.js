@@ -6,7 +6,7 @@ exports.stdin = {};
 var SAMPLE_SIZE = 16; // 16-bit samples, Little-Endian, Signed
 var CHANNELS = 2; // 2 channels (left and right)
 
-exports.SAMPLE_RATE = 44100; // 44,100 Hz sample rate.
+var SAMPLE_RATE = 44100; // 44,100 Hz sample rate.
 
 // If we're getting raw PCM data as expected, calculate the number of bytes
 // that need to be read for `1 Second` of audio data.
@@ -64,61 +64,119 @@ function currentBocSize() {
   return size;
 }
 
-exports.Encoder = function(stream, contentType, spawnName, spawnOpts) {
+exports.listenHandler = function(req, res) {
+  // Sorry, too busy, try again later!
+  var streamId = req.params.id;
 
-  console.log('encoder was invoked');
+  console.log('streamid:' + streamId);
 
-  return function(req, res, next) {
-
-    console.log('enconder child function was invoked');
-    var parsed = require('url').parse(req.url, true);
-
-    if (parsed.pathname == stream) {
-
-      // Sorry, too busy, try again later!
-      if (clients.length >= maxClients) {
-        res.writeHead(503);
-        return res.end("The maximum number of clients (" + exports.maxClients + ") are aleady connected, try connecting again later...")
-      }
-
-      console.log(req.headers);
-
-      var headers = {
-        'Content-Type': 'audio/mpeg',
-        'Transfer-Encoding': 'chunked',
-        "Connection": "close"
-      };
-
-      res.writeHead(200, headers);
-
-      var encoder = spawn(spawnName, spawnOpts);
-      encoder.stdout.on("data", function(chunk) {
-        console.log('data event fired within encoder');
-        res.write(chunk);
-      });
-
-      // First, send what's inside the "Burst-on-Connect" buffers.
-      for (var i = 0, l =bocData.length; i < l; i++) {
-        encoder.stdin.write(bocData[i]);
-      }
-
-      // Then start sending the incoming PCM data to the MP3 encoder
-      var callback = function(chunk) {
-        console.log('pcm chunk sent to mp3');
-        encoder.stdin.write(chunk);
-      }
-
-      exports.stdin.on("data", callback);
-      clients.push(res);
-
-      req.connection.on("close", function() {
-        // This occurs when the HTTP client closes the connection.
-        clients.splice(clients.indexOf(res), 1);
-        encoder.stdin.end();
-        exports.stdin.removeListener("data", callback);
-      });
-    } else {
-      next();
-    }
+  if (clients.length >= maxClients) {
+    res.writeHead(503);
+    return res.end("The maximum number of clients (" + exports.maxClients + ") are aleady connected, try connecting again later...")
   }
+
+  console.log(req.headers);
+
+  var headers = {
+    'Content-Type': 'audio/mpeg',
+    'Transfer-Encoding': 'chunked',
+    "Connection": "close"
+  };
+
+  res.writeHead(200, headers);
+
+  var spawnOpts = [
+    "-S" // Operate silently (nothing to stderr)
+    , "-r" // Input is raw PCM
+    , "-s", SAMPLE_RATE / 1000 // Input sampling rate
+    , "-" // Input from stdin
+    , "-" // Output to stderr
+    , "-V 5" //variable bit rate
+  ];
+
+  var encoder = spawn('lame', spawnOpts);
+
+  encoder.stdout.on("data", function(chunk) {
+    res.write(chunk);
+  });
+
+  // First, send what's inside the "Burst-on-Connect" buffers.
+  for (var i = 0, l = bocData.length; i < l; i++) {
+    encoder.stdin.write(bocData[i]);
+  }
+
+  // Then start sending the incoming PCM data to the MP3 encoder
+  var callback = function(chunk) {
+    encoder.stdin.write(chunk);
+  }
+
+  console.log('export stdin is: ', exports.stdin);
+  exports.stdin[streamId].on("data", callback);
+  clients.push(res);
+
+  req.connection.on("close", function() {
+    // This occurs when the HTTP client closes the connection.
+    clients.splice(clients.indexOf(res), 1);
+    encoder.stdin.end();
+    exports.stdin[streamId].removeListener("data", callback);
+  });
 }
+
+// exports.Encoder = function(stream, contentType, spawnName, spawnOpts) {
+
+//   console.log('encoder was invoked');
+
+//   return function(req, res, next) {
+
+//     console.log('enconder child function was invoked');
+//     var parsed = require('url').parse(req.url, true);
+
+//     if (parsed.pathname == stream) {
+
+//       // Sorry, too busy, try again later!
+//       if (clients.length >= maxClients) {
+//         res.writeHead(503);
+//         return res.end("The maximum number of clients (" + exports.maxClients + ") are aleady connected, try connecting again later...")
+//       }
+
+//       console.log(req.headers);
+
+//       var headers = {
+//         'Content-Type': 'audio/mpeg',
+//         'Transfer-Encoding': 'chunked',
+//         "Connection": "close"
+//       };
+
+//       res.writeHead(200, headers);
+
+//       var encoder = spawn(spawnName, spawnOpts);
+//       encoder.stdout.on("data", function(chunk) {
+//         console.log('data event fired within encoder');
+//         res.write(chunk);
+//       });
+
+//       // First, send what's inside the "Burst-on-Connect" buffers.
+//       for (var i = 0, l =bocData.length; i < l; i++) {
+//         encoder.stdin.write(bocData[i]);
+//       }
+
+//       // Then start sending the incoming PCM data to the MP3 encoder
+//       var callback = function(chunk) {
+//         console.log('pcm chunk sent to mp3');
+//         encoder.stdin.write(chunk);
+//       }
+
+//       exports.stdin.on("data", callback);
+//       clients.push(res);
+
+//       req.connection.on("close", function() {
+//         // This occurs when the HTTP client closes the connection.
+//         clients.splice(clients.indexOf(res), 1);
+//         encoder.stdin.end();
+//         exports.stdin.removeListener("data", callback);
+//       });
+//     } else {
+//       next();
+//     }
+//   }
+// }
