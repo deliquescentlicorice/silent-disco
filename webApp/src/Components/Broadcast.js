@@ -12,7 +12,7 @@ class Broadcast extends React.Component {
   render() {
     return (
       <div>
-        <AppBar title="DJ"/>
+        <AppBar title="Broadcast"/>
         <BroadcastSetup history={this.history}/>
       </div>
     )

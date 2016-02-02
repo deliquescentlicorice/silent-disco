@@ -8,6 +8,7 @@ import App from './App.jsx';
 import StreamLive from './Components/StreamLive.js';
 import Broadcast from './Components/Broadcast.js'
 import BroadcastLive from './Components/BroadcastLive.js'
+import BroadcastProfile from './Components/BroadcastProfile.js'
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -22,6 +23,7 @@ var routes = (
     <Route path="/stream/:streamId" component={StreamLive}/>
     <Route path='broadcast/setup' component={Broadcast}/>
     <Route path='broadcast/live' component={BroadcastLive}/>
+    <Route path='broadcast/profile' component={BroadcastProfile}/>
     
   </Router>
 )
