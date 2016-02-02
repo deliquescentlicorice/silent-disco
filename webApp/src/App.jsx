@@ -84,7 +84,7 @@ class App extends React.Component {
     return (
       <div>
 
-        <NavBar title="Silent Disco" history={this.history}/>
+        <NavBar title="Listen" history={this.history}/>
 
         <List>
         {Object.keys(this.state.streams).map(this.renderStream.bind(this))}

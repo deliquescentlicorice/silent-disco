@@ -71,7 +71,7 @@ class StreamLive extends React.Component {
     return (
       <div style={styles.mainContainer}>
         <div>  
-          <NavBar title={'Now Playing'} showMenuIconButton={false} history={this.props.history}/>
+          <NavBar title={'Now Playing'} history={this.props.history}/>
         </div>
         <div style={styles.playerContainer}>
           
