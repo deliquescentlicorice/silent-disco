@@ -14,7 +14,7 @@ import TitleBar from './Components/TitleBar.js';
 import List from '../node_modules/material-ui/lib/lists/list';
 
 //for development; we'll change this in production
-// var REQUEST_URL_ALL = 'http://localhost:3000/api/streams';
+var REQUEST_URL_ALL = 'http://localhost:3000/api/streams';
 
 class App extends React.Component {
   constructor() {
@@ -42,24 +42,24 @@ class App extends React.Component {
       };
     }
 
-    // componentDidMount() {
-    //   this.fetchData();
-    //   // var stations = FAKE_STATION_DATA;
-    //   // this.setState({
-    //   //   dataSource: this.state.dataSource.cloneWithRows(stations),
-    //   //   isLoading: false
-    //   // })
-    // }
+    componentDidMount() {
+      this.fetchData();
+      // var stations = FAKE_STATION_DATA;
+      // this.setState({
+      //   dataSource: this.state.dataSource.cloneWithRows(stations),
+      //   isLoading: false
+      // })
+    }
 
-    // fetchData() {
-    //   fetch(REQUEST_URL_ALL)
-    //   .then((response) => response.json())
-    //   .then((responseData) => {
-    //     this.setState({
-    //       streams: responseData
-    //     });
-    //   });
-    // }
+    fetchData() {
+      fetch(REQUEST_URL_ALL)
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({
+          streams: responseData
+        });
+      });
+    }
 
     goToStream() {
       var streamId= this.props.index;
