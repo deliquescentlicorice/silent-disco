@@ -12,10 +12,12 @@ class BroadcastSetup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      audioSelect : document.querySelector('select#audioSource'),
       name: (new Date).getTime().toString() + Math.random().toFixed(2),
       broadcaster: 'anonymous',
       desc: 'Hi, I\'m anonymous and you\'re listening to QuantumRadio',
       isInitializing: false,
+<<<<<<< HEAD
       isLoggedIn: false,
       isLive: true,
       favorites: []
@@ -114,6 +116,146 @@ class BroadcastSetup extends React.Component {
 
 
     var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
+=======
+      //I need this default to do anything with the page
+      isLoggedIn: true,
+      // gotSources: function(sourceInfos) {
+      //   for (var i = 0; i !== sourceInfos.length; ++i) {
+      //     var sourceInfo = sourceInfos[i];
+      //     if (sourceInfo.kind === 'audio') {
+      //       var option = document.createElement('option');
+      //       option.value = sourceInfo.id;
+      //       option.text = sourceInfo.label || 'microphone ' +
+      //       (this.state.audioSelect.length + 1);
+      //       this.state.audioSelect.appendChild(option);
+      //     }
+      //   }
+      // },
+      // renderAudio: function(data) {
+      //   var canvas = document.getElementById("canvas"),
+      //   width = canvas.width,
+      //   height = canvas.height,
+      //   context = canvas.getContext('2d');
+      //   context.clearRect(0, 0, width, height);
+      //   var step = Math.ceil(data.length / width);
+      //   var amp = height / 2;
+      //   for (var i = 0; i < width; i++) {
+      //     var min = 1.0;
+      //     var max = -1.0;
+      //     for (var j = 0; j < step; j++) {
+      //       var datum = data[(i * step) + j];
+      //       if (datum < min)
+      //         min = datum;
+      //       if (datum > max)
+      //         max = datum;
+      //     }
+      //     context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+      //   }
+      // }
+    }
+    var that = this;
+    this.gotSources = function(sourceInfos) {
+      for (var i = 0; i !== sourceInfos.length; i++) {
+        var sourceInfo = sourceInfos[i];
+        if (sourceInfo.kind === 'audio') {
+          var option = document.createElement('option');
+          option.value = sourceInfo.id;
+          option.text = sourceInfo.label || 'microphone' + (that.state.audioSelect.length + 1);
+          that.state.audioSelect.appendChild(option);
+        }
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.state.audioSelect = document.querySelector('select#audioSource');
+
+    MediaStreamTrack.getSources(this.gotSources);
+
+    this.state.renderAudio = function(data) {
+        var canvas = document.getElementById("canvas"),
+        width = canvas.width,
+        height = canvas.height,
+        context = canvas.getContext('2d');
+        context.clearRect(0, 0, width, height);
+        var step = Math.ceil(data.length / width);
+        var amp = height / 2;
+        for (var i = 0; i < width; i++) {
+          var min = 1.0;
+          var max = -1.0;
+          for (var j = 0; j < step; j++) {
+            var datum = data[(i * step) + j];
+            if (datum < min)
+              min = datum;
+            if (datum > max)
+              max = datum;
+          }
+          context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+        }
+      };
+    // if (!this.state.isLoggedIn) {
+    //   SC.initialize({
+    //     client_id: '67e4bbe5a2b1b64416b0ed84366b34ca',
+    //     redirect_uri: 'http://localhost:3000/auth/soundcloud'
+    //   });
+
+    //   // initiate auth popup
+    //   SC.connect()
+      // .then(function(err, result) {
+      //   return SC.get('/me');
+      // })
+      // .then(function(me) {
+      //   this.setState({
+      //     isLoggedIn: true
+      //   })
+      //   .catch(function(error) {
+
+      //   alert(error);
+      //   })
+      // });
+}
+
+stationNameInput(event) {
+  this.setState({
+    name: event.target.value
+  });
+}
+
+stationBroadcasterInput(event) {
+  this.setState({
+    broadcaster: event.target.value
+  });
+}
+
+stationDescriptionInput(event) {
+  this.setState({
+    desc: event.target.value
+  });
+}
+
+stationNameInput(event) {
+  this.setState({
+    name: event.target.value
+  });
+}
+
+stationBroadcasterInput(event) {
+  this.setState({
+    broadcaster: event.target.value
+  });
+}
+
+stationDescriptionInput(event) {
+  this.setState({
+    desc: event.target.value
+  });
+}
+
+
+startBroadcast() {
+
+  var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
+>>>>>>> streaming integrated with React frontend
   //handle web audio api not supported
   navigator.getUserMedia = navigator.getUserMedia ||
   navigator.webkitGetUserMedia ||
@@ -144,6 +286,7 @@ class BroadcastSetup extends React.Component {
     typeof MediaStreamTrack.getSources === 'undefined') {
     alert('This browser does not support MediaStreamTrack.\n\nTry Chrome.');
 } else {
+  console.log('inputSourcesCB is: ', inputSourcesCB);
   MediaStreamTrack.getSources(inputSourcesCB);
 }
 
@@ -233,95 +376,19 @@ Broadcaster.prototype._interleave = function(leftChannel, rightChannel) {
   }
   return result;
 }
-}
-    }
-
-  stationNameInput(event) {
-    this.setState({
-      name: event.target.value
-    });
-  }
-
-  stationBroadcasterInput(event) {
-    this.setState({
-      broadcaster: event.target.value
-    });
-  }
-
-  stationDescriptionInput(event) {
-    this.setState({
-      desc: event.target.value
-    });
-  }
-
-stationNameInput(event) {
-  this.setState({
-    name: event.target.value
-  });
-}
-
-stationBroadcasterInput(event) {
-  this.setState({
-    broadcaster: event.target.value
-  });
-}
-
-stationDescriptionInput(event) {
-  this.setState({
-    desc: event.target.value
-  });
-}
-
-
-startBroadcast() {
-
-  var audioSelect = document.querySelector('select#audioSource');
-
-  var gotSources = function(sourceInfos) {
-    for (var i = 0; i !== sourceInfos.length; ++i) {
-      var sourceInfo = sourceInfos[i];
-      if (sourceInfo.kind === 'audio') {
-        var option = document.createElement('option');
-        option.value = sourceInfo.id;
-        option.text = sourceInfo.label || 'microphone ' +
-        (audioSelect.length + 1);
-        audioSelect.appendChild(option);
-      }
-    }
-  };
 
 
     // this.props.history.push({
     //   pathname: '/broadcast/live'
     // })
 
-var renderAudio = function(data) {
-  var canvas = document.getElementById("canvas"),
-  width = canvas.width,
-  height = canvas.height,
-  context = canvas.getContext('2d');
 
-  context.clearRect(0, 0, width, height);
-  var step = Math.ceil(data.length / width);
-  var amp = height / 2;
-  for (var i = 0; i < width; i++) {
-    var min = 1.0;
-    var max = -1.0;
-    for (var j = 0; j < step; j++) {
-      var datum = data[(i * step) + j];
-      if (datum < min)
-        min = datum;
-      if (datum > max)
-        max = datum;
-    }
-    context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
-  }
-}
 
 var streamId = 1;
-var bc = new Broadcaster(streamId, gotSources, renderAudio);
+console.log('this.state.renderAudio is: ', this.state.renderAudio);
+var bc = new Broadcaster(streamId, this.gotSources, this.state.renderAudio);
 
-var audioSource = audioSelect.value;
+var audioSource = this.state.audioSelect.value;
         //need to set audio source before calling start
         bc.audioSource = audioSource;
         console.log('my audio Source is: ', audioSource);
@@ -365,27 +432,33 @@ var audioSource = audioSelect.value;
     // })
 }
 
-  render() {
-    var partial;
-    if (this.state.isLoggedIn) {
-      partial = (
-        <div style={styles.container}>
-          <p style={styles.title}>Tell us about your station</p>
-          <TextField onChange={this.stationNameInput.bind(this)}
-            hintText="Stream Name"
-            floatingLabelText="Stream Name"
-          /><br/>
-          <TextField onChange={this.stationDescriptionInput.bind(this)}
-            hintText="Description"
-            floatingLabelText="Description"
-          /><br/><br/>
-          <DropDownMenu value={this.state.isLive} onChange={this.stationLiveInput.bind(this)}>
-            <MenuItem value={true} primaryText="Live"/>
-            <MenuItem value={false} primaryText="SoundCloud"/>
-          </DropDownMenu><br/><br/>
-          <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
-          <Canvas />
+
+render() {
+  var partial;
+  if (this.state.isLoggedIn) {
+    partial = (
+      <div>
+              <div class="select">
+            <label for="audioSource">Audio source: </label><select id="audioSource"></select>
         </div>
+      <p style={styles.title}>Tell us about your station...</p>
+      <TextField onChange={this.stationNameInput.bind(this)}
+      hintText="Station Name"
+      floatingLabelText="Station Name"
+      /><br/>
+      <TextField onChange={this.stationBroadcasterInput.bind(this)}
+      hintText="Broadcast Name"
+      floatingLabelText="Broadcast Name"
+      /><br/>
+      <TextField onChange={this.stationDescriptionInput.bind(this)}
+      hintText="Description"
+      floatingLabelText="Description"
+      /><br/><br/>
+      <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
+      <div id="canvas-container">
+      <canvas width="600" height="100" id="canvas"></canvas>
+      </div>
+      </div>
       )
     } else {
       partial = (
@@ -393,10 +466,10 @@ var audioSource = audioSelect.value;
           <p style={styles.title}>Broadcasting requires a SoundCloud account. Please sign in!</p>
         </div>
       )
-    }
+  }
 
-    return partial;
-  } 
+  return partial;
+} 
 }
 
 var styles = {
