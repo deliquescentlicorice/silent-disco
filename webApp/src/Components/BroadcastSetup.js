@@ -174,7 +174,6 @@ class BroadcastSetup extends React.Component {
   //fetch can't run JSON
     $.ajax({
     url: serverURL,
-    dataType: 'json',
     method: 'POST',
     contentType:"application/x-www-form-urlencoded",
     data: {
@@ -185,10 +184,8 @@ class BroadcastSetup extends React.Component {
         lat: 30
       },
     success: function(data) {
-      console.log(data);
     },
     error: function(xhr, status, err) {
-      console.error(status, err.toString());
     }
   });
 
