@@ -3,6 +3,7 @@ import TextField from '../../node_modules/material-ui/lib/text-field';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
+import {BinaryClient} from 'binaryjs-client';
 
 
 class BroadcastSetup extends React.Component {
@@ -34,73 +35,115 @@ class BroadcastSetup extends React.Component {
     });
   }
 
+
   startBroadcast() {
     console.log(this)
     console.log("station name", this.state.name)
     console.log("station broadcaster", this.state.broadcaster)
     console.log("station description", this.state.desc)
     /* copy-paste from site.js for recording functionality */
-            var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
-        var client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
-        
-        client.on('open', function() {
-            bStream = client.createStream({
-                sampleRate: resampleRate
-            });
-        });
+    var context;
+    var bStream;
+    var  contextSampleRate = (new AudioContext()).sampleRate;
+    var resampleRate = 44100;
+    var recorder;
+    // var workerLoc = 'webApp/public/js/worker/resampler-worker.js';
+    // var worker = new Worker(workerLoc);
 
-        if (context) {
-            recorder.connect(context.destination);
-            return;
-        }
+    var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+    var client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
-        var audioSource = audioSelect.value;
+    var  interleave = function(leftChannel, rightChannel) {
+      var length = leftChannel.length + rightChannel.length;
+      var result = new Float32Array(length);
 
-        var constraints = {
-            audio: {
-                optional: [{
-                    sourceId: audioSource
-                }]
-            },
-            video: false
-        };
+      var inputIndex = 0;
 
-        navigator.getUserMedia(constraints, function(stream) {
-            context = new AudioContext();
-            var audioInput = context.createMediaStreamSource(stream);
-            contextSampleRate = context.sampleRate;
+      for (var index = 0; index < length;) {
+        result[index++] = leftChannel[inputIndex];
+        result[index++] = rightChannel[inputIndex];
+        inputIndex++;
+      }
+      return result;
+    };
+
+
+    var  onAudio  = function (e) {
+      var left = e.inputBuffer.getChannelData(0);
+      var right = e.inputBuffer.getChannelData(1);
+
+      var stereoBuff = interleave(left, right);
+
+      // worker.postMessage({
+      //   cmd: "resample",
+      //   buffer: stereoBuff
+      // });
+    };
+
+    client.on('open', function() {
+      bStream = client.createStream({
+        sampleRate: resampleRate
+      });
+    });
+
+    if (context) {
+      recorder.connect(context.destination);
+      return;
+    }
+
+    // var audioSource = audioSelect.value;
+
+    //we'll have to specify a source later
+    var constraints = {
+      audio: true,
+      video: false
+    };
+
+    navigator.getUserMedia = navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
+
+    navigator.getUserMedia(constraints, function(stream) {
+      context = new AudioContext();
+      var audioInput = context.createMediaStreamSource(stream);
+      contextSampleRate = context.sampleRate;
             var bufferSize = 0; // let implementation decide
             recorder = context.createScriptProcessor(bufferSize, 2, 2);
             recorder.onaudioprocess = onAudio;
             audioInput.connect(recorder);
             recorder.connect(context.destination);
 
-        }, function(e) {
+          }, function(e) {
             console.log('error connectiing to audio source');
             throw e;
-        });
+          });
     // this.props.history.push({
     //   pathname: '/broadcast/live'
     // })
-    // var serverURL = "http://10.6.32.108:8000/testpost";
+    var serverURL = "http://localhost:3000/api/" + this.state.name;
     
     // this.setState({
     //   isInitializing: true
     // });
 
-    // fetch(serverURL, {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     name: this.state.name,
-    //     broadcaster: this.state.broadcaster,
-    //     desc: this.state.desc
-    //   })
-    // })
-    // .then((response) => response.json())
-    // .then((responseData) => {
-    //   this.setState({
-    //     isInitializing: false
-    //   })
+  //hardcoding John Doe for now
+    fetch(serverURL, {
+      method: 'POST',
+      body: {
+        // name: this.state.name,
+        "creator": "John Doe",
+        "desc": this.state.desc,
+        "lng": 40,
+        "lat": 30
+      }
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({
+        isInitializing: false
+      });
+    });
 
     //   console.log(responseData);
 
@@ -112,28 +155,28 @@ class BroadcastSetup extends React.Component {
     //     })
     //   }
     // })
-  }
+}
 
-  render() {
-    return (
-      <div>
-        <p style={styles.title}>Tell us about your station...</p>
-        <TextField onChange={this.stationNameInput.bind(this)}
-          hintText="Station Name"
-          floatingLabelText="Station Name"
-        /><br/>
-        <TextField onChange={this.stationBroadcasterInput.bind(this)}
-          hintText="Broadcast Name"
-          floatingLabelText="Broadcast Name"
-        /><br/>
-        <TextField onChange={this.stationDescriptionInput.bind(this)}
-          hintText="Description"
-          floatingLabelText="Description"
-        /><br/><br/>
-        <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
-      </div>
+render() {
+  return (
+    <div>
+    <p style={styles.title}>Tell us about your station...</p>
+    <TextField onChange={this.stationNameInput.bind(this)}
+    hintText="Station Name"
+    floatingLabelText="Station Name"
+    /><br/>
+    <TextField onChange={this.stationBroadcasterInput.bind(this)}
+    hintText="Broadcast Name"
+    floatingLabelText="Broadcast Name"
+    /><br/>
+    <TextField onChange={this.stationDescriptionInput.bind(this)}
+    hintText="Description"
+    floatingLabelText="Description"
+    /><br/><br/>
+    <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
+    </div>
     )
-  } 
+} 
 }
 
 var styles = {
