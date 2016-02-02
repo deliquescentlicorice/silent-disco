@@ -25,7 +25,7 @@ import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 
 // COMPONENTS
-import TitleBar from './TitleBar.js';
+import NavBar from './NavBar.js';
 
 
 class BroadcastLive extends React.Component {
@@ -65,7 +65,7 @@ class BroadcastLive extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <TitleBar history={this.history}/>
+        <NavBar history={this.history}/>
         <div style={styles.cardContainer}>
           
           <Card style={styles.mainBox}>

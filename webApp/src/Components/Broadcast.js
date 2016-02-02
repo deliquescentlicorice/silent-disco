@@ -5,6 +5,7 @@ import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 
 import BroadcastSetup from './BroadcastSetup';
+import NavBar from './NavBar';
 
 
 class Broadcast extends React.Component {
@@ -12,7 +13,7 @@ class Broadcast extends React.Component {
   render() {
     return (
       <div>
-        <AppBar title="Broadcast"/>
+        <NavBar title="Broadcast" history={this.props.history}/>
         <BroadcastSetup history={this.history}/>
       </div>
     )
