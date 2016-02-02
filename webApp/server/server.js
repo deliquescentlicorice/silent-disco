@@ -24,6 +24,13 @@ var encoder = require('./encoder');
 var binaryServer = require('binaryjs').BinaryServer;
 var binarySocketHandler = require('./binarySockets.js');
 
+var scAuth = require('./config/scAuth.js');
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var SoundCloudStrategy = require('passport-soundcloud').Strategy;
+var apiKeys = require('./config/apiKeys');
+
 var version = process.env.version || 'DEV';
 
 if (version === 'DEV') {
@@ -43,11 +50,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(cookieParser());
+app.use(session({ secret: 'disco' , resave: true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
 
-require('./routes.js')(app, express);
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+require('./routes.js')(app, express, scAuth.ensureAuth);
 
 
 app.use(express.static(__dirname + '/../src'));
+
 
 //broadcasting client
 app.use("/broadcast", express.static(__dirname + '/../public'));
@@ -73,5 +92,29 @@ console.log('Listening on port:' + port);
 var bServer = binaryServer({server: server});
 
 bServer.on('connection', binarySocketHandler.connect);
+
+passport.use(new SoundCloudStrategy({
+  clientID: apiKeys.clientID,
+  clientSecret: apiKeys.clientSecret,
+  callbackURL: "http://localhost:" + port + "/auth/soundcloud"
+}, function(accessToken, refreshToken, profile, done) {
+  scAuth.signup({profile: profile}, function (err, profile){
+    console.log('done');
+    return done(err, profile);
+  });
+  // controller.isUserInDb([unique identifier goes here], function (inDb){
+  //   if(inDb){
+  //     scAuth.login({profile: profile}, function (err, profile){
+  //       return done(err, profile);
+  //     });
+  //   } else {
+  //     scAuth.signup({profile: profile}, function (err, profile){
+  //       return done(err, profile);
+  //     });
+  //   }
+  // });
+  }
+));
+
 
 module.exports = app;
