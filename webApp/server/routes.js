@@ -10,7 +10,9 @@ module.exports = function(app, express, ensureAuth) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));
   });
 
-  app.get('/auth/soundcloud', function(req, res) {
+  app.get('/auth/soundcloud', passport.authenticate('soundcloud', {
+    failureRedirect: '/'
+  }), function(req, res) {
     // on success, closes out the pop-up
     // res.redirect('/broadcast/setup')
     res.sendFile(path.join(__dirname + '/../public', 'success.html'));
