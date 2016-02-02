@@ -9,9 +9,11 @@ module.exports = {
     var streamLongitude = req.body.lng;
     var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
+    console.log(req.body);
 
     User.findOne({name: streamCreator}, function(err, doc) {
       if (doc) {
+        console.log('creator found');
         var creatorId = doc._id;
         var newStream = new Stream({name: streamName, 
           description: streamDesc,
@@ -34,6 +36,7 @@ module.exports = {
         });
       }
       else {
+        console.log('user not found');
         res.status(500).send('user not found');
       }
     });
