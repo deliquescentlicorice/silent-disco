@@ -38,7 +38,7 @@ $(function() {
         }
     }
 
-    var streamId = 1;
+    var streamId = 44;
     var bc = new Broadcaster(streamId, gotSources, renderAudio);
 
     $("#start-rec-btn").click(function() {

@@ -11,14 +11,14 @@ var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
   this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
   this.stream;
-  
+
   this.context = new AudioContext();
   // this.contextSampleRate = this.context.sampleRate;
-
+  //console.log('streamId:' + streamId);
   this.client.on('open', function() {
     this.stream = this.client.createStream({
-      sampleRate: this.context.SampleRate,
-      streamID: this.streamId
+      sampleRate: this.context.sampleRate,
+      streamId: streamId
     });
   }.bind(this));
 
@@ -53,10 +53,10 @@ Broadcaster.prototype.start = function() {
 
   navigator.getUserMedia(constraints, function(stream) {
     var audioInput = this.context.createMediaStreamSource(stream);
-    
+
     var bufferSize = 0; // let implementation decide
     this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
-    
+
     this.recorder.onaudioprocess = function(e) {
       this.onAudio(e);
     }.bind(this);
@@ -92,7 +92,7 @@ Broadcaster.prototype.onAudio = function(e) {
   //     cmd: "resample",
   //     buffer: stereoBuff
   // });
-  
+
   if (this.renderAudioCallback) {
     this.renderAudioCallback(left); //callback to render audio value
   }

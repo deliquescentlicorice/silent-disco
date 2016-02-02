@@ -5,9 +5,13 @@ exports.connect = function(client) {
   console.log("new binary socket connection...");
 
   client.on('stream', function(stream, meta) {
+    console.log('meta object'+ meta);
     console.log("Stream Start...@" + meta.sampleRate + "Hz");
-    encoder.stdin = stream;
-    encoder.stdin.on('data', encoder.onInStreamPCM);
+    console.log("Stream Id:" + meta.streamId);
+    
+    var streamId = meta.streamId;
+    encoder.stdin[streamId] = stream;
+    encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
   });
 } 
 
