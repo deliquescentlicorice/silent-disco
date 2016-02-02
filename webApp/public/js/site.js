@@ -6,20 +6,22 @@ $(function() {
         recorder,
         context,
         bStream,
-        contextSampleRate = (new AudioContext()).sampleRate,
-        resampleRate = 44100,
-        worker = new Worker('js/worker/resampler-worker.js');
+        contextSampleRate = (new AudioContext()).sampleRate;
+    // resampleRate = 44100,
+    // worker = new Worker('js/worker/resampler-worker.js');
 
-    worker.postMessage({
-        cmd: "init",
-        from: contextSampleRate,
-        to: resampleRate
-    });
+    //do we need to resample ????
+    // worker.postMessage({
+    //     cmd: "init",
+    //     from: contextSampleRate,
+    //     to: resampleRate
+    // });
 
-    worker.addEventListener('message', function(e) {
-        if (bStream && bStream.writable)
-            bStream.write(convertFloat32ToInt16(e.data.buffer));
-    }, false);
+    // worker.addEventListener('message', function(e) {
+    //     if (bStream && bStream.writable)
+    //         bStream.write(convertFloat32ToInt16(e.data.buffer));
+    // }, false);
+
 
     var audioSelect = document.querySelector('select#audioSource');
 
@@ -47,10 +49,10 @@ $(function() {
 
         var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
         var client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
-        
+
         client.on('open', function() {
             bStream = client.createStream({
-                sampleRate: resampleRate
+                sampleRate: contextSampleRate
             });
         });
 
@@ -92,10 +94,12 @@ $(function() {
 
         var stereoBuff = interleave(left, right);
 
-        worker.postMessage({
-            cmd: "resample",
-            buffer: stereoBuff
-        });
+        bStream.write(convertFloat32ToInt16(stereoBuff));
+
+        // worker.postMessage({
+        //     cmd: "resample",
+        //     buffer: stereoBuff
+        // });
 
         drawBuffer(left);
     }
@@ -122,7 +126,7 @@ $(function() {
         }
         return result;
     }
-    
+
     //https://github.com/cwilso/Audio-Buffer-Draw/blob/master/js/audiodisplay.js
     function drawBuffer(data) {
         var canvas = document.getElementById("canvas"),
