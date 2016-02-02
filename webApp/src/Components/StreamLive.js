@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 // COMPONENTS
-import TitleBar from './TitleBar.js';
+import NavBar from './NavBar.js';
 
 // MEDIA PLAYER
 import Sound from '../../node_modules/react-sound';
@@ -71,7 +71,7 @@ class StreamLive extends React.Component {
     return (
       <div style={styles.mainContainer}>
         <div>  
-          <AppBar title={'Now Playing'} showMenuIconButton={false}/>
+          <NavBar title={'Now Playing'} showMenuIconButton={false} history={this.props.history}/>
         </div>
         <div style={styles.playerContainer}>
           

@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 // COMPONENTS
 import StreamEntry from './Components/StreamEntry.js';
-import TitleBar from './Components/TitleBar.js';
+import NavBar from './Components/NavBar.js';
 
 // MATERIAL UI
 import List from '../node_modules/material-ui/lib/lists/list';
@@ -84,7 +84,7 @@ class App extends React.Component {
     return (
       <div>
 
-        <TitleBar title="Silent Disco" history={this.history}/>
+        <NavBar title="Silent Disco" history={this.history}/>
 
         <List>
         {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
