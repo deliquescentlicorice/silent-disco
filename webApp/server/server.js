@@ -66,7 +66,7 @@ app.use(express.static(__dirname + '/../src'));
 app.use("/broadcast", express.static(__dirname + '/../public'));
 
 //listen API route
-app.get('/listen/:id', encoder.listenHandler);
+app.get('/stream/:id', encoder.listenHandler);
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/../src', 'index.html'));

@@ -272,6 +272,7 @@ startBroadcast() {
     console.log('client opened');
     this.stream = this.client.createStream({
       sampleRate: this.context.SampleRate,
+      //we need some way to access the actual streamId from here
       streamID: this.streamId
     });
     console.log('stream sRate is: ', this.stream.sampleRate);
@@ -395,6 +396,7 @@ var audioSource = this.state.audioSelect.value;
         bc.start();
 
 
+        //I need the id to be generated before this point
         var serverURL = "http://localhost:3000/api/" + this.state.name;
 
     // this.setState({
@@ -408,7 +410,7 @@ var audioSource = this.state.audioSelect.value;
     method: 'POST',
     contentType:"application/x-www-form-urlencoded",
     data: {
-        // name: this.state.name,
+        name: this.state.name,
         creator: "John Doe",
         desc: this.state.desc,
         lng: 40,
