@@ -5,10 +5,10 @@ exports.connect = function(client) {
   console.log("new binary socket connection...");
 
   client.on('stream', function(stream, meta) {
-    console.log('meta object'+ meta);
     console.log("Stream Start...@" + meta.sampleRate + "Hz");
     console.log("Stream Id:" + meta.streamId);
-    
+      
+    //support for multiple streams  
     var streamId = meta.streamId;
     encoder.stdin[streamId] = stream;
     encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
