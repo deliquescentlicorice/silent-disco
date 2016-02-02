@@ -14,7 +14,7 @@ import TitleBar from './Components/TitleBar.js';
 import List from '../node_modules/material-ui/lib/lists/list';
 
 //for development; we'll change this in production
-var REQUEST_URL_ALL = 'http://localhost:3000/api/streams';
+// var REQUEST_URL_ALL = 'http://localhost:3000/api/streams';
 
 class App extends React.Component {
   constructor() {
@@ -29,7 +29,7 @@ class App extends React.Component {
           // url: "http://10.6.32.127:3000/listen",
           // url: "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3",
 
-          image: "https://i1.sndcdn.com/artworks-000121805716-1715so-t500x500.jpg"
+          image: "https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
         },
         {
           name : "One Thing",
@@ -42,24 +42,24 @@ class App extends React.Component {
       };
     }
 
-    componentDidMount() {
-      this.fetchData();
-      // var stations = FAKE_STATION_DATA;
-      // this.setState({
-      //   dataSource: this.state.dataSource.cloneWithRows(stations),
-      //   isLoading: false
-      // })
-    }
+    // componentDidMount() {
+    //   this.fetchData();
+    //   // var stations = FAKE_STATION_DATA;
+    //   // this.setState({
+    //   //   dataSource: this.state.dataSource.cloneWithRows(stations),
+    //   //   isLoading: false
+    //   // })
+    // }
 
-    fetchData() {
-      fetch(REQUEST_URL_ALL)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          streams: responseData
-        });
-      });
-    }
+    // fetchData() {
+    //   fetch(REQUEST_URL_ALL)
+    //   .then((response) => response.json())
+    //   .then((responseData) => {
+    //     this.setState({
+    //       streams: responseData
+    //     });
+    //   });
+    // }
 
     goToStream() {
       var streamId= this.props.index;
@@ -76,7 +76,7 @@ class App extends React.Component {
     }
 
     renderStream(key){
-      return <StreamEntry goToStream={this.goToStream} state = {this.state} history={this.history} key={key} index={key} details={this.state.streams[key]} />
+      return <StreamEntry goToStream={this.goToStream} state={this.state} history={this.history} key={key} index={key} details={this.state.streams[key]} />
     }
 
 

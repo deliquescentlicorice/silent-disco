@@ -77,7 +77,7 @@ class StreamLive extends React.Component {
           
           
             <Card style={styles.card}>
-              <CardMedia style={styles.image}>
+              <CardMedia style={styles.image} >
                 <img src={this.props.location.state.stream.image} />
               </CardMedia>
               <CardTitle title={this.props.location.state.stream.name} subtitle={this.props.location.state.stream.artist}  />

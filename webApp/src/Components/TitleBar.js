@@ -6,14 +6,14 @@ import reactMixin from 'react-mixin';
 
 
 class TitleBar extends React.Component {
-  goToDJ() {
+  setUpBroadcast() {
     this.props.history.push({
       pathname: '/broadcast/setup'
     })
   }
   render() {
     return (
-      <AppBar title={this.props.title} titleStyle={styles.title} iconElementRight={<FlatButton onClick={this.goToDJ.bind(this)} label="DJ" />}/>
+      <AppBar title={this.props.title} titleStyle={styles.title} iconElementRight={<FlatButton onClick={this.setUpBroadcast.bind(this)} label="Broadcast"/>}/>
     )
   } 
 }
