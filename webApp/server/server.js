@@ -66,7 +66,6 @@ require('./routes.js')(app, express, scAuth.ensureAuth);
 
 app.use(express.static(__dirname + '/../src'));
 
-
 //broadcasting client
 app.use("/broadcast", express.static(__dirname + '/../public'));
 
