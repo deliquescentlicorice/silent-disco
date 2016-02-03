@@ -2,9 +2,9 @@ $(function() {
 
     var audioSelect = document.querySelector('select#audioSource');
 
-    var gotSources = function(sourceInfos) {
-        for (var i = 0; i !== sourceInfos.length; ++i) {
-            var sourceInfo = sourceInfos[i];
+    var gotMediaDevices = function(devices) {
+        for (var i = 0; i !== devices.length; ++i) {
+            var sourceInfo = devices[i];
             if (sourceInfo.kind === 'audio') {
                 var option = document.createElement('option');
                 option.value = sourceInfo.id;
@@ -39,13 +39,14 @@ $(function() {
     }
 
     var streamId = 44;
-    var bc = new Broadcaster(streamId, gotSources, renderAudio);
+    var bc = new Broadcaster(streamId, gotMediaDevices, renderAudio);
 
     $("#start-rec-btn").click(function() {
-        var audioSource = audioSelect.value;
-        //need to set audio source before calling start
-        bc.audioSource = audioSource;
-        bc.start();
+        
+        // //need to set audio source before calling start
+        bc.start(audioSelect.value);
+
+        // bc.startFromHTML('htmlPlayer');
     });
 
     $("#stop-rec-btn").click(function() {

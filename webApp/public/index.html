@@ -26,12 +26,16 @@
             <label for="audioSource">Audio source: </label><select id="audioSource"></select>
         </div>
 
-    <button class="btn btn-primary" id="start-rec-btn">Start Recording</button>
-    <button class="btn btn-primary" id="stop-rec-btn">Stop Recording</button>
+    <button class="btn btn-primary" id="start-rec-btn">Start Broadcasting</button>
+    <button class="btn btn-primary" id="stop-rec-btn">Stop Broadcasting</button>
 
     <div id="canvas-container">
         <canvas width="600" height="100" id="canvas"></canvas>
     </div>
+    <br><br>
+
+    <audio id="htmlPlayer" crossorigin="anonymous" src="http://api.soundcloud.com/tracks/231623832/stream?client_id=67e4bbe5a2b1b64416b0ed84366b34ca" controls></audio>
+
 </div>
 
 </body>
