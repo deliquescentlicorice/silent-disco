@@ -140,23 +140,23 @@ class BroadcastSetup extends React.Component {
     });
   }
 
-  stationNameInput(event) {
-    this.setState({
-      name: event.target.value
-    });
-  }
+  // stationNameInput(event) {
+  //   this.setState({
+  //     name: event.target.value
+  //   });
+  // }
 
-  stationBroadcasterInput(event) {
-    this.setState({
-      broadcaster: event.target.value
-    });
-  }
+  // stationBroadcasterInput(event) {
+  //   this.setState({
+  //     broadcaster: event.target.value
+  //   });
+  // }
 
-  stationDescriptionInput(event) {
-    this.setState({
-      desc: event.target.value
-    });
-  }
+  // stationDescriptionInput(event) {
+  //   this.setState({
+  //     desc: event.target.value
+  //   });
+  // }
 
 
   startBroadcast() {

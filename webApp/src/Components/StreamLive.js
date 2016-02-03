@@ -55,14 +55,14 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/stream/' + this.props.location.state.stream.name;
+    var PUT_HEART = 'http://localhost:3000/api/stream/' + this.props.location.state.stream._id;
     fetch(PUT_HEART, {
       method: 'PUT',
       body: JSON.stringify()
     })
     .then((response) => response.json())
     .then((responseData) => {
-      this.setState({heartCount: responseData.heartCount.length > 5 ? '> 9 999' : responseData.heartCount
+      this.setState({heartCount: responseData.heartCountNum.length > 5 ? '> 9 999' : responseData.heartCountNum
     });
     })
   }
