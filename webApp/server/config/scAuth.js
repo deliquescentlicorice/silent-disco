@@ -11,12 +11,9 @@ exports.ensureAuth = function (req, res, next){
 };
 
 exports.signup = function (scUser, callback){
-  var user = {};
-  // fill this object with properties from soundcloud object 'scUser'
-  console.log(scUser);
-  // saves user object to the database
-  // controller.newUser(user);
-  return callback(null, user);
+  scUser = scUser.profile._json;
+  controller.createUser(scUser);
+  return callback(null, scUser);
 };
 
 exports.login = function (scUser, callback){
