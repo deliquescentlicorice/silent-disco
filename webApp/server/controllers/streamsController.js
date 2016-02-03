@@ -9,7 +9,6 @@ module.exports = {
     var streamLongitude = req.body.lng;
     var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
-    console.log(req.body);
 
     User.findOne({name: streamCreator}, function(err, doc) {
       if (doc) {
