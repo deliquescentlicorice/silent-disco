@@ -55,9 +55,8 @@ module.exports = {
   },
 
   upHeart: function(req, res, next) {
-    var streamName = req.body.name;
-    Stream.findOne({name: streamName}, function(err, stream) {
-      console.log('stream properties: ', Object.keys(stream));
+    var streamId = req.params.stream;
+    Stream.findById(streamId, function(err, stream) {
       stream.heartCountNum++;
       console.log('updated the heartCount');
       stream.save(function(err, doc) {

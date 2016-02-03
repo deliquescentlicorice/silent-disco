@@ -180,7 +180,8 @@ it('should have a method that adds one heart to a given stream', function (done)
   .send(muzak)
   .end(function(err, res) {
     request(app)
-    .put('/api/stream/muzak')
+    //so now that I've changed the route, I need to change the path -> has to go to an id
+    .put('/api/stream/' + res.body._id)
     .expect(200)
     .end(function(err, res) {
       if (err) {
