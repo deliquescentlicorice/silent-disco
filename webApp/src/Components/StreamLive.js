@@ -101,6 +101,7 @@ class StreamLive extends React.Component {
         <Sound
         //we need to fix this for multiple streams
           url={'http://localhost:3000/stream/' + this.props.location.state.stream._id}
+
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}
