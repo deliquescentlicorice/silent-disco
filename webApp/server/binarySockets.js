@@ -5,6 +5,7 @@ exports.connect = function(client) {
   console.log("new binary socket connection...");
 
   client.on('stream', function(stream, meta) {
+    console.log(meta);
     console.log("Stream Start...@" + meta.sampleRate + "Hz");
     console.log("Stream Id:" + meta.streamId);
       

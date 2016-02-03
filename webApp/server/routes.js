@@ -5,7 +5,7 @@ var express = require('express');
 var passport = require('passport');
 
 module.exports = function(app, express, ensureAuth) {
-  app.post('/api/:stream', streamsController.createStream);
+  app.post('/api/stream', streamsController.createStream);
   app.get('/api/stream/:stream', streamsController.getStream);
   app.put('/api/stream/:stream', streamsController.upHeart);
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
