@@ -22,7 +22,7 @@ class BroadcastSetup extends React.Component {
       favorites: []
     };
 
-        var that = this;
+    var that = this;
     this.gotSources = function(sourceInfos) {
       for (var i = 0; i !== sourceInfos.length; i++) {
         var sourceInfo = sourceInfos[i];
@@ -63,11 +63,12 @@ class BroadcastSetup extends React.Component {
           favorites: favorites
         });
       });
-    }
-
-        this.state.audioSelect = document.querySelector('select#audioSource');
+    this.state.audioSelect = document.querySelector('select#audioSource');
 
     MediaStreamTrack.getSources(this.gotSources);
+    }
+
+
 
     this.state.renderAudio = function(data) {
       var canvas = document.getElementById("canvas"),
@@ -92,63 +93,27 @@ class BroadcastSetup extends React.Component {
     };
   }
 
-stationNameInput(event) {
-  this.setState({
-    name: event.target.value
-  });
-}
-
-stationBroadcasterInput(event) {
-  this.setState({
-    broadcaster: event.target.value
-  });
-}
-
-stationDescriptionInput(event) {
-  this.setState({
-    desc: event.target.value
-  });
-}
-
-
-
-startBroadcast() {
-
-  var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
-  //handle web audio api not supported
-  navigator.getUserMedia = navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia ||
-  navigator.msGetUserMedia;
-
-
-  this.stream;
-  
-  this.context = new AudioContext();
-  // this.contextSampleRate = this.context.sampleRate;
-
-  this.client.on('open', function() {
-    console.log('client opened');
-    this.stream = this.client.createStream({
-      sampleRate: this.context.SampleRate,
-      //we need some way to access the actual streamId from here
-      streamID: this.streamId
+  stationNameInput(event) {
+    this.setState({
+      name: event.target.value
     });
-    console.log('stream sRate is: ', this.stream.sampleRate);
-  }.bind(this));
+  }
 
-  this.audioSource;
-  this.recorder;
-  this.context;
+  stationBroadcasterInput(event) {
+    this.setState({
+      broadcaster: event.target.value
+    });
+  }
 
-  //todo - handle api not supported
-  if (typeof MediaStreamTrack === 'undefined' ||
-    typeof MediaStreamTrack.getSources === 'undefined') {
-    alert('This browser does not support MediaStreamTrack.\n\nTry Chrome.');
-} else {
-  console.log('inputSourcesCB is: ', inputSourcesCB);
-  MediaStreamTrack.getSources(inputSourcesCB);
-}
+  stationDescriptionInput(event) {
+    this.setState({
+      desc: event.target.value
+    });
+  }
+
+
+
+  startBroadcast() {
           //I need the id to be generated before this point
           var serverURL = "http://localhost:3000/api/stream";
 
@@ -171,11 +136,12 @@ startBroadcast() {
         console.log('id from database ', data._id);
         var streamId = data._id;
         console.log('when I first assign a streamId client-side, it is: ', streamId);
+
         var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
           console.log('when I pass streamId into Broadcaster, it is: ', streamId);
-            navigator.getUserMedia = navigator.getUserMedia || 
-            navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-         var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+          navigator.getUserMedia = navigator.getUserMedia || 
+          navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+          var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
 
          //binaryJS client - server/socket connection
          this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
@@ -206,52 +172,26 @@ startBroadcast() {
         console.log('inputSourcesCB is: ', inputSourcesCB);
         MediaStreamTrack.getSources(inputSourcesCB);
       }
+      this.renderAudioCallback = renderAudioCallback;
+    }
 
-  var constraints = {
-    audio: {
-      optional: [{
-        sourceId: this.audioSource
-      }]
-    },
-    video: false
-  };
-  navigator.getUserMedia(constraints, function(stream) {
-    var audioInput = this.context.createMediaStreamSource(stream);
-    
-    var bufferSize = 0; // let implementation decide
-    this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
+    Broadcaster.prototype.start = function() {
+      if (!this.audioSource) {
+        return 'Broadcast source not set!';
+      }
 
-    
-    this.recorder.onaudioprocess = function(e) {
-      this.onAudio(e);
-    }.bind(this);
+      var constraints = {
+        audio: {
+          optional: [{
+            sourceId: this.audioSource
+          }]
+        },
+        video: false
+      };
 
-    audioInput.connect(this.recorder);
-    this.recorder.connect(this.context.destination);
+      navigator.getUserMedia(constraints, function(stream) {
+        var audioInput = this.context.createMediaStreamSource(stream);
 
-  }.bind(this), function(e) {
-    console.log('error connectiing to audio source');
-    throw e;
-  });
-}
-
-      Broadcaster.prototype.start = function() {
-        if (!this.audioSource) {
-          return 'Broadcast source not set!';
-        }
-
-        var constraints = {
-          audio: {
-            optional: [{
-              sourceId: this.audioSource
-            }]
-          },
-          video: false
-        };
-
-        navigator.getUserMedia(constraints, function(stream) {
-          var audioInput = this.context.createMediaStreamSource(stream);
-          
           var bufferSize = 0; // let implementation decide
           this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
           
@@ -266,25 +206,25 @@ startBroadcast() {
           console.log('error connectiing to audio source');
           throw e;
         });
-      }
+    }
 
-      Broadcaster.prototype.stop = function() {
-        this.recorder.disconnect();
-        this.client.close();
-      }
+    Broadcaster.prototype.stop = function() {
+      this.recorder.disconnect();
+      this.client.close();
+    }
 
-      Broadcaster.prototype.setAudioSource = function(value) {
-        this.audioSource = value;
-      }
+    Broadcaster.prototype.setAudioSource = function(value) {
+      this.audioSource = value;
+    }
 
-      Broadcaster.prototype.onAudio = function(e) {
-        var left = e.inputBuffer.getChannelData(0);
-        var right = e.inputBuffer.getChannelData(1);
+    Broadcaster.prototype.onAudio = function(e) {
+      var left = e.inputBuffer.getChannelData(0);
+      var right = e.inputBuffer.getChannelData(1);
 
-        var stereoBuff = this._interleave(left, right);
+      var stereoBuff = this._interleave(left, right);
 
-        this.stream.write(this._convertFloat32ToInt16(stereoBuff));
-        if (this.renderAudioCallback) {
+      this.stream.write(this._convertFloat32ToInt16(stereoBuff));
+      if (this.renderAudioCallback) {
           this.renderAudioCallback(left); //callback to render audio value
         }
       }
@@ -320,17 +260,19 @@ startBroadcast() {
 
 
 // var streamId = 1;
-        console.log('this.state.renderAudio is: ', that.state.renderAudio);
-        var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
-        var audioSource = that.state.audioSelect.value;
+console.log('this.state.renderAudio is: ', that.state.renderAudio);
+var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
+var audioSource = that.state.audioSelect.value;
         //need to set audio source before calling start
         bc.audioSource = audioSource;
         console.log('my audio Source is: ', audioSource);
         bc.start();
+      },
+      error: function(err) {
 
+      }});
 
-        //I need the id to be generated before this point
-        var serverURL = "http://localhost:3000/api/" + this.state.name;
+}
 
     // this.setState({
     //   isInitializing: true
@@ -365,11 +307,11 @@ render() {
       </div>
       </div>
       )
-    } else {
-      partial = (
-        <div>
-          <p style={styles.title}>Broadcasting requires a SoundCloud account. Please sign in!</p>
-        </div>
+  } else {
+    partial = (
+      <div>
+      <p style={styles.title}>Broadcasting requires a SoundCloud account. Please sign in!</p>
+      </div>
       )
   }
 
