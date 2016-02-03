@@ -48,6 +48,7 @@ class BroadcastSetup extends React.Component {
           redirect_uri: 'http://localhost:3000/auth/soundcloud'
         });
 
+
         var component = this;
 
         // initiate auth popup
@@ -75,8 +76,6 @@ class BroadcastSetup extends React.Component {
         console.log('audioSelect is defined: ', this.state.audioSelect !== null && this.state.audioSelect !== undefined);
 
         MediaStreamTrack.getSources(component.gotSources);
-
-
 
       this.state.renderAudio = function(data) {
         var canvas = document.getElementById("canvas"),
@@ -157,6 +156,7 @@ class BroadcastSetup extends React.Component {
   //     desc: event.target.value
   //   });
   // }
+
 
 
   startBroadcast() {
@@ -275,6 +275,7 @@ class BroadcastSetup extends React.Component {
           if (this.renderAudioCallback) {
             this.renderAudioCallback(left); //callback to render audio value
           }
+
         }
 
         Broadcaster.prototype._convertFloat32ToInt16 = function(buffer) {
