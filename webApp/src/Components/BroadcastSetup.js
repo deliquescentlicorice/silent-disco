@@ -167,6 +167,7 @@ class BroadcastSetup extends React.Component {
         lng: 40,
         lat: 30
       })})
+    .then((data) => data.json())
     .then((data) =>     {
         console.log('id from database ', data._id);
         var streamId = data._id;
@@ -293,7 +294,6 @@ class BroadcastSetup extends React.Component {
         this.props.history.push({
           pathname: '/broadcast/live'
         })
-        var streamId = 1;
         console.log('this.state.renderAudio is: ', that.state.renderAudio);
         var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
         var audioSource = that.state.audioSelect.value;
