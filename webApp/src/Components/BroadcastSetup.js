@@ -1,6 +1,8 @@
 import React from 'react';
 import TextField from '../../node_modules/material-ui/lib/text-field';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
+import DropDownMenu from '../../node_modules/material-ui/lib/DropDownMenu';
+import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 
@@ -12,7 +14,9 @@ class BroadcastSetup extends React.Component {
       broadcaster: 'anonymous',
       desc: 'Hi, I\'m anonymous and you\'re listening to QuantumRadio',
       isInitializing: false,
-      isLoggedIn: false
+      isLoggedIn: false,
+      isLive: true,
+      favorites: []
     };
   }
 
@@ -23,49 +27,57 @@ class BroadcastSetup extends React.Component {
         redirect_uri: 'http://localhost:3000/auth/soundcloud'
       });
 
+      var component = this;
+
       // initiate auth popup
       SC.connect()
-      // .then(function(err, result) {
-      //   return SC.get('/me');
-      // })
-      // .then(function(me) {
-      //   this.setState({
-      //     isLoggedIn: true
-      //   })
-      //   .catch(function(error) {
-
-      //   alert(error);
-      //   })
-      // });
+      .then(function(err, result) {
+        return SC.get('/me');
+      })
+      .then(function(me) {
+        localStorage.setItem("me", JSON.stringify(me));
+        component.setState({
+          isLoggedIn: true
+        });
+        return SC.get('/me/favorites');
+      })
+      .then(function(favorites) {
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        this.setState({
+          favorites: favorites
+        });
+      });
     }
   }
 
-  stationNameInput(event) {
+  stationNameInput(event, index, value) {
     this.setState({
-      name: event.target.value
+      name: value
     });
   }
 
-  stationBroadcasterInput(event) {
+  stationDescriptionInput(event, index, value) {
     this.setState({
-      broadcaster: event.target.value
+      desc: value
     });
   }
 
-  stationDescriptionInput(event) {
+  stationLiveInput(event, index, value) {
     this.setState({
-      desc: event.target.value
-    });
+      isLive: value
+    })
   }
 
   startBroadcast() {
-    console.log(this)
-    console.log("station name", this.state.name)
-    console.log("station broadcaster", this.state.broadcaster)
-    console.log("station description", this.state.desc)
-    this.props.history.push({
-      pathname: '/broadcast/live'
-    })
+    if (this.state.isLive) {
+      this.props.history.push({
+        pathname: '/broadcast/live'
+      });
+    } else {
+      this.props.history.push({
+        pathname: '/broadcast/soundcloud'
+      });
+    }
     // var serverURL = "http://10.6.32.108:8000/testpost";
     
     // this.setState({
@@ -102,27 +114,27 @@ class BroadcastSetup extends React.Component {
     var partial;
     if (this.state.isLoggedIn) {
       partial = (
-        <div>
-          <p style={styles.title}>Tell us about your station...</p>
+        <div style={styles.container}>
+          <p style={styles.title}>Tell us about your station</p>
           <TextField onChange={this.stationNameInput.bind(this)}
-            hintText="Station Name"
-            floatingLabelText="Station Name"
-          /><br/>
-          <TextField onChange={this.stationBroadcasterInput.bind(this)}
-            hintText="Broadcast Name"
-            floatingLabelText="Broadcast Name"
+            hintText="Stream Name"
+            floatingLabelText="Stream Name"
           /><br/>
           <TextField onChange={this.stationDescriptionInput.bind(this)}
             hintText="Description"
             floatingLabelText="Description"
           /><br/><br/>
+          <DropDownMenu value={this.state.isLive} onChange={this.stationLiveInput.bind(this)}>
+            <MenuItem value={true} primaryText="Live"/>
+            <MenuItem value={false} primaryText="SoundCloud"/>
+          </DropDownMenu><br/><br/>
           <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
         </div>
       )
     } else {
       partial = (
         <div>
-          <p style={styles.title}>Please log in with your SoundCloud account!</p>
+          <p style={styles.title}>Broadcasting requires a SoundCloud account. Please sign in!</p>
         </div>
       )
     }
@@ -132,6 +144,11 @@ class BroadcastSetup extends React.Component {
 }
 
 var styles = {
+  container: {
+    'flexDirection': 'column',
+    'justifyContent': 'center',
+    'alignContent': 'center'
+  },
   title:{
     'fontFamily':'Roboto, sans-serif'
   }

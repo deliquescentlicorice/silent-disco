@@ -25,22 +25,22 @@ import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 
 // COMPONENTS
-import NavBar from './NavBar.js';
+import TitleBar from './TitleBar.js';
 
 
-class BroadcastLive extends React.Component {
+class BroadcastSC extends React.Component {
   constructor(props) {
-    var user = JSON.parse(localStorage.getItem("me"));
     super(props);
     this.state = {
       disabled: false,
       heartCount: 4000,
       listnerLiveCount: 1000,
-      name: "Screw It, We're Doing It Live",
+      name: "Station Name That Is Super Duper Long Does This Wrap Properly?",
       description: "Description of the station",
-      artist: user.full_name || "anonymous",
-      artistAlias: user.username || "QuantumRadio Broadcaster",
-      artistImage: user.avatar_url
+      artist: "Rob Adelmann",
+      artistAlias: "Gravity (Pink Mammoth)",
+      artistImage: "https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
+      image: "https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
     };
   }
 
@@ -65,7 +65,7 @@ class BroadcastLive extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <NavBar history={this.history}/>
+        <TitleBar history={this.history}/>
         <div style={styles.cardContainer}>
           
           <Card style={styles.mainBox}>
@@ -74,9 +74,10 @@ class BroadcastLive extends React.Component {
               onClick={this.goToProfile.bind(this)}
               title={this.state.artistAlias}
               subtitle={this.state.artist}
+              avatar={this.state.artistImage}
             /></a>
             <CardMedia style={styles.streamImage}>
-              <img src={this.state.artistImage}/>
+              <img src={this.state.image}/>
             </CardMedia>
         
             <CardActions>
@@ -137,6 +138,6 @@ var styles = {
   }
 }
 
-reactMixin.onClass(BroadcastLive, History);
+reactMixin.onClass(BroadcastSC, History);
 
-export default BroadcastLive;
+export default BroadcastSC;
