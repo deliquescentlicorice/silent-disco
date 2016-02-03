@@ -13,14 +13,10 @@ var Admin = mongoose.mongo.Admin;
 var localMongo = 'mongodb://localhost:27017/silentdisco';
 mongoose.connect(localMongo);
 
-// var stream = require('./streamsModel');
-// var user = require('./usersModel');
-// console.log(stream.schema);
-
 var app = express();
 var port = process.env.PORT || 3000;
 
-var encoder = require('./encoder');
+var encoder = require('./controllers/encoder');
 var binaryServer = require('binaryjs').BinaryServer;
 var binarySocketHandler = require('./binarySockets.js');
 
@@ -70,7 +66,7 @@ app.use(express.static(__dirname + '/../src'));
 app.use("/broadcast", express.static(__dirname + '/../public'));
 
 //listen API route
-app.get('/listen/:id', encoder.listenHandler);
+app.get('/stream/:id', encoder.listenHandler);
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/../src', 'index.html'));

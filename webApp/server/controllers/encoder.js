@@ -96,6 +96,7 @@ exports.listenHandler = function(req, res) {
 
   var encoder = spawn('lame', spawnOpts);
 
+
   encoder.stdout.on("data", function(chunk) {
     res.write(chunk);
   });

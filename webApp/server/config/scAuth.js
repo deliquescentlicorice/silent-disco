@@ -1,4 +1,4 @@
-var controller = require('../usersController.js');
+var controller = require('../controllers/usersController.js');
 
 exports.ensureAuth = function (req, res, next){
   // isAuthenticated is provided function that checks if the user is logged in to soundcloud

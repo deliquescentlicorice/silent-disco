@@ -23,6 +23,7 @@ $(function() {
     // }, false);
 
 
+
     var audioSelect = document.querySelector('select#audioSource');
 
     function gotSources(sourceInfos) {
@@ -58,6 +59,7 @@ $(function() {
 
         if (context) {
             recorder.connect(context.destination);
+            console.log(context.destination);
             return;
         }
 
@@ -81,6 +83,7 @@ $(function() {
             recorder.onaudioprocess = onAudio;
             audioInput.connect(recorder);
             recorder.connect(context.destination);
+            console.log(context.destination);
 
         }, function(e) {
             console.log('error connectiing to audio source');

@@ -55,7 +55,7 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/listen/' + this.props.location.state.stream.name;
+    var PUT_HEART = 'http://localhost:3000/api/stream/' + this.props.location.state.stream.name;
     fetch(PUT_HEART, {
       method: 'PUT',
       body: JSON.stringify()
@@ -99,7 +99,8 @@ class StreamLive extends React.Component {
         </div>
         
         <Sound
-          url={this.props.location.state.stream.url}
+        //we need to fix this for multiple streams
+          url={'http://localhost:3000/stream/' + this.props.location.state.stream._id}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}

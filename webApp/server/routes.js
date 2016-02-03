@@ -1,10 +1,16 @@
-var streamsController = require('./streamsController');
-var usersController = require('./usersController');
+var streamsController = require('./controllers/streamsController');
+var usersController = require('./controllers/usersController');
 var path = require('path');
 var express = require('express');
 var passport = require('passport');
 
 module.exports = function(app, express, ensureAuth) {
+  app.post('/api/stream', streamsController.createStream);
+  app.get('/api/stream/:stream', streamsController.getStream);
+  app.put('/api/stream/:stream', streamsController.upHeart);
+  app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
+  app.get('/api/streams', streamsController.getAllStreams);
+  app.post('/api/users/:user', usersController.createUser);
 
   app.get('/broadcast', function(req, res) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));
@@ -19,11 +25,10 @@ module.exports = function(app, express, ensureAuth) {
   });
 
     app.post('/api/:stream', streamsController.createStream);
-    app.get('/api/listen/:stream', streamsController.getStream);
-    app.put('/api/listen/:stream', streamsController.upHeart);
-    app.put('/api/broadcast/:stream', streamsController.modifyStreamDetails);
+    app.get('/api/stream/:stream', streamsController.getStream);
+    app.put('/api/stream/:stream', streamsController.upHeart);
+    app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
     app.get('/api/streams', streamsController.getAllStreams);
-
   app.get('/user', ensureAuth, function (req, res){
     res.json(req.user);
   });

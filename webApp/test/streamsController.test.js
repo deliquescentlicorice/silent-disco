@@ -5,9 +5,9 @@ var expect = chai.expect;
 //we have to turn the server off before testing
 var app = require('../server/server.js');
 var mongoose = require('mongoose');
-var Stream = require('../server/streamsModel');
-var User = require('../server/usersModel');
-var controller = require('../server/streamsController');
+var Stream = require('../server/models/streamsModel');
+var User = require('../server/models/usersModel');
+var controller = require('../server/controllers/streamsController');
 var bodyParser = require('body-parser');
 
 var dbURI = 'mongodb://localhost:27017/silentdisco';
@@ -33,30 +33,35 @@ describe('Stream Controller', function () {
     clearDB(function () {
       var streams = [
       ['muzak', {
+        name: 'muzak',
         desc: 'what you hear in elevators',
         lat: 40,
         lng: 2,
         creator: 'John Doe'
       }],
       ['simon', {
+        name: 'simon',
         desc: 'after he left Garfunkel',
         lat: 40,
         lng: 2,
         creator: 'John Doe'
       }],
       ['electronica', {
+        name: 'electronica',
         desc: 'something to dance to with a pacifier in your mouth',
         lat: 40,
         lng: 2,
         creator: 'John Doe'
       }],
       ['roommatetunes', {
+        name: 'roommatetunes',
         desc: 'not a roommate for long',
         lat: 40,
         lng: 2,
         creator: 'John Doe'
       }],
       ['baroqueopera', {
+        name: 'baroqueopera',
         desc: 'for the kind of people who like that sort of thing',
         lat: 40,
         lng: 2,
@@ -66,7 +71,7 @@ describe('Stream Controller', function () {
 
       for (var i = 0; i < streams.length; i++) {
         request(app)
-        .post('/api/' + streams[i][0])
+        .post('/api/stream')
         .send(streams[i][1])
         .end(function(err, res) {
           if (err) {
@@ -83,6 +88,7 @@ it('should have a method that given a request to a name path, finds that stream 
   expect(controller.getStream).to.exist;
 
   var muzak = {
+    name: 'muzak',
     desc: 'what you hear in elevators',
     lat: 40,
     lng: 2,
@@ -90,15 +96,14 @@ it('should have a method that given a request to a name path, finds that stream 
   };
 
   request(app)
-  .post('/api/muzak')
+  .post('/api/stream')
   .send(muzak)
   .end(function(err, res) {
     expect(res.status).to.equal(201);
     request(app)
-    .get('/api/listen/muzak')
+    .get('/api/stream/' + res.body._id)
     .set('Accept', 'application/json')
     .expect(function(res) {
-      console.log(res.body);
     })
     .expect(200)
     .expect(function(res) {
@@ -130,6 +135,7 @@ it('should have a method that given a stream object, adds that record to the dat
 
 
   var gospel = {
+    name: 'gospel',
     desc: 'played twice-weekly in church',
     lat: 40,
     lng: 2,
@@ -137,12 +143,12 @@ it('should have a method that given a stream object, adds that record to the dat
   };
 
   request(app)
-  .post('/api/gospel')
+  .post('/api/stream')
   .send(gospel)
   .end(function(err, res) {
     expect(res.status).to.equal(201);
     request(app)
-    .get('/api/listen/gospel')
+    .get('/api/stream/' + res.body._id)
     .set('Accept', 'application/json')
     .expect(200)
     .expect(function(res) {
@@ -162,6 +168,7 @@ it('should have a method that adds one heart to a given stream', function (done)
   expect(controller.upHeart).to.exist;
 
   var muzak = {
+    name: 'muzak',
     desc: 'what you hear in elevators',
     lat: 40,
     lng: 2,
@@ -169,11 +176,11 @@ it('should have a method that adds one heart to a given stream', function (done)
   };
 
   request(app)
-  .post('/api/muzak')
+  .post('/api/stream')
   .send(muzak)
   .end(function(err, res) {
     request(app)
-    .put('/api/listen/muzak')
+    .put('/api/stream/muzak')
     .expect(200)
     .end(function(err, res) {
       if (err) {
@@ -181,7 +188,7 @@ it('should have a method that adds one heart to a given stream', function (done)
       }
       else {
         request(app)
-        .get('/api/listen/muzak')
+        .get('/api/stream/' + res.body._id)
         .expect(200)
         .expect(function (res) {
           expect(res.body.heartCountNum).to.be.above(0)
@@ -208,7 +215,7 @@ it('should have a method that modifies the details of a given stream', function 
   };
 
   request(app)
-  .post('/api/muzak')
+  .post('/api/stream')
   .send(muzak)
   .end(function(err, res) {
     request(app)
@@ -217,7 +224,7 @@ it('should have a method that modifies the details of a given stream', function 
     .expect(200)
     .end(function(err, res) {
       request(app)
-      .get('/api/listen/muzak')
+      .get('/api/stream/' + res.body._id)
       .expect(200)
       .expect(function(res) {
         expect(res.body.description).to.equal('best music ever');
