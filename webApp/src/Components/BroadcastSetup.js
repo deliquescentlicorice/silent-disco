@@ -97,7 +97,6 @@ class BroadcastSetup extends React.Component {
     //     redirect_uri: 'http://localhost:3000/auth/soundcloud'
     //   });
 
-<<<<<<< HEAD
     //   // initiate auth popup
     //   SC.connect()
       // .then(function(err, result) {
