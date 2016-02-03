@@ -21,7 +21,6 @@ class BroadcastSetup extends React.Component {
       isLive: true,
       favorites: []
     };
-
     var that = this;
     this.gotSources = function(sourceInfos) {
       for (var i = 0; i !== sourceInfos.length; i++) {
@@ -93,27 +92,88 @@ class BroadcastSetup extends React.Component {
     };
   }
 
-  stationNameInput(event) {
-    this.setState({
-      name: event.target.value
-    });
-  }
+    this.state.renderAudio = function(data) {
+      var canvas = document.getElementById("canvas"),
+      width = canvas.width,
+      height = canvas.height,
+      context = canvas.getContext('2d');
+      context.clearRect(0, 0, width, height);
+      var step = Math.ceil(data.length / width);
+      var amp = height / 2;
+      for (var i = 0; i < width; i++) {
+        var min = 1.0;
+        var max = -1.0;
+        for (var j = 0; j < step; j++) {
+          var datum = data[(i * step) + j];
+          if (datum < min)
+            min = datum;
+          if (datum > max)
+            max = datum;
+        }
+        context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+      }
+    };
+    // if (!this.state.isLoggedIn) {
+    //   SC.initialize({
+    //     client_id: '67e4bbe5a2b1b64416b0ed84366b34ca',
+    //     redirect_uri: 'http://localhost:3000/auth/soundcloud'
+    //   });
 
-  stationBroadcasterInput(event) {
-    this.setState({
-      broadcaster: event.target.value
-    });
-  }
+    //   // initiate auth popup
+    //   SC.connect()
+      // .then(function(err, result) {
+      //   return SC.get('/me');
+      // })
+      // .then(function(me) {
+      //   this.setState({
+      //     isLoggedIn: true
+      //   })
+      //   .catch(function(error) {
 
-  stationDescriptionInput(event) {
-    this.setState({
-      desc: event.target.value
-    });
-  }
+      //   alert(error);
+      //   })
+      // });
+}
+
+stationNameInput(event) {
+  this.setState({
+    name: event.target.value
+  });
+}
+
+stationBroadcasterInput(event) {
+  this.setState({
+    broadcaster: event.target.value
+  });
+}
+
+stationDescriptionInput(event) {
+  this.setState({
+    desc: event.target.value
+  });
+}
+
+stationNameInput(event) {
+  this.setState({
+    name: event.target.value
+  });
+}
+
+stationBroadcasterInput(event) {
+  this.setState({
+    broadcaster: event.target.value
+  });
+}
+
+stationDescriptionInput(event) {
+  this.setState({
+    desc: event.target.value
+  });
+}
 
 
+startBroadcast() {
 
-  startBroadcast() {
           //I need the id to be generated before this point
           var serverURL = "http://localhost:3000/api/stream";
 
@@ -136,12 +196,11 @@ class BroadcastSetup extends React.Component {
         console.log('id from database ', data._id);
         var streamId = data._id;
         console.log('when I first assign a streamId client-side, it is: ', streamId);
-
         var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
           console.log('when I pass streamId into Broadcaster, it is: ', streamId);
-          navigator.getUserMedia = navigator.getUserMedia || 
-          navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-          var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+            navigator.getUserMedia = navigator.getUserMedia || 
+            navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+         var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
 
          //binaryJS client - server/socket connection
          this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
@@ -172,26 +231,27 @@ class BroadcastSetup extends React.Component {
         console.log('inputSourcesCB is: ', inputSourcesCB);
         MediaStreamTrack.getSources(inputSourcesCB);
       }
+
       this.renderAudioCallback = renderAudioCallback;
     }
 
-    Broadcaster.prototype.start = function() {
-      if (!this.audioSource) {
-        return 'Broadcast source not set!';
-      }
+      Broadcaster.prototype.start = function() {
+        if (!this.audioSource) {
+          return 'Broadcast source not set!';
+        }
 
-      var constraints = {
-        audio: {
-          optional: [{
-            sourceId: this.audioSource
-          }]
-        },
-        video: false
-      };
+        var constraints = {
+          audio: {
+            optional: [{
+              sourceId: this.audioSource
+            }]
+          },
+          video: false
+        };
 
-      navigator.getUserMedia(constraints, function(stream) {
-        var audioInput = this.context.createMediaStreamSource(stream);
-
+        navigator.getUserMedia(constraints, function(stream) {
+          var audioInput = this.context.createMediaStreamSource(stream);
+          
           var bufferSize = 0; // let implementation decide
           this.recorder = this.context.createScriptProcessor(bufferSize, 2, 2);
           
@@ -199,14 +259,7 @@ class BroadcastSetup extends React.Component {
             this.onAudio(e);
           }.bind(this);
 
-          audioInput.connect(this.recorder);
-          this.recorder.connect(this.context.destination);
 
-        }.bind(this), function(e) {
-          console.log('error connectiing to audio source');
-          throw e;
-        });
-    }
 
     Broadcaster.prototype.stop = function() {
       this.recorder.disconnect();
@@ -260,25 +313,18 @@ class BroadcastSetup extends React.Component {
 
 
 // var streamId = 1;
-console.log('this.state.renderAudio is: ', that.state.renderAudio);
-var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
-var audioSource = that.state.audioSelect.value;
+        console.log('this.state.renderAudio is: ', that.state.renderAudio);
+        var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
+        var audioSource = that.state.audioSelect.value;
         //need to set audio source before calling start
         bc.audioSource = audioSource;
         console.log('my audio Source is: ', audioSource);
         bc.start();
       },
-      error: function(err) {
+      error: function(xhr, status, err) {
 
       }});
-
 }
-
-    // this.setState({
-    //   isInitializing: true
-    // });
-
-
 
 render() {
   var partial;
