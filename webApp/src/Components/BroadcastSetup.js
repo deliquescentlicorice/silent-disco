@@ -14,6 +14,11 @@ import {
 from 'binaryjs-client';
 import $ from '../../public/js/jquery-1.11.1.min';
 
+//how to do fetch with json
+//fetch(url, {method:, body})
+//JSON.stringify()
+//
+
 class BroadcastSetup extends React.Component {
   constructor(props) {
     super(props);
@@ -72,10 +77,10 @@ class BroadcastSetup extends React.Component {
 
       }
 
-              this.state.audioSelect = document.querySelector('select#audioSource');
-        console.log('audioSelect is defined: ', this.state.audioSelect !== null && this.state.audioSelect !== undefined);
+      this.state.audioSelect = document.querySelector('select#audioSource');
+      console.log('audioSelect is defined: ', this.state.audioSelect !== null && this.state.audioSelect !== undefined);
 
-        MediaStreamTrack.getSources(component.gotSources);
+      MediaStreamTrack.getSources(component.gotSources);
 
       this.state.renderAudio = function(data) {
         var canvas = document.getElementById("canvas"),
@@ -121,45 +126,29 @@ class BroadcastSetup extends React.Component {
   // });
   // }
 
-  stationNameInput(event) {
+  stationNameInput(event, index, value) {
     this.setState({
       name: event.target.value
     });
+    console.log('when name is set, it is: ', this.state.name);
   }
 
-  stationBroadcasterInput(event) {
+  stationBroadcasterInput(event, index, value) {
     this.setState({
       broadcaster: event.target.value
     });
   }
 
-  stationDescriptionInput(event) {
+  stationDescriptionInput(event, index, value) {
     this.setState({
       desc: event.target.value
     });
   }
 
-  // stationNameInput(event) {
-  //   this.setState({
-  //     name: event.target.value
-  //   });
-  // }
-
-  // stationBroadcasterInput(event) {
-  //   this.setState({
-  //     broadcaster: event.target.value
-  //   });
-  // }
-
-  // stationDescriptionInput(event) {
-  //   this.setState({
-  //     desc: event.target.value
-  //   });
-  // }
-
 
 
   startBroadcast() {
+    console.log('value of name in current scope: ', this.state.name);
 
     //I need the id to be generated before this point
     var serverURL = "http://localhost:3000/api/stream";
@@ -167,19 +156,19 @@ class BroadcastSetup extends React.Component {
     //I need to pass state into the success callback
     var that = this;
 
-    //fetch can't run JSON
-    $.ajax({
-      url: serverURL,
-      method: 'POST',
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        name: this.state.name,
+    fetch(serverURL, {method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+      body: JSON.stringify({name: that.state.name,
         creator: "John Doe",
-        desc: this.state.desc,
+        desc: that.state.desc,
         lng: 40,
         lat: 30
-      },
-      success: function(data) {
+      })})
+    .then((data) => data.json())
+    .then((data) =>     {
         console.log('id from database ', data._id);
         var streamId = data._id;
         console.log('when I first assign a streamId client-side, it is: ', streamId);
@@ -302,10 +291,9 @@ class BroadcastSetup extends React.Component {
         }
 
 
-        // this.props.history.push({
-        //   pathname: '/broadcast/live'
-        // })
-        // var streamId = 1;
+        this.props.history.push({
+          pathname: '/broadcast/live'
+        })
         console.log('this.state.renderAudio is: ', that.state.renderAudio);
         var bc = new Broadcaster(streamId, that.gotSources, that.state.renderAudio);
         var audioSource = that.state.audioSelect.value;
@@ -313,14 +301,25 @@ class BroadcastSetup extends React.Component {
         bc.audioSource = audioSource;
         console.log('my audio Source is: ', audioSource);
         bc.start();
-
-
-
-      },
-      error: function(xhr, status, err) {
-
       }
-    });
+        );
+    //fetch can't run JSON
+    // $.ajax({
+    //   url: serverURL,
+    //   method: 'POST',
+    //   contentType: "application/x-www-form-urlencoded",
+    //   data: {
+    //     name: this.state.name,
+    //     creator: "John Doe",
+    //     desc: this.state.desc,
+    //     lng: 40,
+    //     lat: 30
+    //   },
+    //   success: function(data) {
+    //   },
+    //   error: function(xhr, status, err) {
+    //   }
+    // });
   }
 
   render() {
