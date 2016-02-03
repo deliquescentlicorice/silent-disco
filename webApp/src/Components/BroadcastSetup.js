@@ -68,10 +68,13 @@ class BroadcastSetup extends React.Component {
               favorites: favorites
             });
           });
-        this.state.audioSelect = document.querySelector('select#audioSource');
 
-        MediaStreamTrack.getSources(this.gotSources);
       }
+
+              this.state.audioSelect = document.querySelector('select#audioSource');
+        console.log('audioSelect is defined: ', this.state.audioSelect !== null && this.state.audioSelect !== undefined);
+
+        MediaStreamTrack.getSources(component.gotSources);
 
 
 
