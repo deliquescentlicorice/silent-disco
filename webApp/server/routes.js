@@ -6,11 +6,18 @@ var passport = require('passport');
 
 module.exports = function(app, express, ensureAuth) {
   app.post('/api/stream', streamsController.createStream);
+
   app.get('/api/stream/:stream', streamsController.getStream);
   app.put('/api/stream/:stream', streamsController.upHeart);
+
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
+
   app.get('/api/streams', streamsController.getAllStreams);
+  
   app.post('/api/users/:user', usersController.createUser);
+  app.get('/user', ensureAuth, function(req, res) {
+    res.json(req.user);
+  });
 
   app.get('/broadcast', function(req, res) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));
@@ -24,12 +31,5 @@ module.exports = function(app, express, ensureAuth) {
     res.sendFile(path.join(__dirname + '/../public', 'success.html'));
   });
 
-    app.post('/api/:stream', streamsController.createStream);
-    app.get('/api/stream/:stream', streamsController.getStream);
-    app.put('/api/stream/:stream', streamsController.upHeart);
-    app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
-    app.get('/api/streams', streamsController.getAllStreams);
-  app.get('/user', ensureAuth, function (req, res){
-    res.json(req.user);
-  });
+
 };
