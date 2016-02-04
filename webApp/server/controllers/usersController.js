@@ -1,14 +1,6 @@
 var User = require('../models/usersModel');
 var Stream = require('../models/streamsModel');
 
-var copyObj = function(obj) {
-  var result = {};
-  for (var key in obj) {
-    result[key] = obj[key];
-  }
-  return result;
-};
-
 module.exports = {
   createUser: function(user, callback) {
     User.findOneAndUpdate({
@@ -72,11 +64,7 @@ module.exports = {
           if (err) {
             throw err;
           } else {
-            var bloatedUser = copyObj(doc);
-            console.log('streams are: ', docs);
-            bloatedUser.streams = docs;
-            //user object (row) with an additional field 'streams', value of streams is docs
-            res.status(200).send(bloatedUser);
+            res.status(200).send({user: doc, streams: docs});
           }
         });
       }

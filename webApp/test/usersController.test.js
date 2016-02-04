@@ -28,10 +28,6 @@ describe('User Controller', function() {
 
   beforeEach(function(done) {
 
-    //let me think through this: I need a user in the database, or at least a user entry to post to the database
-    //but I search on a couple fields, so I can post a 'dummy' user who has only an id field, for example
-    //then search for that
-
     var dummy = {
       id: 1,
       first_name: 'John',
@@ -110,17 +106,15 @@ describe('User Controller', function() {
     };
 
     controller.createUser(dummy, function(user) {
-      console.log('user._id is: ', user._id);
       request(app)
         .get('/api/user/' + user._id)
         .set('Accept', 'application/json')
         .expect(200)
         .expect(function(res) {
-          expect(res.body.first_name).to.equal('John');
-          expect(res.body.last_name).to.equal('Doe');
-          console.log(Object.keys(res.body));
+          expect(res.body.user.first_name).to.equal('John');
+          expect(res.body.user.last_name).to.equal('Doe');
           expect(Array.isArray(res.body.streams)).to.be.true;
-          expect(res.body.streams.length).to.equal(1);
+          expect(res.body.streams.length).to.be.above(0);
         })
         .end(done);
     });
