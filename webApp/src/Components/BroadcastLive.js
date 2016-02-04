@@ -29,6 +29,9 @@ import reactMixin from 'react-mixin';
 // COMPONENTS
 import NavBar from './NavBar.js';
 
+// AJAX GET CALL
+import $ from '../../public/js/jquery-1.11.1.min';
+
 class BroadcastLive extends React.Component {
   constructor(props) {
     var user = JSON.parse(localStorage.getItem("me"));
@@ -87,6 +90,19 @@ class BroadcastLive extends React.Component {
             context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
         }
     });
+    this.fetchData();
+  }
+
+  fetchData() {
+    $.ajax({
+      url: '/api/stream/'+this.props.location.state.streamId
+    })
+    .done((responseData) => {
+      this.setState({
+        stream: responseData
+      });
+      console.log('State',this.state);
+    });
   }
 
   startBroadcast() {
@@ -113,7 +129,7 @@ class BroadcastLive extends React.Component {
 
   goToProfile() {
     this.props.history.push({
-      pathname: '/broadcast/profile'
+      pathname: '/profile/'+ this.state.stream.creator
     })
   }
 
@@ -136,7 +152,7 @@ class BroadcastLive extends React.Component {
             <CardHeader
               onClick={this.goToProfile.bind(this)}
               title={this.state.artistAlias}
-              subtitle={this.state.artist}
+              // subtitle={this.state.artist}
             /></a>
             <CardMedia style={styles.streamImage}>
               <img src={this.state.artistImage}/>
@@ -152,16 +168,17 @@ class BroadcastLive extends React.Component {
               {dropDown}
             </CardActions>
 
-            <CardTitle title={this.state.name}/>
+            <CardTitle title={this.state.stream.name}/>
             <CardText>
-              {this.state.description}
+              {this.state.stream.description}
             </CardText>
           </Card>
           <Card style={styles.box}>
             <CardText>
                 <h2>STATS <TrendingUp /></h2>
-                <div><span style={styles.count}>{this.state.listnerLiveCount.toLocaleString()}</span><span> Listens <Face /></span></div>
-                <div><span style={styles.count}>{this.state.heartCount.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
+                <div><span style={styles.count}>{this.state.stream.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face /></span></div>
+                <div><span style={styles.count}>{this.state.stream.listenerLiveCount.toLocaleString()}</span><span> Current Listeners <Face /></span></div>
+                <div><span style={styles.count}>{this.state.stream.heartCountNum.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
             </CardText>
             <div id="canvas-container">
               <canvas width="600" height="100" id="canvas"></canvas>
