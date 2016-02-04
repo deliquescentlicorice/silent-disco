@@ -16,10 +16,14 @@ module.exports = {
       website: user.website,
       websiteTitle: user.website_title,
     });
-    newUser.save(function(err) {
+    newUser.save(function(err, doc) {
       if (err) {
           throw err;
       }
-    })
+      else {
+        console.log(typeof callback);
+        callback(doc);
+      }
+    });
   }
 };
