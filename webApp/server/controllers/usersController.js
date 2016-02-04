@@ -21,6 +21,7 @@ module.exports = {
           throw err;
       }
       else {
+        console.log(typeof callback);
         callback(doc);
       }
     });
