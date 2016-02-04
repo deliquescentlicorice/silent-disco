@@ -11,11 +11,15 @@ module.exports = {
     var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
 
-    User.findOne({scId: streamCreator.id}, function(err, doc) {
-      if (doc) {
+    User.findOne({
+      scId: streamCreator.id
+    }, function(err, user) {
+      if (user) {
         console.log('creator found');
-        var creatorId = doc._id;
-        var newStream = new Stream({name: streamName, 
+        console.log(user)
+        var newStream = new Stream({
+          name: streamName,
+          broadcaster: user.scUsername,
           description: streamDesc,
           heartCountNum: 0,
           listenerMaxCount: 0,
@@ -24,21 +28,22 @@ module.exports = {
           playing: true,
           latitude: streamLatitude,
           longitude: streamLongitude,
-          creator: creatorId
+          creator: user._id
         });
-        newStream.save(function(err, doc) {
+        newStream.save(function(err, stream) {
           if (err) {
             throw err;
           }
           else {
-            res.status(201).send(doc);
+            res.status(201).send(stream);
           }
         });
       }
       else {
-        usersController.createUser(streamCreator, function(doc) {
-          var creatorId = doc._id;
-          var newStream = new Stream({name: streamName,
+        usersController.createUser(streamCreator, function(user) {
+          var newStream = new Stream({
+            name: streamName,
+            broadcaster: user.scUsername,
             description: streamDesc,
             heartCountNum: 0,
             listenerMaxCount: 0,
@@ -47,14 +52,14 @@ module.exports = {
             playing: true,
             latitude: streamLatitude,
             longitude: streamLongitude,
-            creator: creatorId
+            creator: user._id
           });
-          newStream.save(function(err, doc) {
+          newStream.save(function(err, stream) {
             if (err) {
               throw err
             }
             else {
-              res.status(201).send(doc);
+              res.status(201).send(stream);
             }
           });
         });
@@ -64,12 +69,12 @@ module.exports = {
 
   getStream: function(req, res, next) {
     var streamId = req.params.stream;
-    Stream.findById(streamId, function(err, doc) {
+    Stream.findById(streamId, function(err, stream) {
       if (err) {
         throw err;
       }
       else {
-        res.status(200).send(doc);
+        res.status(200).send(stream);
       }
     });
   },

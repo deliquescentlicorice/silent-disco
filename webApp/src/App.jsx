@@ -86,7 +86,7 @@ class App extends React.Component {
     }
 
     renderStream(key){
-      return <StreamEntry goToStream={this.goToStream} state={this.state} history={this.history} key={key} index={key} details={this.state.streams[key]} />
+      return <StreamEntry goToStream={this.goToStream} stream={this.state.streams[key]} history={this.history} key={key} index={key} />
     }
 
 

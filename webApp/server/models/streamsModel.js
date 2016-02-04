@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 var streamSchema = new mongoose.Schema({
   name: String,
+  broadcaster: String,
   description: String,
   heartCountNum: Number,
   listenerMaxCount: Number,
