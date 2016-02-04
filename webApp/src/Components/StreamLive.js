@@ -14,6 +14,7 @@ import MediaQuery from '../../node_modules/react-responsive';
 import Card from '../../node_modules/material-ui/lib/card/card';
 import CardActions from '../../node_modules/material-ui/lib/card/card-actions';
 import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
+import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
 import Play from '../../node_modules/material-ui/lib/svg-icons/av/play-arrow';
@@ -24,6 +25,8 @@ import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import $ from '../../public/js/jquery-1.11.1.min';
 
+var BASE_URL = 'http://' + document.location.host;
+
 class StreamLive extends React.Component {
 
   constructor(props){
@@ -31,9 +34,19 @@ class StreamLive extends React.Component {
 
     this.state = {
       status : "STOPPED",
-      disabled : false
+      disabled : false,
+      desc: "",
+      name: "",
+      broadcaster: "",
+      description: "",
+      image: "",
+      listenerLiveCount: "",
+      creator: ""
     }
-    
+  }
+
+  componentWillMount() {
+    this.fetchStreamData();
   }
 
   playSong() {
@@ -57,7 +70,7 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://' + document.location.host + '/api/stream/' + this.props.location.state.stream._id;
+    var PUT_HEART = BASE_URL + '/api/stream/' + this.props.location.state.stream._id;
 
     // fetch(PUT_HEART, {
     //   method: 'PUT',
@@ -82,6 +95,29 @@ class StreamLive extends React.Component {
       });
   }
 
+  fetchStreamData() {
+    $.ajax({
+      url: BASE_URL + '/api/stream/' + this.props.location.state.stream._id
+    })
+    .done((streamData) => {
+      console.log(streamData)
+      $.ajax({
+        url: BASE_URL + '/api/user/' + streamData.creator
+      })
+      .done((userData) => {
+        console.log(userData)
+        this.setState({
+          name: streamData.name,
+          broadcaster: streamData.broadcaster,
+          desc: streamData.description,
+          image: userData.scAvatarUri,
+          listenerLiveCount: streamData.listenerLiveCount,
+          creator: streamData.creator
+        })
+      })
+    })
+  }
+
   render() {
     return (
       <div style={styles.mainContainer}>
@@ -93,9 +129,12 @@ class StreamLive extends React.Component {
           
             <Card style={styles.card}>
               <CardMedia style={styles.image} >
-                <img src={this.props.location.state.stream.image} />
+                <img src={this.state.image} />
               </CardMedia>
-              <CardTitle title={this.props.location.state.stream.name} subtitle={this.props.location.state.stream.artist}  />
+              <CardTitle title={this.state.name} subtitle={this.state.broadcaster}  />
+              <CardText>
+                {this.state.desc}
+              </CardText>
               <CardActions>
                 <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
                   <Play />
@@ -141,8 +180,9 @@ var styles = {
   },
 
   card: {
-    'flex-grow':1,
+    'flexGrow':1,
     'alignContent': 'center',
+    'maxWidth': 325
     // 'border': '10px solid yellow',
     // 'height': '100vh'
   },
