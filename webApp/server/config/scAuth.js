@@ -12,7 +12,9 @@ exports.ensureAuth = function (req, res, next){
 
 exports.signup = function (scUser, callback){
   scUser = scUser.profile._json;
-  controller.createUser(scUser);
+  //the easiest edit is to add a null callback to createUser
+  controller.createUser(scUser, function(doc) {
+  });
   return callback(null, scUser);
 };
 
