@@ -42,6 +42,7 @@ class StreamLive extends React.Component {
       status: "PLAYING",
       disabled: true
     });
+
     
   }
 
@@ -113,7 +114,6 @@ class StreamLive extends React.Component {
         </div>
         
         <Sound
-        //we need to fix this for multiple streams
           url={'/stream/' + this.props.location.state.stream._id}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
