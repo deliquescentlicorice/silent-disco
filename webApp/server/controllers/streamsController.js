@@ -1,5 +1,6 @@
 var Stream = require('../models/streamsModel');
 var User = require('../models/usersModel');
+var usersController = require('./usersController');
 
 module.exports = {
   createStream: function(req, res, next) {
@@ -10,7 +11,7 @@ module.exports = {
     var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
 
-    User.findOne({scId: streamCreator}, function(err, doc) {
+    User.findOne({scId: streamCreator.id}, function(err, doc) {
       if (doc) {
         console.log('creator found');
         var creatorId = doc._id;
@@ -35,8 +36,28 @@ module.exports = {
         });
       }
       else {
-        console.log('user not found');
-        res.status(500).send('user not found');
+        usersController.createUser(streamCreator, function(doc) {
+          var creatorId = doc._id;
+          var newStream = new Stream({name: streamName,
+            description: streamDesc,
+            heartCountNum: 0,
+            listenerMaxCount: 0,
+            listenerLiveCount: 0,
+            timestamp: Date.now(),
+            playing: true,
+            latitude: streamLatitude,
+            longitude: streamLongitude,
+            creator: creatorId
+          });
+          newStream.save(function(err, doc) {
+            if (err) {
+              throw err
+            }
+            else {
+              res.status(201).send(doc);
+            }
+          });
+        });
       }
     });
   },

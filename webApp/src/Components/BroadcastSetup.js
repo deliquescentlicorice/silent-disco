@@ -80,7 +80,8 @@ class BroadcastSetup extends React.Component {
       },
       body: JSON.stringify({
         name: this.state.name,
-        creator: JSON.parse(localStorage.getItem("me")).id,
+        //send whole user, not just id, so we can create if not already in db
+        creator: JSON.parse(localStorage.getItem("me")),
         desc: this.state.desc,
         lng: 40,
         lat: 30
