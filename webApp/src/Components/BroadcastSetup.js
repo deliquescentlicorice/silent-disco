@@ -5,6 +5,7 @@ import DropDownMenu from '../../node_modules/material-ui/lib/DropDownMenu';
 import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
+import $ from '../../public/js/jquery-1.11.1.min';
 
 class BroadcastSetup extends React.Component {
   constructor(props) {
@@ -70,40 +71,66 @@ class BroadcastSetup extends React.Component {
   }
 
   startBroadcast() {
-    var serverURL = "http://localhost:3000/api/stream";
+    var serverURL = "http://" + document.location.host + "/api/stream";
 
-    fetch(serverURL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.name,
-        creator: JSON.parse(localStorage.getItem("me")).id,
-        desc: this.state.desc,
-        lng: 40,
-        lat: 30
+    // fetch(serverURL, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     name: this.state.name,
+    //     creator: JSON.parse(localStorage.getItem("me")).id,
+    //     desc: this.state.desc,
+    //     lng: 40,
+    //     lat: 30
+    //   })
+    // })
+    // .then((data) => data.json())
+    // .then((data) => {
+    //   console.log('id from database ', data._id);
+    //   var streamId = data._id;
+
+    //   if (this.state.isLive) {
+    //     this.props.history.push({
+    //       pathname: '/broadcast/live',
+    //       state: {
+    //         streamId: streamId
+    //       }
+    //     });
+    //   } else {
+    //     this.props.history.push({
+    //       pathname: '/broadcast/soundcloud'
+    //     });
+    //   }
+    // });
+    $.ajax({
+        url: serverURL,
+        method: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        data: {
+          name: this.state.name,
+          creator: JSON.parse(localStorage.getItem("me")).id,
+          desc: this.state.desc,
+          lng: 40,
+          lat: 30
+        }
       })
-    })
-    .then((data) => data.json())
-    .then((data) => {
-      console.log('id from database ', data._id);
-      var streamId = data._id;
-
-      if (this.state.isLive) {
-        this.props.history.push({
-          pathname: '/broadcast/live',
-          state: {
-            streamId: streamId
-          }
-        });
-      } else {
-        this.props.history.push({
-          pathname: '/broadcast/soundcloud'
-        });
-      }
-    });
+      .done((responseData) => {
+        if (this.state.isLive) {
+          this.props.history.push({
+            pathname: '/broadcast/live',
+            state: {
+              streamId: responseData._id
+            }
+          });
+        } else {
+          this.props.history.push({
+            pathname: '/broadcast/soundcloud'
+          });
+        }
+      })
   }
 
   render() {

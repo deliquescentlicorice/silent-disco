@@ -5,6 +5,7 @@ import reactMixin from 'react-mixin';
 
 // HELPERS
 import _ from 'lodash';
+import $ from '../public/js/jquery-1.11.1.min';
 
 // COMPONENTS
 import StreamEntry from './Components/StreamEntry.js';
@@ -14,7 +15,7 @@ import NavBar from './Components/NavBar.js';
 import List from '../node_modules/material-ui/lib/lists/list';
 
 //for development; we'll change this in production
-var REQUEST_URL_ALL = 'http://localhost:3000/api/streams';
+var REQUEST_URL_ALL = 'http://' + document.location.host + '/api/streams';
 
 class App extends React.Component {
   constructor() {
@@ -52,9 +53,18 @@ class App extends React.Component {
     }
 
     fetchData() {
-      fetch(REQUEST_URL_ALL)
-      .then((response) => response.json())
-      .then((responseData) => {
+      // As of iOS 9.3 and OSX 10.11, Safari does not support fetch.
+      // fetch(REQUEST_URL_ALL)
+      // .then((response) => response.json())
+      // .then((responseData) => {
+      //   this.setState({
+      //     streams: responseData
+      //   });
+      // });
+      $.ajax({
+        url: REQUEST_URL_ALL
+      })
+      .done((responseData) => {
         this.setState({
           streams: responseData
         });
