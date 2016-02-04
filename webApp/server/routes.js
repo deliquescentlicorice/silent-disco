@@ -30,6 +30,4 @@ module.exports = function(app, express, ensureAuth) {
     // res.redirect('/broadcast/setup')
     res.sendFile(path.join(__dirname + '/../public', 'success.html'));
   });
-
-
 };

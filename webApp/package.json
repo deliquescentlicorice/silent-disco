@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "binaryjs": "^0.2.1",
+    "binaryjs-client": "^1.0.0",
     "body-parser": "^1.14.2",
     "connect": "^3.3.4",
     "cookie-parser": "^1.4.1",
