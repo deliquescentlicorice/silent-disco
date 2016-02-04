@@ -11,6 +11,7 @@ import React, {
 } from 'react-native';
 import Station from './Station';
 import Loading from './Loading';
+import endpointIP from  './endpointIP';
 
 var FAKE_STATION_DATA = [
   {
@@ -46,7 +47,7 @@ var FAKE_STATION_DATA = [
   }
 ];
 
-var REQUEST_URL_ALL = '';
+var REQUEST_URL_ALL = endpointIP + '/api/streams';
 
 
 class StationList extends Component {
@@ -61,20 +62,21 @@ class StationList extends Component {
   }
 
   componentDidMount() {
-    // this.fetchData();
-    var stations = FAKE_STATION_DATA;
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(stations),
-      isLoading: false
-    })
+    this.fetchData();
+    // var stations = FAKE_STATION_DATA;
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(stations),
+    //   isLoading: false
+    // })
   }
 
   fetchData() {
     fetch(REQUEST_URL_ALL)
       .then((response) => response.json())
       .then((responseData) => {
+        console.log(responseData);
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData.items),
+          dataSource: this.state.dataSource.cloneWithRows(responseData),
           isLoading: false
         });
       })
@@ -93,12 +95,13 @@ class StationList extends Component {
   }
 
   renderStation(station) {
+    // removed <Text style={styles.broadcaster}>{station.broadcaster}</Text>
     return (
       <TouchableHighlight onPress={() => this.listenToStation(station)} underlayColor='#dddddd'>
         <View>
           <View style={styles.container}>
             <Text style={styles.name}>{station.name}</Text>
-            <Text style={styles.broadcaster}>{station.broadcaster}</Text>
+            
           </View>
           <View style={styles.separator}/>
         </View>

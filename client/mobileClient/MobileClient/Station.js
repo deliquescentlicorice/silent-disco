@@ -10,6 +10,7 @@ import React, {
   View,
 } from 'react-native';
 import Loading from './Loading';
+import endpointIP from  './endpointIP';
 
 var audio = NativeModules.RNAudioPlayerURL;
 
@@ -39,9 +40,8 @@ class Station extends Component {
   }
 
   componentDidMount() {
-    //this.fetchData();
+    // this.fetchData();
     var stationDetail = FAKE_STATION_DATUM;
-    console.log(this.props.station.id);
     this.setState({
       isLoading: false,
       heartCount: stationDetail.heartCount,
@@ -49,7 +49,7 @@ class Station extends Component {
       listenerCount: stationDetail.listenerCount,
       desc: stationDetail.desc
     });
-    audio.initWithURL(this.props.station.uri);
+    audio.initWithURL(endpointIP + '/stream/' + this.props.station._id);
     audio.play();
   }
 
@@ -73,19 +73,19 @@ class Station extends Component {
   }
 
   upheart() {
-    var POST_HEART = "http://10.6.32.108:8000/" + this.props.station.id + "/heart";
+    var POST_HEART = endpointIP + '/api/stream/' + this.props.station._id;
     fetch(POST_HEART, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify({
-        id: this.props.station.id
+        id: this.props.station._id
       })
     })
-    .then((response) => response.json())
-    .then((responseData) => {
-      this.setState({
-        heartCount: responseData.heartCount.length > 5 ? ">9,999" : responseData.heartCount
-      });
-    })
+    // .then((response) => response.json())
+    // .then((responseData) => {
+    //   this.setState({
+    //     heartCount: responseData.heartCount.length > 5 ? ">9,999" : responseData.heartCount
+    //   });
+    // })
     .done();
   }
 
@@ -93,13 +93,13 @@ class Station extends Component {
     if (this.state.isLoading) {
       return <Loading />
     }
-
+    // removed <Text style={styles.broadcaster}>{this.props.station.broadcaster}</Text>
     return (
       <View style={styles.container} >
         <Image style={styles.lede} source={{uri: this.state.image}}/>
         <View>
           <View style={styles.heartThisDJ}>
-            <Text style={styles.broadcaster}>{this.props.station.broadcaster}</Text>
+            
             <View style={styles.rightContainer}>
               <Text style={styles.heartNum}>
                 {this.state.heartCount}
