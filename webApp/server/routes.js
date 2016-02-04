@@ -9,6 +9,8 @@ module.exports = function(app, express, ensureAuth) {
 
   app.get('/api/stream/:stream', streamsController.getStream);
   app.put('/api/stream/:stream', streamsController.upHeart);
+  app.put('/api/listener/:stream', streamsController.addListener);
+  app.put('api/nolistener/:stream', streamsController.removeListener);
 
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
 
