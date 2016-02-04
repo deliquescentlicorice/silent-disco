@@ -69,6 +69,7 @@ app.use("/broadcast", express.static(__dirname + '/../public'));
 app.get('/stream/:id', encoder.listenHandler);
 
 app.get('*', function(req, res) {
+  console.log('hitting the catchall route');
   res.sendFile(path.join(__dirname + '/../src', 'index.html'));
 });
 

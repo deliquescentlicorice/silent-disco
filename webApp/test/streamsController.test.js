@@ -15,7 +15,7 @@ var dbURI = 'mongodb://localhost:27017/silentdisco';
 
 // The `clearDB` helper function, when invoked, will clear the database
 var clearDB = function (done) {
-  mongoose.connection.collections['streams', 'users'].remove(done);
+  mongoose.connection.collections['streams'].remove(done);
 };
 
 describe('Stream Controller', function() {
