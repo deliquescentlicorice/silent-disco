@@ -71,7 +71,7 @@ class BroadcastSetup extends React.Component {
   }
 
   startBroadcast() {
-    var serverURL = "http://" + document.location.host + "/api/stream";
+    var serverURL = "http://localhost:3000/api/stream";
 
     // fetch(serverURL, {
     //   method: 'POST',
