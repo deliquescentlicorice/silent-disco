@@ -14,7 +14,7 @@ var bodyParser = require('body-parser');
 var dbURI = 'mongodb://localhost:27017/silentdisco';
 
 // The `clearDB` helper function, when invoked, will clear the database
-var clearDB = function (done) {
+var clearDB = function(done) {
   mongoose.connection.collections['streams'].remove(done);
 };
 
@@ -199,7 +199,6 @@ describe('Stream Controller', function() {
       .send(muzak)
       .end(function(err, res) {
         request(app)
-          //so now that I've changed the route, I need to change the path -> has to go to an id
           .put('/api/stream/' + res.body._id)
           .expect(200)
           .end(function(err, res) {
@@ -211,6 +210,48 @@ describe('Stream Controller', function() {
                 .expect(200)
                 .expect(function(res) {
                   expect(res.body.heartCountNum).to.be.above(0)
+                })
+                .end(done);
+            }
+          });
+      });
+
+
+
+  });
+
+  it('should have a method that adds one listener to a given stream', function(done) {
+
+    expect(controller.upHeart).to.exist;
+
+    var dummy = {
+      id: 1
+    };
+
+    var muzak = {
+      name: 'muzak',
+      desc: 'what you hear in elevators',
+      lat: 40,
+      lng: 2,
+      creator: dummy
+    };
+
+    request(app)
+      .post('/api/stream')
+      .send(muzak)
+      .end(function(err, res) {
+        request(app)
+          .put('/api/listener/' + res.body._id)
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            } else {
+              request(app)
+                .get('/api/stream/' + res.body._id)
+                .expect(200)
+                .expect(function(res) {
+                  expect(res.body.listenerLiveCount).to.be.above(0)
                 })
                 .end(done);
             }
