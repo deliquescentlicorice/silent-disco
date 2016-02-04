@@ -22,6 +22,7 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 import AppBar from '../../node_modules/material-ui/lib/app-bar';
 // import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 // import CardText from '../../node_modules/material-ui/lib/card/card-text';
+import $ from '../../public/js/jquery-1.11.1.min';
 
 class StreamLive extends React.Component {
 
@@ -55,16 +56,29 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = 'http://localhost:3000/api/stream/' + this.props.location.state.stream._id;
-    fetch(PUT_HEART, {
-      method: 'PUT',
-      body: JSON.stringify()
-    })
-    .then((response) => response.json())
-    .then((responseData) => {
-      this.setState({heartCount: responseData.heartCountNum.length > 5 ? '> 9 999' : responseData.heartCountNum
-    });
-    })
+    var PUT_HEART = 'http://' + document.location.host + '/api/stream/' + this.props.location.state.stream._id;
+
+    // fetch(PUT_HEART, {
+    //   method: 'PUT',
+    //   body: JSON.stringify()
+    // })
+    // .then((response) => response.json())
+    // .then((responseData) => {
+    //   this.setState({
+    //     heartCount: responseData.heartCountNum.length > 5 ? '> 9 999' : responseData.heartCountNum
+    //   });
+    // })
+    $.ajax({
+        url: PUT_HEART,
+        method: 'PUT',
+        contentType: "application/x-www-form-urlencoded",
+        data: ''
+      })
+      .done((responseData) => {
+        this.setState({
+          heartCount: responseData.heartCountNum.length > 5 ? '> 9 999' : responseData.heartCountNum
+        });
+      });
   }
 
   render() {
@@ -100,7 +114,7 @@ class StreamLive extends React.Component {
         
         <Sound
         //we need to fix this for multiple streams
-          url={'http://localhost:3000/stream/' + this.props.location.state.stream._id}
+          url={'/stream/' + this.props.location.state.stream._id}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}

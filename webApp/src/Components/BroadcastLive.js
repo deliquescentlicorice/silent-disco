@@ -71,7 +71,6 @@ class BroadcastLive extends React.Component {
             width = canvas.width,
             height = canvas.height,
             context = canvas.getContext('2d');
-            debugger;
         context.clearRect(0, 0, width, height);
         var step = Math.ceil(data.length / width);
         var amp = height / 2;
