@@ -111,7 +111,7 @@ class BroadcastSetup extends React.Component {
         contentType: "application/x-www-form-urlencoded",
         data: {
           name: this.state.name,
-          creator: JSON.parse(localStorage.getItem("me")).id,
+          creator: JSON.parse(localStorage.getItem("me")),
           desc: this.state.desc,
           lng: 40,
           lat: 30
