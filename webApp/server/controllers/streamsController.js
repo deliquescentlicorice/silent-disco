@@ -90,6 +90,39 @@ module.exports = {
     });
   },
 
+  addListener: function(req, res, next) {
+    var streamId = req.params.stream;
+    Stream.findById(streamId, function(err, stream) {
+      stream.listenerLiveCount++;
+      stream.listenerMaxCount = Math.max(stream.listenerMaxCount, stream.listenerLiveCount);
+      console.log('added listener');
+      stream.save(function(err, doc) {
+        if (err) {
+          return err;
+        }
+        else {
+          res.status(200).send(doc);
+        }
+      });
+    });
+  },
+
+  removeListener: function(req, res, next) {
+    var streamId = req.params.stream;
+    Stream.findById(streamId, function(err, stream) {
+      stream.listenerLiveCount--;
+      console.log('removed listener');
+      stream.save(function(err, doc) {
+        if (err) {
+          return err;
+        }
+        else {
+          res.status(200).doc;
+        }
+      });
+    });
+  },
+
   modifyStreamDetails: function(req, res, next) {
     var streamId = req.params.stream;
     var streamName = req.body.name;
