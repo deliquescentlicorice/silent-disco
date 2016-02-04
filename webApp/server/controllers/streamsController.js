@@ -10,7 +10,7 @@ module.exports = {
     var streamLatitude = req.body.lat;
     var streamCreator = req.body.creator;
 
-    User.findOne({name: streamCreator}, function(err, doc) {
+    User.findOne({scId: streamCreator}, function(err, doc) {
       if (doc) {
         console.log('creator found');
         var creatorId = doc._id;
