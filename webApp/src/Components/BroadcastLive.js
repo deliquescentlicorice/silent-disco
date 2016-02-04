@@ -119,7 +119,7 @@ class BroadcastLive extends React.Component {
 
   goToProfile() {
     this.props.history.push({
-      pathname: '/profile/'+ this.state.stream.creator
+      pathname: '/user/'+ this.state.stream.creator
     })
   }
 

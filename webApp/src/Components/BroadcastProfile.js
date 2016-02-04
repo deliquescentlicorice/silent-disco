@@ -150,7 +150,7 @@ class BroadcastProfile extends React.Component {
           <Card>
           <CardHeader
               title={this.state.user.scUsername}
-              // subtitle={this.state.artist.artist}
+              subtitle={this.state.user.full_name}
               avatar={this.state.user.scAvatarUri}
             />
             <div>

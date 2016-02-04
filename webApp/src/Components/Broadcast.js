@@ -1,5 +1,4 @@
 import React from 'react';
-import AppBar from '../../node_modules/material-ui/lib/app-bar';
 import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';

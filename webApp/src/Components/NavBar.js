@@ -8,6 +8,10 @@ import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
+import Auth from '../utils/Auth';
+
+// AJAX GET CALL
+import $ from '../../public/js/jquery-1.11.1.min';
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -27,6 +31,19 @@ class NavBar extends React.Component {
     this.props.history.push({
       pathname: '/broadcast/setup'
     })
+  }
+
+  endSession() {
+    $.ajax({
+      url: '/logout'
+    })
+    .done((responseData) => {
+      Auth.logout();
+      this.props.history.push({
+        pathname: '/'
+      })
+    });
+    
   }
 
   goToProfile() {
@@ -70,7 +87,7 @@ class NavBar extends React.Component {
         </LeftNav>
         <AppBar title={this.props.title} 
           titleStyle={styles.title} 
-          iconElementRight={<FlatButton onClick={this.createBroadcast.bind(this)} label="Login"/>}
+          iconElementRight={<FlatButton  onClick={this.endSession.bind(this)}label="Logout"/>}
           onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
         />
 

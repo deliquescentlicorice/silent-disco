@@ -26,6 +26,11 @@ module.exports = function(app, express, ensureAuth) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));
   });
 
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
   app.get('/auth/soundcloud', passport.authenticate('soundcloud', {
     failureRedirect: '/'
   }), function(req, res) {
