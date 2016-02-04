@@ -79,6 +79,18 @@ module.exports = {
     });
   },
 
+  getStreamsByCreator: function(req, res, next) {
+    var creatorId = req.body._id;
+    Stream.find({creator: creatorId}, function(err, docs) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.status(200).send(docs)
+      }
+    });
+  },
+
   upHeart: function(req, res, next) {
     var streamId = req.params.stream;
     Stream.findById(streamId, function(err, stream) {
