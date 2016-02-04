@@ -23,8 +23,7 @@ var routes = (
     <Route path="/stream/:streamId" component={StreamLive}/>
     <Route path='broadcast/setup' component={Broadcast}/>
     <Route path='broadcast/:streamId' component={BroadcastLive}/>
-    <Route path='/profile/:userId' component={BroadcastProfile}/>
-    
+    <Route path='/profile/:userId' component={BroadcastProfile}/> 
   </Router>
 )
 
