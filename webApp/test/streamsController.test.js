@@ -8,13 +8,14 @@ var mongoose = require('mongoose');
 var Stream = require('../server/models/streamsModel');
 var User = require('../server/models/usersModel');
 var controller = require('../server/controllers/streamsController');
+var usersController = require('../server/controllers/usersController');
 var bodyParser = require('body-parser');
 
 var dbURI = 'mongodb://localhost:27017/silentdisco';
 
 // The `clearDB` helper function, when invoked, will clear the database
 var clearDB = function (done) {
-  mongoose.connection.collections['streams'].remove(done);
+  mongoose.connection.collections['streams', 'users'].remove(done);
 };
 
 describe('Stream Controller', function () {
@@ -29,29 +30,35 @@ describe('Stream Controller', function () {
 
   beforeEach(function (done) {
 
+    //let me think through this: I need a user in the database, or at least a user entry to post to the database
+    //but I search on a couple fields, so I can post a 'dummy' user who has only an id field, for example
+    //then search for that
+
+    var dummy = {id: 1};
 
     clearDB(function () {
+      var user = 
       var streams = [
       ['muzak', {
         name: 'muzak',
         desc: 'what you hear in elevators',
         lat: 40,
         lng: 2,
-        creator: 'John Doe'
+        creator: dummy
       }],
       ['simon', {
         name: 'simon',
         desc: 'after he left Garfunkel',
         lat: 40,
         lng: 2,
-        creator: 'John Doe'
+        creator: dummy
       }],
       ['electronica', {
         name: 'electronica',
         desc: 'something to dance to with a pacifier in your mouth',
         lat: 40,
         lng: 2,
-        creator: 'John Doe'
+        creator: dummy
       }],
       ['roommatetunes', {
         name: 'roommatetunes',
