@@ -13,17 +13,6 @@ var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
 
   this.ctx = new AudioContext();
 
-  // this.ctxSampleRate = this.ctx.sampleRate;
-  //console.log('streamId:' + streamId);
-
-  // below method is new and only supported on chrome desktop
-  // if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-  //   alert('This browser does not support MediaStreamTrack. Try Chrome.');
-  // } else {
-  //   navigator.mediaDevices.enumerateDevices().then(inputSourcesCB);
-  // }
-
-  //this method is deprecated but supported on both chrome and android
   if (typeof MediaStreamTrack === 'undefined' ||
     typeof MediaStreamTrack.getSources === 'undefined') {
     alert('This browser does not support MediaStreamTrack.\n\nTry Chrome.');
@@ -80,18 +69,29 @@ Broadcaster.prototype.start = function(sourceId) {
 }
 
 Broadcaster.prototype.startFromHTML = function(elementId) {
-  var audioElement = document.getElementById(elementId);
-  var audioSrc = this.ctx.createMediaElementSource(audioElement);
+  var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+  this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
-  var bufferSize = 0; // let implementation decide
-  this.recorder = this.ctx.createScriptProcessor(bufferSize, 2, 2);
+  this.client.on('open', function() {
 
-  this.recorder.onaudioprocess = function(e) {
-    this.onAudio(e);
-  }.bind(this);
+    this.stream = this.client.createStream({
+      sampleRate: this.ctx.sampleRate,
+      streamId: this.streamId
+    });
 
-  audioSrc.connect(this.recorder);
-  this.recorder.connect(this.ctx.destination);
+    var audioElement = document.getElementById(elementId);
+    var audioSrc = this.ctx.createMediaElementSource(audioElement);
+
+    var bufferSize = 0; // let implementation decide
+    this.recorder = this.ctx.createScriptProcessor(bufferSize, 2, 2);
+
+    this.recorder.onaudioprocess = function(e) {
+      this.onAudio(e);
+    }.bind(this);
+
+    audioSrc.connect(this.recorder);
+    this.recorder.connect(this.ctx.destination);
+  }.bind(this));
 }
 
 Broadcaster.prototype.stop = function() {
@@ -107,13 +107,7 @@ Broadcaster.prototype.onAudio = function(e) {
   var stereoBuff = this._interleave(left, right);
 
   this.stream.write(this._convertFloat32ToInt16(stereoBuff));
-
-  // resampling code - leaving this out for now
-  // worker.postMessage({
-  //     cmd: "resample",
-  //     buffer: stereoBuff
-  // });
-
+  
   if (this.renderAudioCallback) {
     this.renderAudioCallback(left); //callback to render audio value
   }

@@ -13,59 +13,12 @@ var SAMPLE_RATE = 44100; // 44,100 Hz sample rate.
 var BLOCK_ALIGN = SAMPLE_SIZE / 8 * CHANNELS; // Number of 'Bytes per Sample'
 var BYTES_PER_SECOND = exports.SAMPLE_RATE * BLOCK_ALIGN;
 
-// A simple "Burst-on-Connect" implementation. We'll store the previous "10
-// seconds" worth of raw PCM data, and send it each time a new Icecast
-// connection is made.
-var bocData = [];
-var bocSize = BYTES_PER_SECOND * 10; // 10 raw PCM seconds in bytes
-
-var metadata = {};
-var currentTrack = "unknown";
-var currentTrackStartTime, duration, dId;
-
-var name = "My Music";
-var metaint = 8192;
-
 // Array of HttpServerResponse objects that are listening clients.
 var clients = [];
-
 // note sure if this is needed
-var maxClients = 15;
-
-exports.onInStreamPCM = function(chunk) {
-  bocData.push(chunk);
-  var removed = 0;
-  while (currentBocSize() > bocSize) {
-    removed += bocData.shift().length;
-  }
-
-  // If we've removed a number of bytes that isn't a multiple of BLOCK_ALIGN,
-  // then we'd be left with a partial audio sample, which at best case reverses
-  // the audio channels, and at worst makes the bytes 16-bit ints be offset by 1,
-  // resulting in awful static sound.
-  var stillToRemove = removed % BLOCK_ALIGN;
-  while (stillToRemove > 0) {
-    if (bocData[0].length <= stillToRemove) {
-      stillToRemove -= bocData.shift().length;
-    } else {
-      bocData[0] = bocData[0].slice(stillToRemove);
-      stillToRemove = 0;
-    }
-  }
-}
-
-function currentBocSize() {
-  var size = 0,
-    i = 0,
-    l = bocData.length
-  for (; i < l; i++) {
-    size += bocData[i].length;
-  }
-  return size;
-}
+var maxClients = 25;
 
 exports.listenHandler = function(req, res) {
-  // Sorry, too busy, try again later!
   var streamId = req.params.id;
 
   console.log('streamid:' + streamId);
@@ -100,17 +53,13 @@ exports.listenHandler = function(req, res) {
     res.write(chunk);
   });
 
-  // First, send what's inside the "Burst-on-Connect" buffers.
-  // for (var i = 0, l = bocData.length; i < l; i++) {
-  //   encoder.stdin.write(bocData[i]);
-  // }
-
   // Then start sending the incoming PCM data to the MP3 encoder
   var callback = function(chunk) {
     encoder.stdin.write(chunk);
   }
 
   exports.stdin[streamId].on("data", callback);
+
   clients.push(res);
 
   req.connection.on("close", function() {
