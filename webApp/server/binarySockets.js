@@ -12,15 +12,19 @@ exports.connect = function(client) {
     //support for multiple streams  
     var streamId = meta.streamId;
     encoder.stdin[streamId] = stream;
-    encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
-  });
-} 
+    // encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
 
-// Takes a Number in seconds, and returns a String in format mm:ss.
-// Used in metadata events to compatible clients (VLC).
-// function prettyPrintTime(seconds) {
-//   seconds = Number(seconds);
-//   var mins = Math.floor(seconds/60);
-//   var secs = seconds % 60;
-//   return mins + ":" + (secs < 10 ? "0":"") + Math.floor(secs);
-// }
+    stream.on('end', function() {
+      encoder.stdin[streamId].destroy();
+      delete encoder.stdin[streamId];
+      console.log('stream end event');
+    });
+  });
+
+
+  //handle disconnect
+  client.on('close', function() {
+
+    console.log('binary js client connection closed');
+  })
+} 
