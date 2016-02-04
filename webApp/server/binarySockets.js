@@ -13,7 +13,20 @@ exports.connect = function(client) {
     var streamId = meta.streamId;
     encoder.stdin[streamId] = stream;
     encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
+
+    stream.on('end', function() {
+      encoder.stdin[streamId].destroy();
+      delete encoder.stdin[streamId];
+      console.log('stream end event');
+    });
   });
+
+
+  //handle disconnect
+  client.on('close', function() {
+
+    console.log('binary js client connection closed');
+  })
 } 
 
 // Takes a Number in seconds, and returns a String in format mm:ss.

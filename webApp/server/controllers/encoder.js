@@ -96,15 +96,14 @@ exports.listenHandler = function(req, res) {
 
   var encoder = spawn('lame', spawnOpts);
 
-
   encoder.stdout.on("data", function(chunk) {
     res.write(chunk);
   });
 
   // First, send what's inside the "Burst-on-Connect" buffers.
-  for (var i = 0, l = bocData.length; i < l; i++) {
-    encoder.stdin.write(bocData[i]);
-  }
+  // for (var i = 0, l = bocData.length; i < l; i++) {
+  //   encoder.stdin.write(bocData[i]);
+  // }
 
   // Then start sending the incoming PCM data to the MP3 encoder
   var callback = function(chunk) {
