@@ -130,7 +130,6 @@ class BroadcastSetup extends React.Component {
             pathname: '/broadcast/soundcloud'
           });
         }
-
       })
   }
 
