@@ -25,5 +25,18 @@ module.exports = {
         callback(doc);
       }
     });
+  },
+
+  getUser: function(req, res, next) {
+    var userId = req.params.user;
+    User.findById(userId, function(err, doc) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.status(200).send(doc);
+      }
+    });
   }
+  
 };

@@ -27,6 +27,9 @@ import reactMixin from 'react-mixin';
 import NavBar from './NavBar.js'
 import BroadcastEntry from './BroadcastEntry.js'
 
+// AJAX GET CALL
+import $ from '../../public/js/jquery-1.11.1.min';
+
 
 class BroadcastProfile extends React.Component {
   constructor() {
@@ -88,6 +91,23 @@ class BroadcastProfile extends React.Component {
     };
   }
 
+  componentDidMount(){
+    this.fetchUserData()
+    
+  }
+
+  fetchUserData() {
+    $.ajax({
+      url: '/api/user/'+ this.props.params.userId
+    })
+    .done((responseData) => {
+      this.setState({
+        user: responseData
+      });
+      console.log('State',this.state);
+    });
+  }
+
   goToBroadcast() {
     var broadcastId= this.props.index;
     console.log("Going To Stream " + broadcastId);
@@ -129,9 +149,9 @@ class BroadcastProfile extends React.Component {
         <div style={styles.box}>
           <Card>
           <CardHeader
-              title={this.state.artist.artistAlias}
-              subtitle={this.state.artist.artist}
-              avatar={this.state.artist.artistImage}
+              title={this.state.user.scUsername}
+              // subtitle={this.state.artist.artist}
+              avatar={this.state.user.scAvatarUri}
             />
             <div>
               <CardText>

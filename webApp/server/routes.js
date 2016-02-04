@@ -16,6 +16,7 @@ module.exports = function(app, express, ensureAuth) {
 
   app.get('/api/streams', streamsController.getAllStreams);
   
+  app.get('/api/user/:user', usersController.getUser);
   app.post('/api/users/:user', usersController.createUser);
   app.get('/user', ensureAuth, function(req, res) {
     res.json(req.user);

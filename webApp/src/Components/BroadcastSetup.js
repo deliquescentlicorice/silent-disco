@@ -120,7 +120,7 @@ class BroadcastSetup extends React.Component {
       .done((responseData) => {
         if (this.state.isLive) {
           this.props.history.push({
-            pathname: '/broadcast/live',
+            pathname: '/broadcast/'+responseData._id,
             state: {
               streamId: responseData._id
             }
