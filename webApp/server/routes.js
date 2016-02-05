@@ -15,6 +15,8 @@ module.exports = function(app, express, ensureAuth) {
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
 
   app.get('/api/streams', streamsController.getAllStreams);
+
+  app.get('/api/soundcloud/:user', usersController.getUserSoundcloudID);
   
   app.get('/api/user/:user', usersController.getUserWithStreams);
   app.post('/api/user/:user', usersController.createUser);
@@ -24,6 +26,11 @@ module.exports = function(app, express, ensureAuth) {
 
   app.get('/broadcast', function(req, res) {
     res.sendFile(path.join(__dirname + '/../public', 'index.html'));
+  });
+
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
   });
 
   app.get('/auth/soundcloud', passport.authenticate('soundcloud', {

@@ -88,9 +88,9 @@ passport.use(new SoundCloudStrategy({
   clientSecret: apiKeys.clientSecret,
   callbackURL: "http://localhost:" + port + "/auth/soundcloud"
 }, function(accessToken, refreshToken, profile, done) {
-  scAuth.signup({profile: profile}, function (err, profile){
-    console.log('done');
-    return done(err, profile);
+  scAuth.signup({profile: profile}, function (err, result){
+    console.log('done', result);
+    return done(err, result);
   });
   // controller.isUserInDb([unique identifier goes here], function (inDb){
   //   if(inDb){

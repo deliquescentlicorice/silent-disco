@@ -52,6 +52,17 @@ module.exports = {
       });
   },
 
+  getUserSoundcloudID: function(req, res, next) {
+    var userId = req.params.user;
+    User.findOne({ scId: userId}, function(err, doc) {
+      if (err) {
+        throw err;
+      } else {
+        res.status(200).send(doc);
+      }
+    });
+  },
+
   getUserWithStreams: function(req, res, next) {
     var userId = req.params.user;
     User.findById(userId, function(err, doc) {

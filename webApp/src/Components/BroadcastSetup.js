@@ -7,6 +7,8 @@ import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import $ from '../../public/js/jquery-1.11.1.min';
 import Loading from './Loading.js';
+import Auth from '../utils/Auth';
+
 
 class BroadcastSetup extends React.Component {
   constructor(props) {
@@ -21,36 +23,6 @@ class BroadcastSetup extends React.Component {
       favorites: [],
       isLoading: false
     };
-  }
-
-  componentDidMount() {
-    if (!this.state.isLoggedIn) {
-      SC.initialize({
-        client_id: '67e4bbe5a2b1b64416b0ed84366b34ca',
-        redirect_uri: 'http://localhost:3000/auth/soundcloud'
-      });
-
-      var component = this;
-
-      // initiate auth popup
-      SC.connect()
-      .then(function(err, result) {
-        return SC.get('/me');
-      })
-      .then(function(me) {
-        localStorage.setItem("me", JSON.stringify(me));
-        component.setState({
-          isLoggedIn: true
-        });
-        return SC.get('/me/favorites');
-      })
-      .then(function(favorites) {
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-        component.setState({
-          favorites: favorites,
-        });
-      });
-    }
   }
 
   stationNameInput(event, index, value) {
@@ -73,6 +45,33 @@ class BroadcastSetup extends React.Component {
 
   startBroadcast() {
     var serverURL = "http://localhost:3000/api/stream";
+    $.ajax({
+        url: serverURL,
+        method: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        data: {
+          name: this.state.name,
+          creator: JSON.parse(localStorage.getItem("me")),
+          desc: this.state.desc,
+          lng: 40,
+          lat: 30
+        }
+      })
+      .done((responseData) => {
+        if (this.state.isLive) {
+          this.props.history.push({
+            pathname: '/broadcast/'+responseData._id,
+            state: {
+              streamId: responseData._id
+            }
+          });
+        } else {
+          this.props.history.push({
+            pathname: '/broadcast/soundcloud'
+          });
+        }
+
+      });
 
     this.setState({
       isLoading: true
@@ -110,44 +109,11 @@ class BroadcastSetup extends React.Component {
     //     });
     //   }
     // });
-    $.ajax({
-        url: serverURL,
-        method: 'POST',
-        contentType: "application/x-www-form-urlencoded",
-        data: {
-          name: this.state.name,
-          creator: JSON.parse(localStorage.getItem("me")),
-          desc: this.state.desc,
-          lng: 40,
-          lat: 30
-        }
-      })
-      .done((responseData) => {
-        this.setState({
-          isLoading: false
-        });
-        if (this.state.isLive) {
-          this.props.history.push({
-            pathname: '/broadcast/'+responseData._id,
-            state: {
-              streamId: responseData._id
-            }
-          });
-        } else {
-          this.props.history.push({
-            pathname: '/broadcast/soundcloud'
-          });
-        }
-      })
   }
 
+
   render() {
-    var partial;
-    if (this.state.isLoading) {
-      partial = <Loading />
-    }
-    else if (this.state.isLoggedIn) {
-      partial = (
+    return (
         <div style={styles.container}>
           <p style={styles.title}>Tell us about your stream</p>
           <TextField onChange={this.stationNameInput.bind(this)}
@@ -164,16 +130,7 @@ class BroadcastSetup extends React.Component {
           </DropDownMenu><br/><br/>
           <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
         </div>
-      )
-    } else {
-      partial = (
-        <div>
-          <p style={styles.title}>Broadcasting requires a SoundCloud account. Please sign in!</p>
-        </div>
-      )
-    }
-
-    return partial;
+    )
   } 
 }
 
