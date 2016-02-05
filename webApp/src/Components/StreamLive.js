@@ -98,17 +98,15 @@ class StreamLive extends React.Component {
       url: BASE_URL + '/api/stream/' + this.props.params.streamId
     })
     .done((streamData) => {
-      console.log(streamData)
       $.ajax({
         url: BASE_URL + '/api/user/' + streamData.creator
       })
       .done((userData) => {
-        console.log(userData)
         this.setState({
           name: streamData.name,
           broadcaster: streamData.broadcaster,
           desc: streamData.description,
-          image: userData.scAvatarUri,
+          image: userData.user.scAvatarUri,
           listenerLiveCount: streamData.listenerLiveCount,
           creator: streamData.creator,
           isLoading: false
