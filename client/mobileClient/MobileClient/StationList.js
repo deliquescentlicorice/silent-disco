@@ -13,42 +13,7 @@ import Station from './Station';
 import Loading from './Loading';
 import endpointIP from  './endpointIP';
 
-var FAKE_STATION_DATA = [
-  {
-    id: 1,
-    name: 'Smooth Jazz 23/6',
-    broadcaster: "Yazz Boatman",
-    streamImgUri: "",
-    uri: "http://dir.xiph.org/listen/4642557/listen.m3u"
-  }, {
-    id: 2,
-    name: 'Feast on the Blood of the Fallen',
-    broadcaster: "Radio Sunshine",
-    streamImgUri: "",
-    uri: "http://dir.xiph.org/listen/2050679/listen.m3u"
-  }, {
-    id: 3,
-    name: 'Sketchy Site',
-    broadcaster: "DJ Gravity",
-    streamImgUri: "",
-    uri: "http://10.6.32.127:3000/listen"
-  }, {
-    id: 4,
-    name: 'Christmas 365',
-    broadcaster: "Sick Nick",
-    streamImgUri: "",
-    uri: "http://dir.xiph.org/listen/4913295/listen.m3u"
-  }, {
-    id: 5,
-    name: 'Classical Orchestral Music',
-    broadcaster: "P.D.Q. Bach",
-    streamImgUri: "",
-    uri: "http://dir.xiph.org/listen/5231626/listen.m3u"
-  }
-];
-
 var REQUEST_URL_ALL = endpointIP + '/api/streams';
-
 
 class StationList extends Component {
   constructor(props) {
@@ -63,11 +28,6 @@ class StationList extends Component {
 
   componentDidMount() {
     this.fetchData();
-    // var stations = FAKE_STATION_DATA;
-    // this.setState({
-    //   dataSource: this.state.dataSource.cloneWithRows(stations),
-    //   isLoading: false
-    // })
   }
 
   fetchData() {
@@ -95,13 +55,12 @@ class StationList extends Component {
   }
 
   renderStation(station) {
-    // removed <Text style={styles.broadcaster}>{station.broadcaster}</Text>
     return (
       <TouchableHighlight onPress={() => this.listenToStation(station)} underlayColor='#dddddd'>
         <View>
           <View style={styles.container}>
             <Text style={styles.name}>{station.name}</Text>
-            
+            <Text style={styles.broadcaster}>{station.broadcaster}</Text>
           </View>
           <View style={styles.separator}/>
         </View>
@@ -116,6 +75,7 @@ class StationList extends Component {
 
     return (
       <ListView
+        style={styles.listView}
         dataSource={this.state.dataSource}
         renderRow={this.renderStation.bind(this)}
       />
@@ -124,6 +84,9 @@ class StationList extends Component {
 }
 
 var styles = StyleSheet.create({
+  listView: {
+    paddingTop: 65
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
