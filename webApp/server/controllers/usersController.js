@@ -26,7 +26,7 @@ module.exports = {
       function(err, doc) {
         if (doc) {
           console.log('user already exists');
-          throw err;
+          callback(doc);
         } else {
           var newUser = new User({
             scId: user.id.toString(),
