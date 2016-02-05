@@ -136,9 +136,18 @@ describe('Stream Controller', function() {
 
 
     // request(app)
-    //   .get('/api/listen/arglebargle')
+    //   .get('/api/stream/arglebargle')
     //   .set('Accept', 'application/json')
     //   .expect(404, done);
+
+  });
+
+  it('should have a method that given a request to a nonexistent stream, throws a 404', function(done) {
+
+    request(app)
+      .get('/api/stream/1')
+      .set('Accept', 'application/json')
+      .expect(404, done);
 
   });
 

@@ -121,4 +121,47 @@ describe('User Controller', function() {
 
   });
 
+  it("should have a method that given a request to a name path, modifies that user's data", function(done) {
+
+    expect(controller.modifyUser).to.exist;
+
+    var dummy = {
+      id: 1,
+      first_name: 'John',
+      last_name: 'Doe'
+    };
+
+    var muzak = {
+      name: 'muzak',
+      desc: 'what you hear in elevators',
+      lat: 40,
+      lng: 2,
+      creator: dummy
+    };
+
+    controller.createUser(dummy, function(user) {
+      request(app)
+        .get('/api/user/' + user._id)
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect(function(res) {
+          expect(res.body.user.first_name).to.equal('John');
+          expect(res.body.user.last_name).to.equal('Doe');
+        })
+        .end(function(err, res) {
+          request(app)
+          .put('/api/user/' + user._id)
+          .set('Accept', 'application/json')
+          .send({last_name: 'Smith'})
+          .expect(200)
+          .expect(function(res) {
+            expect(res.body.first_name).to.equal('John');
+            expect(res.body.last_name).to.equal('Smith');
+          })
+          .end(done);
+        });
+    });
+
+  });
+
 });

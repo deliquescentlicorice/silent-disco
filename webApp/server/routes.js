@@ -19,7 +19,7 @@ module.exports = function(app, express, ensureAuth) {
   app.get('/api/soundcloud/:user', usersController.getUserSoundcloudID);
   
   app.get('/api/user/:user', usersController.getUserWithStreams);
-  app.post('/api/user/:user', usersController.createUser);
+  app.put('/api/user/:user', usersController.modifyUser);
   app.get('/user', ensureAuth, function(req, res) {
     res.json(req.user);
   });
