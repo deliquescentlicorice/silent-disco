@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 // COMPONENTS
 import NavBar from './NavBar.js';
+import Loading from './Loading.js'
 
 // MEDIA PLAYER
 import Sound from '../../node_modules/react-sound';
@@ -41,7 +42,8 @@ class StreamLive extends React.Component {
       description: "",
       image: "",
       listenerLiveCount: "",
-      creator: ""
+      creator: "",
+      isLoading: true
     }
   }
 
@@ -55,8 +57,6 @@ class StreamLive extends React.Component {
       status: "PLAYING",
       disabled: true
     });
-
-    
   }
 
   stopSong() {
@@ -65,9 +65,7 @@ class StreamLive extends React.Component {
       status: "STOPPED",
       disabled: false
     });
-    
   }
-
 
   addHeart() {
     var PUT_HEART = BASE_URL + '/api/stream/' + this.props.params.streamId;
@@ -112,45 +110,48 @@ class StreamLive extends React.Component {
           desc: streamData.description,
           image: userData.scAvatarUri,
           listenerLiveCount: streamData.listenerLiveCount,
-          creator: streamData.creator
+          creator: streamData.creator,
+          isLoading: false
         })
       })
     })
   }
 
   render() {
+    var partial = <Loading />
+    if (!this.state.isLoading) {
+      partial = (
+        <div style={styles.playerContainer}>
+          <Card style={styles.card}>
+            <CardMedia style={styles.image} >
+              <img src={this.state.image} />
+            </CardMedia>
+            <CardTitle title={this.state.name} subtitle={this.state.broadcaster}  />
+            <CardText>
+              {this.state.desc}
+            </CardText>
+            <CardActions>
+              <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
+                <Play />
+              </FloatingActionButton>
+              <span></span>
+              <FloatingActionButton onClick={this.stopSong.bind(this)} secondary={true}  disabled={!this.state.disabled}>
+                <Pause />
+              </FloatingActionButton>
+              <FloatingActionButton onClick={this.addHeart.bind(this)}>
+                <Favorite />
+              </FloatingActionButton>
+            </CardActions>
+          </Card>
+        </div>
+      )
+    }
     return (
       <div style={styles.mainContainer}>
         <div>  
           <NavBar title={'Now Playing'} history={this.props.history}/>
         </div>
-        <div style={styles.playerContainer}>
-          
-          
-            <Card style={styles.card}>
-              <CardMedia style={styles.image} >
-                <img src={this.state.image} />
-              </CardMedia>
-              <CardTitle title={this.state.name} subtitle={this.state.broadcaster}  />
-              <CardText>
-                {this.state.desc}
-              </CardText>
-              <CardActions>
-                <FloatingActionButton onClick={this.playSong.bind(this)} secondary={true} disabled={this.state.disabled}>
-                  <Play />
-                </FloatingActionButton>
-                <span></span>
-                <FloatingActionButton onClick={this.stopSong.bind(this)} secondary={true}  disabled={!this.state.disabled}>
-                  <Pause />
-                </FloatingActionButton>
-                <FloatingActionButton onClick={this.addHeart.bind(this)}>
-                  <Favorite />
-                </FloatingActionButton>
-              </CardActions>
-            </Card>
-        
-          
-        </div>
+        {partial}
         
         <Sound
           url={'/stream/' + this.props.params.streamId}
@@ -159,8 +160,8 @@ class StreamLive extends React.Component {
           onPlaying={this.handleSongPlaying}
           onFinishedPlaying={this.handleSongFinishedPlaying} />
       </div>
-      )
-}
+    )
+  }
 }
 
 var styles = {

@@ -6,6 +6,7 @@ import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import $ from '../../public/js/jquery-1.11.1.min';
+import Loading from './Loading.js';
 
 class BroadcastSetup extends React.Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class BroadcastSetup extends React.Component {
       isInitializing: false,
       isLoggedIn: false,
       isLive: true,
-      favorites: []
+      favorites: [],
+      isLoading: false
     };
   }
 
@@ -44,8 +46,8 @@ class BroadcastSetup extends React.Component {
       })
       .then(function(favorites) {
         localStorage.setItem("favorites", JSON.stringify(favorites));
-        this.setState({
-          favorites: favorites
+        component.setState({
+          favorites: favorites,
         });
       });
     }
@@ -55,7 +57,6 @@ class BroadcastSetup extends React.Component {
     this.setState({
       name: event.target.value
     });
-    console.log('when name is set, it is: ', this.state.name);
   }
 
   stationLiveInput(event, index, value) {
@@ -72,6 +73,10 @@ class BroadcastSetup extends React.Component {
 
   startBroadcast() {
     var serverURL = "http://localhost:3000/api/stream";
+
+    this.setState({
+      isLoading: true
+    })
 
     // fetch(serverURL, {
     //   method: 'POST',
@@ -118,6 +123,9 @@ class BroadcastSetup extends React.Component {
         }
       })
       .done((responseData) => {
+        this.setState({
+          isLoading: false
+        });
         if (this.state.isLive) {
           this.props.history.push({
             pathname: '/broadcast/'+responseData._id,
@@ -130,13 +138,15 @@ class BroadcastSetup extends React.Component {
             pathname: '/broadcast/soundcloud'
           });
         }
-
       })
   }
 
   render() {
     var partial;
-    if (this.state.isLoggedIn) {
+    if (this.state.isLoading) {
+      partial = <Loading />
+    }
+    else if (this.state.isLoggedIn) {
       partial = (
         <div style={styles.container}>
           <p style={styles.title}>Tell us about your stream</p>
