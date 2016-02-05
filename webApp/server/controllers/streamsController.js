@@ -70,12 +70,18 @@ module.exports = {
   getStream: function(req, res, next) {
     var streamId = req.params.stream;
     Stream.findById(streamId, function(err, stream) {
-      if (err) {
-        throw err;
-      }
-      else {
+      if (stream) {
         res.status(200).send(stream);
       }
+      else {
+        res.status(404).send('stream not found');
+      }
+      // if (err) {
+      //   throw err;
+      // }
+      // else {
+      //   res.status(200).send(stream);
+      // }
     });
   },
 
