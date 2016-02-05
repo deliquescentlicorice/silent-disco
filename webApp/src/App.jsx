@@ -56,32 +56,25 @@ class App extends React.Component {
       // As of iOS 9.3 and OSX 10.11, Safari does not support fetch.
       // fetch(REQUEST_URL_ALL)
       // .then((response) => response.json())
-      // .then((responseData) => {
+      // .then((streamList) => {
       //   this.setState({
-      //     streams: responseData
+      //     streams: streamList
       //   });
       // });
       $.ajax({
         url: REQUEST_URL_ALL
       })
-      .done((responseData) => {
+      .done((streamList) => {
+        console.log(streamList)
         this.setState({
-          streams: responseData
+          streams: streamList
         });
       });
     }
 
     goToStream() {
-      var streamId= this.props.index;
-      console.log("Going To Stream " + streamId);
-
       this.props.history.push({
-        pathname: '/stream/' + streamId,
-
-        //so we get which song from the state; a single GET request
-        //we could also send a new request to the server to get each individual song
-          //i'll look at this for testing purposes
-        state: { stream : this.props.state.streams[streamId] }
+        pathname: '/stream/' + this.props.stream._id,
       });
     }
 
@@ -89,21 +82,18 @@ class App extends React.Component {
       return <StreamEntry goToStream={this.goToStream} stream={this.state.streams[key]} history={this.history} key={key} index={key} />
     }
 
-
   render() {
     return (
       <div>
-
         <NavBar title="Listen" history={this.history}/>
-
         <List>
-        {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
+          {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
         </List>
-        </div>
-        )
-    }
+      </div>
+    )
   }
+}
 
-  reactMixin.onClass(App, History);
+reactMixin.onClass(App, History);
 
-  export default App;
+export default App;
