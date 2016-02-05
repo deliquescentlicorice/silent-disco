@@ -80,7 +80,7 @@ class BroadcastLive extends React.Component {
 
   fetchData() {
     $.ajax({
-      url: '/api/stream/'+this.props.location.state.streamId
+      url: '/api/stream/' + this.props.params.streamId
     })
     .done((stream) => {
       console.log('State',stream);
@@ -122,7 +122,7 @@ class BroadcastLive extends React.Component {
 
   goToProfile() {
     this.props.history.push({
-      pathname: '/user/'+ this.state.stream.creator
+      pathname: '/user/'+ this.state.creator
     })
   }
 
@@ -144,6 +144,7 @@ class BroadcastLive extends React.Component {
               onClick={this.goToProfile.bind(this)}
               title={this.state.artistAlias}
               subtitle={this.state.artist}
+              avatar={this.state.artistImage}
             /></a>
             <CardMedia style={styles.streamImage}>
               <img src={this.state.artistImage}/>

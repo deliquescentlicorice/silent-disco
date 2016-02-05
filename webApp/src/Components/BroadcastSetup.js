@@ -1,8 +1,12 @@
 import React from 'react';
 import TextField from '../../node_modules/material-ui/lib/text-field';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
+import FontIcon from '../../node_modules/material-ui/lib/font-icon';
 import DropDownMenu from '../../node_modules/material-ui/lib/DropDownMenu';
 import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
+import Card from '../../node_modules/material-ui/lib/card/card';
+import CardText from '../../node_modules/material-ui/lib/card/card-text';
+import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import $ from '../../public/js/jquery-1.11.1.min';
@@ -114,32 +118,53 @@ class BroadcastSetup extends React.Component {
 
   render() {
     return (
-        <div style={styles.container}>
-          <p style={styles.title}>Tell us about your stream</p>
-          <TextField onChange={this.stationNameInput.bind(this)}
-            hintText="Stream Name"
-            floatingLabelText="Stream Name"
-          /><br/>
-          <TextField onChange={this.stationDescriptionInput.bind(this)}
-            hintText="Description"
-            floatingLabelText="Description"
-          /><br/><br/>
-          <DropDownMenu value={this.state.isLive} onChange={this.stationLiveInput.bind(this)}>
-            <MenuItem value={true} primaryText="Live"/>
-            <MenuItem value={false} primaryText="SoundCloud"/>
-          </DropDownMenu><br/><br/>
-          <RaisedButton primary={true} onClick={this.startBroadcast.bind(this)} label="Start Broadcasting"/>
-        </div>
+      <div>
+        <Card style={styles.cardContainer}>
+          <CardTitle>
+            Tell Us About Your Stream
+          </CardTitle>
+          <CardText>
+            <TextField 
+              onChange={this.stationNameInput.bind(this)}
+              hintText="Stream Name"
+              floatingLabelText="Stream Name"
+            /><br/>
+            <TextField 
+              onChange={this.stationDescriptionInput.bind(this)}
+              hintText="Description"
+              floatingLabelText="Description"
+            /><br/><br/>
+            <DropDownMenu value={this.state.isLive} onChange={this.stationLiveInput.bind(this)}>
+              <MenuItem value={true} primaryText="Live"/>
+              <MenuItem value={false} primaryText="SoundCloud"/>
+            </DropDownMenu><br/><br/>
+            <RaisedButton 
+              primary={true} 
+              onClick={this.startBroadcast.bind(this)} 
+              label="Start Broadcasting"
+              icon={<FontIcon className="fa fa-microphone"/>}
+            />
+          </CardText>
+        </Card>
+      </div>
     )
   } 
 }
 
 var styles = {
-  container: {
-    'flexDirection': 'column',
-    'justifyContent': 'center',
-    'alignContent': 'center'
+
+  cardContainer:{
+    'display': 'flex',
+    'flexDirection':'row',
+    'flexWrap': 'wrap',
+    alignItem:'center',
+    justifyContent:'center'
   },
+
+  box: {
+    'flexGrow':1,
+  },
+
   title:{
     'fontFamily':'Roboto, sans-serif'
   }

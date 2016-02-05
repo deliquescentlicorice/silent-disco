@@ -50,7 +50,6 @@ class NavBar extends React.Component {
   goToProfile() {
     console.log(localStorage.getItem("dbID"))
     let profileID = JSON.parse(localStorage.getItem("dbID"))._id;
-    console.log(profileID)
     this.props.history.push({
       pathname: '/user/'+profileID
     })

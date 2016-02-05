@@ -36,58 +36,6 @@ class BroadcastProfile extends React.Component {
     super();
 
     this.state = {
-      artist: {
-        artist: "Rob Adelmann",
-        artistAlias:"Gravity (Pink Mammoth)",
-        artistImage:"https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
-      }, 
-
-      streams : [
-        {
-          disabled: false,
-          heartCount: 4000,
-          listnerLiveCount: 1000,
-          name:"Live from Pink Mammoth - Burning Man 2013",
-          description:"Description of the station",
-          artist: "Rob Adelmann",
-          artistAlias:"Gravity (Pink Mammoth)",
-          artistImage:"https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
-          image:"https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
-        },
-        {
-          disabled: false,
-          heartCount: 10000,
-          listnerLiveCount: 8000,
-          name:"Live from Pink Mammoth - Burning Man 2015",
-          description:"Super Awesome",
-          artist: "Rob Adelmann",
-          artistAlias:"Gravity (Pink Mammoth)",
-          artistImage:"https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
-          image:"https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
-        },
-        {
-          disabled: false,
-          heartCount: 10000,
-          listnerLiveCount: 8000,
-          name:"Live from Pink Mammoth - Burning Man 2012",
-          description:"Super Awesome",
-          artist: "Rob Adelmann",
-          artistAlias:"Gravity (Pink Mammoth)",
-          artistImage:"https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
-          image:"https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
-        },
-        {
-          disabled: false,
-          heartCount: 10000,
-          listnerLiveCount: 8000,
-          name:"Live from Pink Mammoth - Burning Man 2016",
-          description:"Super Awesome",
-          artist: "Rob Adelmann",
-          artistAlias:"Gravity (Pink Mammoth)",
-          artistImage:"https://i1.sndcdn.com/avatars-000018148011-fxojwa-t200x200.jpg",
-          image:"https://i1.sndcdn.com/artworks-000061035457-wy5yn1-t200x200.jpg"
-        }
-        ]
     };
   }
 
@@ -109,35 +57,36 @@ class BroadcastProfile extends React.Component {
   }
 
   goToBroadcast() {
-    var broadcastId= this.props.index;
+    console.log("broadcast",this)
+    var broadcastId= this.props.details._id;
     console.log("Going To Stream " + broadcastId);
 
     this.props.history.push({
-      pathname: '/broadcast/live',
+      pathname: '/broadcast/'+broadcastId
 
       //so we get which song from the state; a single GET request
       //we could also send a new request to the server to get each individual song
         //i'll look at this for testing purposes
-      state: { stream : this.props.state.streams[broadcastId] }
+      // state: { stream : this.props.state.streams[broadcastId] }
     });
   }
 
   renderStream(key){
-    return <BroadcastEntry goToBroadcast={this.goToBroadcast} history={this.history} state={this.state} key={key} index={key} details={this.state.streams[key]} />
+    return <BroadcastEntry goToBroadcast={this.goToBroadcast} history={this.history} state={this.state} key={key} index={key} details={this.state.user.streams[key]} />
   }
 
   listnerCountTotal(){
     var sum = 0;
-    for(var i=0;i<this.state.streams.length;i++){
-      sum = sum + this.state.streams[i].listnerLiveCount;
+    for(var i=0;i<this.state.user.streams.length;i++){
+      sum = sum + this.state.user.streams[i].listenerMaxCount;
     }
     return sum.toLocaleString()
   }
 
   heartCountTotal(){
     var sum = 0;
-    for(var i=0;i<this.state.streams.length;i++){
-      sum = sum + this.state.streams[i].heartCount;
+    for(var i=0;i<this.state.user.streams.length;i++){
+      sum = sum + this.state.user.streams[i].heartCountNum;
     }
     return sum.toLocaleString()
   }
@@ -149,9 +98,9 @@ class BroadcastProfile extends React.Component {
         <div style={styles.box}>
           <Card>
           <CardHeader
-              title={this.state.user.scUsername}
-              subtitle={this.state.user.full_name}
-              avatar={this.state.user.scAvatarUri}
+              title={this.state.user.user.scUsername}
+              subtitle={this.state.user.user.full_name}
+              avatar={this.state.user.user.scAvatarUri}
             />
             <div>
               <CardText>
@@ -164,7 +113,7 @@ class BroadcastProfile extends React.Component {
         </div>
         <div style={styles.box}>
           <List subheader="Previous Streams" style={styles.box}>
-            {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
+            {Object.keys(this.state.user.streams).map(this.renderStream.bind(this))}
           </List>
         </div>
       </div>

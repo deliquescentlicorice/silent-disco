@@ -32,14 +32,14 @@ class BroadcastEntry extends React.Component {
       <div>
         <ListItem
           onClick={this.props.goToBroadcast.bind(this)}
-          leftAvatar={<Avatar src={this.props.details.image} />}
+          // leftAvatar={<Avatar src={this.props.details.image} />}
           rightIconButton={rightIconMenu}
           primaryText={this.props.details.name}
           secondaryText={
             <p>
-              <span style={styles.count}>{this.props.details.listnerLiveCount.toLocaleString()}</span><span> Listens <Face /></span> 
+              <span style={styles.count}>{this.props.details.listenerMaxCount.toLocaleString()}</span><span> Listens <Face /></span> 
               <span style={styles.count}> | </span>
-              <span style={styles.count}>{this.props.details.heartCount.toLocaleString()}</span><span>  Hearts <Favorite color={Colors.red500}/></span>
+              <span style={styles.count}>{this.props.details.heartCountNum.toLocaleString()}</span><span>  Hearts <Favorite color={Colors.red500}/></span>
             </p>
           }
           secondaryTextLines={2}
