@@ -70,7 +70,7 @@ class StreamLive extends React.Component {
 
 
   addHeart() {
-    var PUT_HEART = BASE_URL + '/api/stream/' + this.props.location.state.stream._id;
+    var PUT_HEART = BASE_URL + '/api/stream/' + this.props.params.streamId;
 
     // fetch(PUT_HEART, {
     //   method: 'PUT',
@@ -97,7 +97,7 @@ class StreamLive extends React.Component {
 
   fetchStreamData() {
     $.ajax({
-      url: BASE_URL + '/api/stream/' + this.props.location.state.stream._id
+      url: BASE_URL + '/api/stream/' + this.props.params.streamId
     })
     .done((streamData) => {
       console.log(streamData)
@@ -153,7 +153,7 @@ class StreamLive extends React.Component {
         </div>
         
         <Sound
-          url={'/stream/' + this.props.location.state.stream._id}
+          url={'/stream/' + this.props.params.streamId}
           playStatus={this.state.status}
           onLoading={this.handleSongLoading}
           onPlaying={this.handleSongPlaying}
