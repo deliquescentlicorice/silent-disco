@@ -42,5 +42,5 @@ var routes = (
 
 
 
-// ReactDOM.render(<Router history={createHistory()} routes={routes}/>, document.getElementById('root'));
 ReactDOM.render(routes, document.getElementById('root'));
+// ReactDOM.render(<Router history={createHistory()} routes={routes}/>, document.getElementById('root'));

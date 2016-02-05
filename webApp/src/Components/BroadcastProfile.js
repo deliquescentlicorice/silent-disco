@@ -145,7 +145,7 @@ class BroadcastProfile extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <NavBar history={this.history}/>
+        <NavBar title="Profile" history={this.history}/>
         <div style={styles.box}>
           <Card>
           <CardHeader

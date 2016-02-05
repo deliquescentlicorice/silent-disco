@@ -17,9 +17,10 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
     };
   }
+
 
   handleToggle() {
     this.setState({
@@ -47,14 +48,23 @@ class NavBar extends React.Component {
   }
 
   goToProfile() {
+    console.log(localStorage.getItem("dbID"))
+    let profileID = JSON.parse(localStorage.getItem("dbID"))._id;
+    console.log(profileID)
     this.props.history.push({
-      pathname: '/broadcast/profile'
+      pathname: '/user/'+profileID
     })
   }
 
   goToListen() {
     this.props.history.push({
       pathname: '/'
+    })
+  }
+
+  goToLogin() {
+    this.props.history.push({
+      pathname: '/login'
     })
   }
 
@@ -65,29 +75,53 @@ class NavBar extends React.Component {
         <LeftNav onRequestChange={this.handleToggle.bind(this)} open={this.state.open} docked={false}>
           <div style={styles.leftNavTitle}>silent disco</div>
           <MenuItem onClick={this.goToListen.bind(this)} >Listen</MenuItem>
-          <List subheader="">
-            <ListItem
-              primaryText="Broadcast"
-              initiallyOpen={true}
-              primaryTogglesNestedList={true}
-              nestedItems={[
+          { Auth.isAuth() ? (
+              <List subheader="">
                 <ListItem
-                  key={1}
-                  primaryText="Create Broadcast"
-                  onClick={this.createBroadcast.bind(this)}
-                />,
+                  primaryText="Broadcast"
+                  initiallyOpen={true}
+                  primaryTogglesNestedList={true}
+                  nestedItems={[
+                    <ListItem
+                      key={1}
+                      primaryText="Create Broadcast"
+                      onClick={this.createBroadcast.bind(this)}
+                    />,
+                    <ListItem
+                      key={2}
+                      primaryText="Profile"
+                      onClick={this.goToProfile.bind(this)}
+                    />,
+                    <ListItem
+                      key={3}
+                      primaryText="Logout"
+                      onClick={this.endSession.bind(this)}
+                    />,
+                  ]}
+                />
+              </List>
+            ) : (
+              <List subheader="">
                 <ListItem
-                  key={2}
-                  primaryText="Profile"
-                  onClick={this.goToProfile.bind(this)}
-                />,
-              ]}
-            />
-          </List>
+                  primaryText="Broadcast"
+                  initiallyOpen={true}
+                  primaryTogglesNestedList={true}
+                  nestedItems={[
+                    <ListItem
+                      key={1}
+                      primaryText="Login"
+                      onClick={this.goToLogin.bind(this)}
+                    />,
+                  ]}
+                />
+              </List>
+          )}
+          
+      
+          
         </LeftNav>
         <AppBar title={this.props.title} 
           titleStyle={styles.title} 
-          iconElementRight={<FlatButton  onClick={this.endSession.bind(this)}label="Logout"/>}
           onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
         />
 
@@ -115,3 +149,23 @@ reactMixin.onClass(NavBar, History);
 
 export default NavBar;
 
+
+// <List subheader="">
+  // <ListItem
+    // primaryText="Broadcast"
+    // initiallyOpen={true}
+    // primaryTogglesNestedList={true}
+    // nestedItems={[
+      // <ListItem
+        // key={1}
+        // primaryText="Create Broadcast"
+        // onClick={this.createBroadcast.bind(this)}
+      // />,
+      // <ListItem
+        // key={2}
+        // primaryText="Profile"
+        // onClick={this.goToProfile.bind(this)}
+      // />,
+    // ]}
+  // />
+// </List>

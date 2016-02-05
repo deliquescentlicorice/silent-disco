@@ -73,9 +73,8 @@ class BroadcastLive extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props.location.state.streamId);
-    // var streamId = 44;
-    this.bc = new Broadcaster(this.props.location.state.streamId, this.gotMediaDevices.bind(this), visualizer);
+    console.log(this.props.params.streamId);
+    this.bc = new Broadcaster(this.props.params.streamId, this.gotMediaDevices.bind(this), visualizer);
     this.fetchData();
   }
 
@@ -84,13 +83,17 @@ class BroadcastLive extends React.Component {
       url: '/api/stream/'+this.props.location.state.streamId
     })
     .done((stream) => {
+      console.log('State',stream);
       this.setState({
         name: stream.name,
         description: stream.description,
         heartCount: stream.heartCountNum,
         listenerLiveCount: stream.listenerLiveCount,
         listenerMaxCount: stream.listenerMaxCount,
-        isLoading: false
+        isLoading: false,
+        creator: stream.creator,
+        broadcaster: stream.broadcaster,
+        playing: stream.playing
       });
     });
   }

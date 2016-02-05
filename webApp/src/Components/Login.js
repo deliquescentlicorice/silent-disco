@@ -8,12 +8,25 @@ import Auth from '../utils/Auth';
 
 class Login extends React.Component {
 
+
+  login() {
+    let that=this;
+    Auth.setUser()
+    .then(function(){
+      if(Auth.isAuth()){
+        that.props.history.push({
+          pathname: '/broadcast/setup'
+        })
+      }
+    })
+  }
+
   render() {
     return (
       <div>
 
       <NavBar title="Login" history={this.history}/>
-      <RaisedButton primary={true} onClick={Auth.setUser.bind(this)} label="Login With SoundCloud"/>
+      <RaisedButton primary={true} onClick={this.login.bind(this)} label="Login With SoundCloud"/>
       
       </div>
     )

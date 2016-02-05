@@ -1,3 +1,5 @@
+import $ from '../../public/js/jquery-1.11.1.min';
+
 module.exports = {
 
   isAuth () {
@@ -7,10 +9,15 @@ module.exports = {
   logout () {
     localStorage.removeItem("me")
     localStorage.removeItem("favorites")
+    localStorage.removeItem("dbID")
+    localStorage.removeItem("result")
   },
 
   checkAuth() {
     return localStorage.getItem("me")
+  },
+
+  onChange () {
   },
 
   setUser() {
@@ -22,22 +29,21 @@ module.exports = {
     var component = this;
 
     // initiate auth popup
-    SC.connect()
+    return SC.connect()
     .then(function(err, result) {
       return SC.get('/me');
     })
     .then(function(me) {
       localStorage.setItem("me", JSON.stringify(me));
-      component.setState({
-        isLoggedIn: true
-      });
+      var find = '/api/soundcloud/' + me.id
+      return $.get(find);
+    })
+    .then(function(dbID) {
+      localStorage.setItem("dbID", JSON.stringify(dbID));
       return SC.get('/me/favorites');
     })
     .then(function(favorites) {
       localStorage.setItem("favorites", JSON.stringify(favorites));
-      this.setState({
-        favorites: favorites
-      });
     });
   }
 }

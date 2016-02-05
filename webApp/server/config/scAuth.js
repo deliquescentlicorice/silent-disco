@@ -14,8 +14,10 @@ exports.signup = function (scUser, callback){
   scUser = scUser.profile._json;
   //the easiest edit is to add a null callback to createUser
   controller.createUser(scUser, function(doc) {
+    console.log(doc);
+    return callback(null, doc);
   });
-  return callback(null, scUser);
+  // return callback(null, scUser);
 };
 
 exports.login = function (scUser, callback){
