@@ -29,6 +29,9 @@ import reactMixin from 'react-mixin';
 // COMPONENTS
 import NavBar from './NavBar.js';
 
+// VISUALIZER
+import visualizer from './visualizer.js';
+
 // AJAX GET CALL
 import $ from '../../public/js/jquery-1.11.1.min';
 
@@ -39,10 +42,11 @@ class BroadcastLive extends React.Component {
     this.state = {
       disabled: false,
       heartCount: 4000,
-      listnerLiveCount: 1000,
+      listenerLiveCount: 1000,
+      listenerMaxCount: 1000000,
       name: "Screw It, We're Doing It Live",
       description: "Description of the station",
-      artist: user.full_name || "anonymous",
+      artist: user.full_name || "pseudonymous",
       artistAlias: user.username || "QuantumRadio Broadcaster",
       artistImage: user.avatar_url,
       selectedSource: null,
@@ -69,27 +73,7 @@ class BroadcastLive extends React.Component {
   componentWillMount() {
     console.log(this.props.location.state.streamId);
     // var streamId = 44;
-    this.bc = new Broadcaster(this.props.location.state.streamId, this.gotMediaDevices.bind(this), function(data) {
-        var canvas = document.getElementById("canvas"),
-            width = canvas.width,
-            height = canvas.height,
-            context = canvas.getContext('2d');
-        context.clearRect(0, 0, width, height);
-        var step = Math.ceil(data.length / width);
-        var amp = height / 2;
-        for (var i = 0; i < width; i++) {
-            var min = 1.0;
-            var max = -1.0;
-            for (var j = 0; j < step; j++) {
-                var datum = data[(i * step) + j];
-                if (datum < min)
-                    min = datum;
-                if (datum > max)
-                    max = datum;
-            }
-            context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
-        }
-    });
+    this.bc = new Broadcaster(this.props.location.state.streamId, this.gotMediaDevices.bind(this), visualizer);
     this.fetchData();
   }
 
@@ -97,9 +81,13 @@ class BroadcastLive extends React.Component {
     $.ajax({
       url: '/api/stream/'+this.props.location.state.streamId
     })
-    .done((responseData) => {
+    .done((stream) => {
       this.setState({
-        stream: responseData
+        name: stream.name,
+        description: stream.description,
+        heartCount: stream.heartCountNum,
+        listenerLiveCount: stream.listenerLiveCount,
+        listenerMaxCount: stream.listenerMaxCount
       });
       console.log('State',this.state);
     });
@@ -152,7 +140,7 @@ class BroadcastLive extends React.Component {
             <CardHeader
               onClick={this.goToProfile.bind(this)}
               title={this.state.artistAlias}
-              // subtitle={this.state.artist}
+              subtitle={this.state.artist}
             /></a>
             <CardMedia style={styles.streamImage}>
               <img src={this.state.artistImage}/>
@@ -168,21 +156,19 @@ class BroadcastLive extends React.Component {
               {dropDown}
             </CardActions>
 
-            <CardTitle title={this.state.stream.name}/>
+            <CardTitle title={this.state.name}/>
             <CardText>
-              {this.state.stream.description}
+              {this.state.description}
             </CardText>
           </Card>
           <Card style={styles.box}>
             <CardText>
                 <h2>STATS <TrendingUp /></h2>
-                <div><span style={styles.count}>{this.state.stream.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face /></span></div>
-                <div><span style={styles.count}>{this.state.stream.listenerLiveCount.toLocaleString()}</span><span> Current Listeners <Face /></span></div>
-                <div><span style={styles.count}>{this.state.stream.heartCountNum.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
+                <div><span style={styles.count}>{this.state.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face /></span></div>
+                <div><span style={styles.count}>{this.state.listenerLiveCount.toLocaleString()}</span><span> Current Listeners <Face /></span></div>
+                <div><span style={styles.count}>{this.state.heartCount.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
             </CardText>
-            <div id="canvas-container">
-              <canvas width="600" height="100" id="canvas"></canvas>
-            </div>
+            <canvas width="600" height="100" id="visualizer"></canvas>
           </Card>
 
         </div>
