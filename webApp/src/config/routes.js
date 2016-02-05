@@ -1,4 +1,4 @@
-import auth from '../utils/Auth'
+import auth from '../utils/Auth';
 
 function redirectToLogin(nextState, replace) {
   if (!auth.isAuth()) {
@@ -11,12 +11,20 @@ function redirectToLogin(nextState, replace) {
 
 
 export default {
-  component: require('../Components/App'),
+  component: require('../App.jsx'),
+  
   childRoutes: [
+    { path: '/',
+      getComponent: (location, cb) => {
+        require.ensure([], (require) => {
+          cb(null, require('../App.jsx'))
+        })
+      }
+    },
     { path: '/stream/:streamId',
       getComponent: (location, cb) => {
         require.ensure([], (require) => {
-          cb(null, require('../Components/StreamLive.js'))
+          cb(null, require('../Components/StreamLive'))
         })
       }
     },
@@ -24,40 +32,46 @@ export default {
     { path: '/login',
       getComponent: (location, cb) => {
         require.ensure([], (require) => {
-          cb(null, require('../Components/Login.js'))
+          cb(null, require('../Components/Login'))
         })
       }
     },
 
 
     { onEnter: redirectToLogin,
-      { path: '/broadcast/setup',
-        getComponent: (location, cb) => {
-          require.ensure([], (require) => {
-            cb(null, require('../Components/Broadcast.js'))
-          })
+      childRoutes: [
+        { path: '/broadcast/setup',
+          getComponent: (location, cb) => {
+            require.ensure([], (require) => {
+              cb(null, require('../Components/Broadcast'))
+            })
+          }
         }
-      }
+      ]
     },
 
     { onEnter: redirectToLogin,
-      { path: '/broadcast/:streamId',
-        getComponent: (location, cb) => {
-          require.ensure([], (require) => {
-            cb(null, require('../Components/BroadcastLive.js'))
-          })
+      childRoutes: [
+        { path: '/broadcast/:streamId',
+          getComponent: (location, cb) => {
+            require.ensure([], (require) => {
+              cb(null, require('../Components/BroadcastLive'))
+            })
+          }
         }
-      }
+      ]
     },
 
     { onEnter: redirectToLogin,
-      { path: '/user/:userId',
-        getComponent: (location, cb) => {
-          require.ensure([], (require) => {
-            cb(null, require('../Components/BroadcastProfile.js'))
-          })
+      childRoutes: [
+        { path: '/user/:userId',
+          getComponent: (location, cb) => {
+            require.ensure([], (require) => {
+              cb(null, require('../Components/BroadcastProfile'))
+            })
+          }
         }
-      }
+      ]
     },
 
   ]
