@@ -4,22 +4,22 @@ import reactMixin from 'react-mixin';
 import $ from '../../public/js/jquery-1.11.1.min';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import NavBar from './NavBar';
-import AuthUtil from '../utils/Auth';
+import Auth from '../utils/Auth';
 
-class Auth extends React.Component {
+class Login extends React.Component {
 
   render() {
     return (
       <div>
 
       <NavBar title="Login" history={this.history}/>
-      <RaisedButton primary={true} onClick={AuthUtil.setUser.bind(this)} label="Login With SoundCloud"/>
+      <RaisedButton primary={true} onClick={Auth.setUser.bind(this)} label="Login With SoundCloud"/>
       
       </div>
     )
   }
 }
 
-reactMixin.onClass(Auth, History);
+reactMixin.onClass(Login, History);
 
-export default Auth;
+export default Login;
