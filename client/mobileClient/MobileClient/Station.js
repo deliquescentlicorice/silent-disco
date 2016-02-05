@@ -14,15 +14,6 @@ import endpointIP from  './endpointIP';
 
 var audio = NativeModules.RNAudioPlayerURL;
 
-var FAKE_STATION_DATUM = {
-  heartCount: 1000,
-  image: '',
-  listenerCount: 20,
-  desc: 'Sick beets. Not a typo. Here is some additional text to experiement with how text flows.'
-}
-
-var REQUEST_URL_ONE = "";
-
 class Station extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +21,8 @@ class Station extends Component {
       isLoading: true,
       heartCount: 0,
       image: '',
-      listenerCount: 0,
+      listenerLiveCount: 0,
+      listenerMaxCount: 0,
       desc: ''
     }
   }
@@ -40,15 +32,9 @@ class Station extends Component {
   }
 
   componentDidMount() {
-    // this.fetchData();
-    var stationDetail = FAKE_STATION_DATUM;
-    this.setState({
-      isLoading: false,
-      heartCount: stationDetail.heartCount,
-      image: "https://i.imgur.com/03t6Yun.jpg",
-      listenerCount: stationDetail.listenerCount,
-      desc: stationDetail.desc
-    });
+    this.fetchData();
+    // to get to playing music as soon as possible,
+    // audio play will not wait for data to be fetched
     audio.initWithURL(endpointIP + '/stream/' + this.props.station._id);
     audio.play();
   }
@@ -58,34 +44,37 @@ class Station extends Component {
   }
 
   fetchData() {
-    fetch(REQUEST_URL_ONE)
+    var component = this;
+    fetch(endpointIP + '/api/stream/' + this.props.station._id)
       .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          isLoading: false,
-          heartCount: responseData.heartCount,
-          image: responseData.image,
-          listenerCount: responseData.listenerCount,
-          desc: responseData.desc
-        });
+      .then((streamData) => {
+        fetch(endpointIP + '/api/user/' + streamData.creator)
+        .then((response) => response.json())
+        .then((userData) => {
+          component.setState({
+            isLoading: false,
+            heartCount: streamData.heartCountNum,
+            image: userData.user.scAvatarUri,
+            listenerLiveCount: streamData.listenerLiveCount,
+            listenerMaxCount: streamData.listenerMaxCount,
+            desc: streamData.description
+          });
+        })
       })
       .done();
   }
 
   upheart() {
-    var POST_HEART = endpointIP + '/api/stream/' + this.props.station._id;
-    fetch(POST_HEART, {
+    fetch(endpointIP + '/api/stream/' + this.props.station._id, {
       method: 'PUT',
-      body: JSON.stringify({
-        id: this.props.station._id
-      })
+      body: ''
     })
-    // .then((response) => response.json())
-    // .then((responseData) => {
-    //   this.setState({
-    //     heartCount: responseData.heartCount.length > 5 ? ">9,999" : responseData.heartCount
-    //   });
-    // })
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({
+        heartCount: responseData.heartCountNum.length > 5 ? ">9,999" : responseData.heartCountNum
+      });
+    })
     .done();
   }
 
@@ -93,13 +82,12 @@ class Station extends Component {
     if (this.state.isLoading) {
       return <Loading />
     }
-    // removed <Text style={styles.broadcaster}>{this.props.station.broadcaster}</Text>
     return (
       <View style={styles.container} >
         <Image style={styles.lede} source={{uri: this.state.image}}/>
         <View>
           <View style={styles.heartThisDJ}>
-            
+            <Text style={styles.broadcaster}>{this.props.station.broadcaster}</Text>
             <View style={styles.rightContainer}>
               <Text style={styles.heartNum}>
                 {this.state.heartCount}
