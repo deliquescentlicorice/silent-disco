@@ -28,6 +28,7 @@ import reactMixin from 'react-mixin';
 
 // COMPONENTS
 import NavBar from './NavBar.js';
+import Loading from './Loading.js';
 
 // VISUALIZER
 import visualizer from './visualizer.js';
@@ -50,7 +51,8 @@ class BroadcastLive extends React.Component {
       artistAlias: user.username || "QuantumRadio Broadcaster",
       artistImage: user.avatar_url,
       selectedSource: null,
-      audioSources: []
+      audioSources: [],
+      isLoading: true
     };
   }
 
@@ -87,9 +89,9 @@ class BroadcastLive extends React.Component {
         description: stream.description,
         heartCount: stream.heartCountNum,
         listenerLiveCount: stream.listenerLiveCount,
-        listenerMaxCount: stream.listenerMaxCount
+        listenerMaxCount: stream.listenerMaxCount,
+        isLoading: false
       });
-      console.log('State',this.state);
     });
   }
 
@@ -122,7 +124,7 @@ class BroadcastLive extends React.Component {
   }
 
   render() {
-    console.log(this.state.audioSources);
+    var partial = <Loading />
     var dropDown = (
       <DropDownMenu value={this.state.selectedSource} onChange={this.sourceInput.bind(this)}>
         <MenuItem value={null} key={null} primaryText={"Select a source..."} />
@@ -130,11 +132,9 @@ class BroadcastLive extends React.Component {
       </DropDownMenu>
     )
 
-    return (
-      <div style={styles.container}>
-        <NavBar history={this.history}/>
+    if (!this.state.isLoading) {
+      partial = (
         <div style={styles.cardContainer}>
-          
           <Card style={styles.mainBox}>
             <a href="#">
             <CardHeader
@@ -170,8 +170,13 @@ class BroadcastLive extends React.Component {
             </CardText>
             <canvas width="600" height="100" id="visualizer"></canvas>
           </Card>
-
         </div>
+      )
+    }
+    return (
+      <div style={styles.container}>
+        <NavBar history={this.history}/>
+        {partial}
       </div>
     )
   } 
