@@ -44,6 +44,9 @@ import visualizer from './visualizer.js';
 // AJAX GET CALL
 import $ from '../../public/js/jquery-1.11.1.min';
 
+//CLIENTID
+import SC_Client from '../../server/config/apiKeys'
+
 class BroadcastLive extends React.Component {
   constructor(props) {
     var user = JSON.parse(localStorage.getItem("me"));
@@ -222,7 +225,7 @@ class BroadcastLive extends React.Component {
                 // rightIcon={<PlayCircleOutline />}
               />
             </List>
-            <audio crossOrigin="anonymous" id="playerID" src={this.state.currentSong.stream_url + '?client_id=67e4bbe5a2b1b64416b0ed84366b34ca'} controls ></audio>
+            <audio crossOrigin="anonymous" id="playerID" src={this.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } controls ></audio>
 
             <FloatingActionButton onClick={this.startHTMLBroadcast.bind(this)}>
               <Mic />
