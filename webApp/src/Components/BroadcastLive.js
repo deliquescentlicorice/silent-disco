@@ -22,6 +22,11 @@ import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
 import Paper from '../../node_modules/material-ui/lib/paper';
 
+import ListItem from '../../node_modules/material-ui/lib/lists/list-item';
+import Avatar from '../../node_modules/material-ui/lib/avatar';
+import PlayCircleOutline from 'material-ui/lib/svg-icons/av/play-circle-outline';
+import List from '../../node_modules/material-ui/lib/lists/list';
+
 // ROUTER
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
@@ -29,6 +34,9 @@ import reactMixin from 'react-mixin';
 // COMPONENTS
 import NavBar from './NavBar.js';
 import Loading from './Loading.js';
+import BroadcastStats from './BroadcastStats.js';
+import BroadcastAUX from './BroadcastAUX.js';
+import BroadcastSCEntry from './BroadcastSCEntry.js';
 
 // VISUALIZER
 import visualizer from './visualizer.js';
@@ -78,11 +86,16 @@ class BroadcastLive extends React.Component {
     this.fetchData();
   }
 
+  componentWillUnmount() {
+    this.bc.stop();
+  }
+
   fetchData() {
     $.ajax({
       url: '/api/stream/' + this.props.params.streamId
     })
     .done((stream) => {
+      let fav = JSON.parse(localStorage.getItem("favorites"));
       console.log('State',stream);
       this.setState({
         name: stream.name,
@@ -93,9 +106,19 @@ class BroadcastLive extends React.Component {
         isLoading: false,
         creator: stream.creator,
         broadcaster: stream.broadcaster,
-        playing: stream.playing
+        playing: stream.playing,
+        favorites: fav,
+        currentSong: fav[2] || null
       });
+
     });
+  }
+  startHTMLBroadcast(){
+    this.bc.startFromHTML("playerID");
+  }
+
+  stopHTMLBroadcast(){
+    this.bc.stop();
   }
 
   startBroadcast() {
@@ -115,9 +138,11 @@ class BroadcastLive extends React.Component {
   }
 
   sourceInput(event, index, value) {
+    console.log("value",value)
     this.setState({
       selectedSource: value
     })
+    console.log("changed state",this.state)
   }
 
   goToProfile() {
@@ -126,8 +151,21 @@ class BroadcastLive extends React.Component {
     })
   }
 
+  changeSCSong(selectedSong){
+    console.log("currentSong", this)
+    console.log("selectedSong", selectedSong)
+
+    this.setState({
+      currentSong: selectedSong
+    })
+    console.log(this.state)
+  }
+
+  renderSCEntry(key){
+    return <BroadcastSCEntry history={this.history} changeSCSong={this.changeSCSong.bind(this)} state={this.state} key={key.id} index={key} title={key.title} genre={key.genre} stream_url={key.stream_url} artwork={key.artwork_url || key.user.avatar_url} />
+  }
+
   render() {
-    var partial = <Loading />
     var dropDown = (
       <DropDownMenu value={this.state.selectedSource} onChange={this.sourceInput.bind(this)}>
         <MenuItem value={null} key={null} primaryText={"Select a source..."} />
@@ -135,6 +173,8 @@ class BroadcastLive extends React.Component {
       </DropDownMenu>
     )
 
+    var partial = <Loading />
+    console.log("state", this.state)
     if (!this.state.isLoading) {
       partial = (
         <div style={styles.cardContainer}>
@@ -150,11 +190,12 @@ class BroadcastLive extends React.Component {
               <img src={this.state.artistImage}/>
             </CardMedia>
         
+
             <CardActions>
-              <FloatingActionButton onClick={this.startBroadcast.bind(this)} disabled={this.state.disabled}>
+              <FloatingActionButton onClick={this.startBroadcast.bind(this)} disabled={this.disabled}>
                 <Mic />
               </FloatingActionButton>
-              <FloatingActionButton onClick={this.stopBroadcast.bind(this)} disabled={!this.state.disabled}>
+              <FloatingActionButton onClick={this.stopBroadcast.bind(this)} disabled={!this.disabled}>
                <MicOff />
               </FloatingActionButton>
               {dropDown}
@@ -166,13 +207,32 @@ class BroadcastLive extends React.Component {
             </CardText>
           </Card>
           <Card style={styles.box}>
-            <CardText>
-                <h2>STATS <TrendingUp /></h2>
-                <div><span style={styles.count}>{this.state.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face /></span></div>
-                <div><span style={styles.count}>{this.state.listenerLiveCount.toLocaleString()}</span><span> Current Listeners <Face /></span></div>
-                <div><span style={styles.count}>{this.state.heartCount.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
-            </CardText>
+            <BroadcastStats listenerLiveCount={this.state.listenerLiveCount} listenerMaxCount={this.state.listenerMaxCount} heart={this.state.heartCount}/>
             <canvas width="600" height="100" id="visualizer"></canvas>
+          </Card>
+          <Card style={styles.box}>
+            <CardTitle title="Now Playing"/>
+            <List>
+              <ListItem
+                // onClick={this.props.goToStream.bind(this)}
+                primaryText={this.state.currentSong.title}
+                secondaryText={this.state.currentSong.genre}
+                leftAvatar={<Avatar src={this.state.currentSong.artwork_url || this.state.currentSong.user.avatar_url} />}
+                // secondaryText={this.state.favorites[2].stream_url}
+                // rightIcon={<PlayCircleOutline />}
+              />
+            </List>
+            <audio crossOrigin="anonymous" id="playerID" src={this.state.currentSong.stream_url + '?client_id=67e4bbe5a2b1b64416b0ed84366b34ca'} controls ></audio>
+
+            <FloatingActionButton onClick={this.startHTMLBroadcast.bind(this)}>
+              <Mic />
+            </FloatingActionButton>
+            <FloatingActionButton onClick={this.stopHTMLBroadcast.bind(this)} >
+             <MicOff />
+            </FloatingActionButton>
+            <List>
+              {this.state.favorites.map(this.renderSCEntry.bind(this))}
+            </List>
           </Card>
         </div>
       )
@@ -199,7 +259,7 @@ var styles = {
   },
 
   box: {
-    'flex':1
+    'flex':3
   },
 
   mainBox: {
@@ -219,3 +279,21 @@ var styles = {
 reactMixin.onClass(BroadcastLive, History);
 
 export default BroadcastLive;
+
+// var dropDown = (
+//       <DropDownMenu value={this.state.selectedSource} onChange={this.sourceInput.bind(this)}>
+//         <MenuItem value={null} key={null} primaryText={"Select a source..."} />
+//         {this.state.audioSources.map(source => <MenuItem value={source.id} key={source.id} primaryText={source.label} />)}
+//       </DropDownMenu>
+//     )
+
+// <BroadcastAUX 
+              // startBroadcast={this.startBroadcast}
+              // stopBroadcast={this.stopBroadcast}
+              // disabled={this.state.disabled}
+              // selectedSource={this.state.selectedSource}
+              // sourceInput={this.sourceInput}
+              // audioSources={this.state.audioSources}
+            // />
+
+
