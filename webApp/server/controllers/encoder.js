@@ -47,10 +47,13 @@ exports.listenHandler = function(req, res) {
     , "-V 5" //variable bit rate
   ];
 
+  //mp3 encoder
   var encoder = spawn('lame', spawnOpts);
 
   encoder.stdout.on("data", function(chunk) {
-    res.write(chunk);
+    if (!res.finished) {
+      res.write(chunk);
+    }
   });
 
   // Then start sending the incoming PCM data to the MP3 encoder
@@ -60,12 +63,19 @@ exports.listenHandler = function(req, res) {
 
   exports.stdin[streamId].on("data", callback);
 
+  exports.stdin[streamId].on("end", function() {
+    console.log('stream on end - ending response');
+    res.end();
+  });
+
   clients.push(res);
 
   req.connection.on("close", function() {
-    // This occurs when the HTTP client closes the connection.
+    // occurs when the HTTP client closes the connection.
     clients.splice(clients.indexOf(res), 1);
     encoder.stdin.end();
-    exports.stdin[streamId].removeListener("data", callback);
+    if (exports.stdin[streamId]) {
+      exports.stdin[streamId].removeListener("data", callback);
+    }
   });
 }
