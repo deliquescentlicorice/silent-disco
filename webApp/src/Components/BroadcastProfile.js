@@ -17,12 +17,15 @@ class BroadcastProfile extends React.Component {
     super();
 
     this.state = {
-      user: {},
-      isLoading: true
+      user:{
+        streams:[],
+        user:{}
+      }
+
     };
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.fetchUserData()
   }
 

@@ -23,7 +23,7 @@ class BroadcastSetup extends React.Component {
       desc: 'Hi, I\'m anonymous and you\'re listening to QuantumRadio',
       isInitializing: false,
       isLoggedIn: false,
-      isLive: true,
+      isLive: "AUX",
       favorites: [],
       isLoading: false
     };
@@ -37,7 +37,7 @@ class BroadcastSetup extends React.Component {
 
   stationLiveInput(event, index, value) {
     this.setState({
-      isLive: event.target.value
+      isLive: value
     });
   }
 
@@ -49,6 +49,11 @@ class BroadcastSetup extends React.Component {
 
   startBroadcast() {
     var serverURL = "http://localhost:3000/api/stream";
+
+    this.setState({
+      isLoading: true
+    })
+
     $.ajax({
         url: serverURL,
         method: 'POST',
@@ -62,57 +67,18 @@ class BroadcastSetup extends React.Component {
         }
       })
       .done((responseData) => {
-        if (this.state.isLive) {
-          this.props.history.push({
-            pathname: '/broadcast/'+responseData._id,
-            state: {
-              streamId: responseData._id
-            }
-          });
-        } else {
-          this.props.history.push({
-            pathname: '/broadcast/soundcloud'
-          });
-        }
-
+        this.setState({
+          isLoading: false
+        })
+        this.props.history.push({
+          pathname: '/broadcast/'+responseData._id,
+          state: {
+            streamId: responseData._id,
+            isLive: this.state.isLive
+          }
+        });
       });
 
-    this.setState({
-      isLoading: true
-    })
-
-    // fetch(serverURL, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     name: this.state.name,
-    //     creator: JSON.parse(localStorage.getItem("me")).id,
-    //     desc: this.state.desc,
-    //     lng: 40,
-    //     lat: 30
-    //   })
-    // })
-    // .then((data) => data.json())
-    // .then((data) => {
-    //   console.log('id from database ', data._id);
-    //   var streamId = data._id;
-
-    //   if (this.state.isLive) {
-    //     this.props.history.push({
-    //       pathname: '/broadcast/live',
-    //       state: {
-    //         streamId: streamId
-    //       }
-    //     });
-    //   } else {
-    //     this.props.history.push({
-    //       pathname: '/broadcast/soundcloud'
-    //     });
-    //   }
-    // });
   }
 
 
@@ -135,8 +101,8 @@ class BroadcastSetup extends React.Component {
               floatingLabelText="Description"
             /><br/><br/>
             <DropDownMenu value={this.state.isLive} onChange={this.stationLiveInput.bind(this)}>
-              <MenuItem value={true} primaryText="Live"/>
-              <MenuItem value={false} primaryText="SoundCloud"/>
+              <MenuItem value={"AUX"} primaryText="AUX or Microphone"/>
+              <MenuItem value={"SC"} primaryText="SoundCloud"/>
             </DropDownMenu><br/><br/>
             <RaisedButton 
               primary={true} 

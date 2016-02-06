@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 // COMPONENTS
 import NavBar from './NavBar.js';
 import Loading from './Loading.js'
+import BroadcastStats from './BroadcastStats';
 
 // MEDIA PLAYER
 import Sound from '../../node_modules/react-sound';
@@ -109,7 +110,9 @@ class StreamLive extends React.Component {
           image: userData.user.scAvatarUri,
           listenerLiveCount: streamData.listenerLiveCount,
           creator: streamData.creator,
-          isLoading: false
+          isLoading: false,
+          heartCount: streamData.heartCountNum,
+          listenerMaxCount: streamData.listenerMaxCount
         })
       })
     })
@@ -119,9 +122,9 @@ class StreamLive extends React.Component {
     var partial = <Loading />
     if (!this.state.isLoading) {
       partial = (
-        <div style={styles.playerContainer}>
-          <Card style={styles.card}>
-            <CardMedia style={styles.image} >
+        <div style={styles.cardContainer}>
+          <Card style={styles.mainBox}>
+            <CardMedia style={styles.streamImage} >
               <img src={this.state.image} />
             </CardMedia>
             <CardTitle title={this.state.name} subtitle={this.state.broadcaster}  />
@@ -141,15 +144,18 @@ class StreamLive extends React.Component {
               </FloatingActionButton>
             </CardActions>
           </Card>
+          <Card style={styles.box}>
+            <BroadcastStats listenerLiveCount={this.state.listenerLiveCount} listenerMaxCount={this.state.listenerMaxCount} heart={this.state.heartCount}/>
+          </Card>
         </div>
       )
     }
     return (
-      <div style={styles.mainContainer}>
-        <div>  
+      <div>
+        <div style={styles.container}>  
           <NavBar title={'Now Playing'} history={this.props.history}/>
+          {partial}
         </div>
-        {partial}
         
         <Sound
           url={'/stream/' + this.props.params.streamId}
@@ -163,19 +169,28 @@ class StreamLive extends React.Component {
 }
 
 var styles = {
-  
-  mainContainer: {
+  container:{
     'display': 'flex',
-    'flexDirection':'column',
-    // 'border': '10px solid purple',
-    // 'height': '100vh'
+    'flexDirection' :'column',
   },
-
-  playerContainer: {
+  cardContainer:{
     'display': 'flex',
     'flexDirection':'row',
-    'justifyContent':'center',
-    // 'border': '10px solid goldenrod',
+    'flexWrap': 'wrap'
+  },
+
+  box: {
+    'flex':3
+  },
+
+  mainBox: {
+    'flexGrow':1,
+    'maxWidth': '600px',
+    'alignContent': 'center',
+  },
+
+  streamImage:{
+    'maxWidth': '300px'
   },
 
   card: {
@@ -184,11 +199,6 @@ var styles = {
     'maxWidth': 325
     // 'border': '10px solid yellow',
     // 'height': '100vh'
-  },
-
-  padding: {
-    // 'flex':1,
-    // 'border': '10px solid red',
   }
 }
 
