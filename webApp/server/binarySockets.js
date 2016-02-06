@@ -15,9 +15,8 @@ exports.connect = function(client) {
     // encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
 
     stream.on('end', function() {
-      encoder.stdin[streamId].destroy();
+      encoder.stdin[streamId].end();
       delete encoder.stdin[streamId];
-      console.log('stream end event');
     });
   });
 
