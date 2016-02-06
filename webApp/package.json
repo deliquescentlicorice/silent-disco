@@ -27,6 +27,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-react-hmre": "^1.0.0",
+    "chai": "^3.5.0",
     "cross-env": "^1.0.6",
     "eslint": "^1.10.3",
     "eslint-plugin-babel": "^3.0.0",
@@ -34,7 +35,9 @@
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.13.3",
     "jQuery": "^1.7.4",
+    "mocha": "^2.4.5",
     "rimraf": "^2.4.3",
+    "supertest": "^1.1.0",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
