@@ -22,6 +22,10 @@ import List from '../../node_modules/material-ui/lib/lists/list';
 import BroadcastEntry from './BroadcastEntry.js'
 
 class BroadcastProfileView extends React.Component {
+  editProfile() {
+    this.props.edit();
+  }
+
   goToBroadcast() {
     console.log("broadcast",this)
     var broadcastId= this.props.details._id;
@@ -60,6 +64,7 @@ class BroadcastProfileView extends React.Component {
 
   render() {
     var partial;
+    console.log(this.props.user)
     if (this.props.isLoading) {
       partial = <div></div>
     } else {
@@ -72,9 +77,13 @@ class BroadcastProfileView extends React.Component {
                 subtitle={this.props.user.full_name}
                 avatar={this.props.user.scAvatarUri}
               />
-              <div>
-                <CardText>
-                  <h2>TOTAL STATS <TrendingUp /></h2>
+              <FlatButton label="edit" onClick={this.editProfile.bind(this)} />
+              <div style={styles.subcontainer}>
+                <CardText style={styles.details}>
+                  <h2>DETAILS</h2>
+                </CardText>
+                <CardText style={styles.stats}>
+                  <h2>CUMULATIVE STATS <TrendingUp /></h2>
                   <div>
                     <span style={styles.count}>{this.listenerCountTotal()}</span><span> Listens <Face /></span>
                   </div>
@@ -102,6 +111,19 @@ var styles = {
     'display': 'flex',
     'flexDirection':'row',
     'flexWrap': 'wrap'
+  },
+
+  subcontainer:{
+    'display': 'flex',
+    'flexDirection':'row'
+  },
+
+  details:{
+    flex: 1
+  },
+
+  stats:{
+    flex: 1
   },
 
   box: {
