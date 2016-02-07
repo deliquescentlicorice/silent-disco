@@ -18,10 +18,6 @@ casper.test.begin("Testing Radio from listener's perspective", 3, function suite
   });
 
   casper.then(function() {
-    this.wait(1000, function() {
-      test.assertEvalEquals(function() {
-        var navbarPossibs = [];
-        var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
     });
   });
 
