@@ -64,7 +64,6 @@ class BroadcastProfileView extends React.Component {
 
   render() {
     var partial;
-    console.log(this.props.user)
     if (this.props.isLoading) {
       partial = <div></div>
     } else {
@@ -72,32 +71,46 @@ class BroadcastProfileView extends React.Component {
         <div>
           <div style={styles.box}>
             <Card>
-            <CardHeader
-                title={this.props.user.scUsername}
-                subtitle={this.props.user.full_name}
-                avatar={this.props.user.scAvatarUri}
-              />
-              <FlatButton label="edit" onClick={this.editProfile.bind(this)} />
+              <CardHeader
+                  title={this.props.user.scUsername}
+                  subtitle={this.props.user.full_name}
+                  avatar={this.props.user.scAvatarUri}
+                />
               <div style={styles.subcontainer}>
-                <CardText style={styles.details}>
+                <CardText style={styles.stats}>
                   <h2>DETAILS</h2>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>Broadcast Name: </span><span>{this.props.user.scUsername || 'pseudonymous'}</span>
+                  </div>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>Full Name: </span><span>{this.props.user.full_name || 'anonymous'}</span>
+                  </div>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>Website Title: </span><span>{this.props.user.websiteTitle || '(none)'}</span>
+                  </div>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>Website URL: </span><span>{this.props.user.website || '(none)'}</span>
+                  </div>
                 </CardText>
                 <CardText style={styles.stats}>
-                  <h2>CUMULATIVE STATS <TrendingUp /></h2>
-                  <div>
-                    <span style={styles.count}>{this.listenerCountTotal()}</span><span> Listens <Face /></span>
+                  <h2>LIFETIME STATS <TrendingUp style={styles.icon} /></h2>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>{this.listenerCountTotal()}</span><span> Listens <Face style={styles.icon} /></span>
                   </div>
-                  <div>
-                    <span style={styles.count}>{this.heartCountTotal()}</span><span> Hearts <Favorite color={Colors.red500}/></span>
+                  <div style={styles.datum}>
+                    <span style={styles.label}>{this.heartCountTotal()}</span><span> Hearts <Favorite style={styles.icon} color={Colors.red500}/></span>
                   </div>
                 </CardText>
               </div>
+              <CardActions>
+                <FlatButton label="edit" onClick={this.editProfile.bind(this)} />
+              </CardActions>
             </Card>
-          </div>
-          <div style={styles.box}>
-            <List subheader="Previous Streams" style={styles.box}>
-              {Object.keys(this.props.streams).map(this.renderStream.bind(this))}
-            </List>
+            <Card>
+              <List subheader="Previous Streams" style={styles.box}>
+                {Object.keys(this.props.streams).map(this.renderStream.bind(this))}
+              </List>
+            </Card>
           </div>
         </div>
       )
@@ -115,22 +128,30 @@ var styles = {
 
   subcontainer:{
     'display': 'flex',
-    'flexDirection':'row'
+    'flexDirection':'row',
   },
 
-  details:{
-    flex: 1
+  tableEntries:{
+    alignContent: 'flex-end'
+  },
+
+  datum:{
+    marginBottom: '5px'
   },
 
   stats:{
-    flex: 1
+    width: '50%'
+  },
+
+  icon:{
+    marginBottom: '-6px'
   },
 
   box: {
     flex:1
   },
 
-  count:{
+  label:{
     fontWeight: 'bold'
   }
 }
