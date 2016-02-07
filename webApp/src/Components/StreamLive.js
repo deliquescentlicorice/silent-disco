@@ -43,8 +43,14 @@ class StreamLive extends React.Component {
       description: "",
       image: "",
       listenerLiveCount: "",
+      listenerMaxCount: "",
+      heartCount: 0,
       creator: "",
-      isLoading: true
+      isLoading: true,
+      image: "",
+      soundcloud: "",
+      website: "",
+      websiteTitle: ""
     }
   }
 
@@ -107,19 +113,28 @@ class StreamLive extends React.Component {
           name: streamData.name,
           broadcaster: streamData.broadcaster,
           desc: streamData.description,
-          image: userData.user.scAvatarUri,
           listenerLiveCount: streamData.listenerLiveCount,
           creator: streamData.creator,
-          isLoading: false,
           heartCount: streamData.heartCountNum,
-          listenerMaxCount: streamData.listenerMaxCount
+          listenerMaxCount: streamData.listenerMaxCount,
+          isLoading: false,
+          image: userData.user.scAvatarUri,
+          soundcloud: userData.user.scPermalink,
+          website: userData.user.website,
+          websiteTitle: userData.user.websiteTitle
         })
       })
     })
   }
 
   render() {
-    var partial = <Loading />
+    var partial = <Loading />;
+    var linkBar = this.state.website ? (
+     <div>{this.state.broadcaster}<br /><a href={this.state.soundcloud}>SoundCloud</a> - <a href={this.state.website}>{this.state.websiteTitle}</a></div>
+    ) : (
+      <div>{this.state.broadcaster}<br /><a href={this.state.soundcloud}>SoundCloud</a></div>
+    )
+
     if (!this.state.isLoading) {
       partial = (
         <div style={styles.cardContainer}>
@@ -127,7 +142,7 @@ class StreamLive extends React.Component {
             <CardMedia style={styles.streamImage} >
               <img src={this.state.image} />
             </CardMedia>
-            <CardTitle title={this.state.name} subtitle={this.state.broadcaster}  />
+            <CardTitle title={this.state.name} subtitle={linkBar} />
             <CardText>
               {this.state.desc}
             </CardText>
