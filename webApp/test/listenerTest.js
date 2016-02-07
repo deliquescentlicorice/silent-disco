@@ -17,9 +17,6 @@ casper.test.begin("Testing Radio from listener's perspective", 3, function suite
     }, 'Listen', 'user lands at Listen page');
   });
 
-  casper.then(function() {
-    this.click('.penguin button');
-  });
 
   casper.then(function() {
     this.wait(1000, function() {
@@ -27,14 +24,11 @@ casper.test.begin("Testing Radio from listener's perspective", 3, function suite
         var navbarPossibs = [];
         var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
         for (var i = 0; i < divs.length; i++) {
-          //so at least I can get the element by reactId
-          // if (divs[i].getAttribute('data-reactid') === '.0.0.0.1') {
           if (divs[i].style.left === '0px' && divs[i].style.width === '256px') {
             navbarPossibs.push(divs[i]);
           }
         }
         return navbarPossibs.length;
-      }, 1, 'navbar appears on left side');
     });
   });
 
