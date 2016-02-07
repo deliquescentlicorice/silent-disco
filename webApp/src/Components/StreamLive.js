@@ -130,9 +130,9 @@ class StreamLive extends React.Component {
   render() {
     var partial = <Loading />;
     var linkBar = this.state.website ? (
-     <div>{this.state.broadcaster}<br /><a href={this.state.soundcloud}>SoundCloud</a> - <a href={this.state.website}>{this.state.websiteTitle}</a></div>
+     <div>{this.state.broadcaster || 'pseudonymous'}<br /><a href={this.state.soundcloud}>SoundCloud</a> - <a href={this.state.website}>{this.state.websiteTitle}</a></div>
     ) : (
-      <div>{this.state.broadcaster}<br /><a href={this.state.soundcloud}>SoundCloud</a></div>
+      <div>{this.state.broadcaster || 'pseudonymous'}<br /><a href={this.state.soundcloud}>SoundCloud</a></div>
     )
 
     if (!this.state.isLoading) {
