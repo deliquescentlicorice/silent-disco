@@ -23,15 +23,19 @@ class BroadcastStats extends React.Component {
     return (
       <CardText>
         <h2>STATS <TrendingUp /></h2>
-        <div><span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face /></span></div><br/>
-        <div><span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Current Listeners <Face /></span></div><br/>
-        <div><span style={styles.count}>{this.props.heart.toLocaleString()}</span><span> Hearts <Favorite color={Colors.red500}/></span></div>
+        <div><span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face style={styles.icon} /></span></div><br/>
+        <div><span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Currently Listening <Face style={styles.icon} /></span></div><br/>
+        <div><span style={styles.count}>{this.props.heart.toLocaleString()}</span><span> Hearts <Favorite style={styles.icon} color={Colors.red500}/></span></div>
       </CardText>
     )
   } 
 }
 
 var styles = {
+  icon:{
+    marginBottom: '-6px'
+  },
+
   count:{
     fontWeight: 'bold'
   }
