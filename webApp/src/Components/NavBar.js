@@ -121,12 +121,15 @@ class NavBar extends React.Component {
         </LeftNav>
         <AppBar title={this.props.title} 
           titleStyle={styles.title} 
-          // onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
+          className="penguin"
+
           onClick={this.handleToggle.bind(this)}
         />
 
       </div>
     )
+          // onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
+          //penguin class for testing purposes
   }
   
 
