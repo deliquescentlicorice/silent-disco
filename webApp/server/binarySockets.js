@@ -11,8 +11,18 @@ exports.connect = function(client) {
       
     //support for multiple streams  
     var streamId = meta.streamId;
+
+    //need to handle listeners arriving to stream before it starts broadcasting
     encoder.stdin[streamId] = stream;
     // encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
+
+    //check if there is a queue of clients waiting for this stream to start
+    if (encoder.streamQueue[streamId]) {
+      encoder.streamQueue[streamId].forEach(function(req) {
+        encoder.addStreamHandlers(streamId,req[0],req[1]);
+      });
+      delete encoder.streamQueue[streamId];
+    }
 
     stream.on('end', function() {
       encoder.stdin[streamId].end();
@@ -20,10 +30,8 @@ exports.connect = function(client) {
     });
   });
 
-
   //handle disconnect
   client.on('close', function() {
-
     console.log('binary js client connection closed');
   })
 } 
