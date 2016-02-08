@@ -41,7 +41,6 @@ exports.listenHandler = function(req, res) {
 
   //check if stream has started yet
   if (exports.stdin[streamId]) {
-    console.log('stream exists');
     exports.addStreamHandlers(streamId, req, res);
   } else {
     //handle user arriving to stream early
