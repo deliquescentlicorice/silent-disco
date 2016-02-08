@@ -18,8 +18,8 @@ exports.connect = function(client) {
 
     //check if there is a queue of clients waiting for this stream to start
     if (encoder.streamQueue[streamId]) {
-      encoder.streamQueue[streamId].forEach(function(res) {
-        encoder.addStreamResponseHandlers(streamId,res);
+      encoder.streamQueue[streamId].forEach(function(req) {
+        encoder.addStreamHandlers(streamId,req[0],req[1]);
       });
       delete encoder.streamQueue[streamId];
     }
@@ -30,10 +30,8 @@ exports.connect = function(client) {
     });
   });
 
-
   //handle disconnect
   client.on('close', function() {
-
     console.log('binary js client connection closed');
   })
 } 
