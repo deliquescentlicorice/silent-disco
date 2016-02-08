@@ -11,8 +11,18 @@ exports.connect = function(client) {
       
     //support for multiple streams  
     var streamId = meta.streamId;
+
+    //need to handle listeners arriving to stream before it starts broadcasting
     encoder.stdin[streamId] = stream;
     // encoder.stdin[streamId].on('data', encoder.onInStreamPCM);
+
+    //check if there is a queue of clients waiting for this stream to start
+    if (encoder.streamQueue[streamId]) {
+      encoder.streamQueue[streamId].forEach(function(res) {
+        encoder.addStreamResponseHandlers(streamId,res);
+      });
+      delete encoder.streamQueue[streamId];
+    }
 
     stream.on('end', function() {
       encoder.stdin[streamId].end();
