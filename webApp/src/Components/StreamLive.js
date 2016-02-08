@@ -1,5 +1,9 @@
 import React from 'react';
 
+// ROUTER
+import { History } from 'react-router';
+import reactMixin from 'react-mixin';
+
 // COMPONENTS
 import NavBar from './NavBar.js';
 import Loading from './Loading.js'
@@ -16,7 +20,6 @@ class StreamLive extends React.Component {
 
   constructor(props){
     super(props);
-
     this.state = {
       status : "STOPPED",
       disabled : false,
@@ -103,11 +106,6 @@ class StreamLive extends React.Component {
 
   render() {
     var partial = <Loading />;
-    var linkBar = this.state.website ? (
-     <div>{this.state.broadcaster || 'pseudonymous'}<br /><a href={this.state.soundcloud}>SoundCloud</a> - <a href={this.state.website}>{this.state.websiteTitle}</a></div>
-    ) : (
-      <div>{this.state.broadcaster || 'pseudonymous'}<br /><a href={this.state.soundcloud}>SoundCloud</a></div>
-    )
 
     if (!this.state.isLoading) {
       partial = <StreamLiveView
@@ -119,7 +117,7 @@ class StreamLive extends React.Component {
     return (
       <div>
         <div style={styles.container}>  
-          <NavBar title={'Now Playing'} history={this.props.history}/>
+          <NavBar title={'Now Playing'} history={this.history}/>
           {partial}
         </div>
         
@@ -140,5 +138,7 @@ var styles = {
     'flexDirection' :'column',
   }
 }
+
+reactMixin.onClass(StreamLive, History);
 
 export default StreamLive;
