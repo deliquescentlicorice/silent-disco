@@ -10,12 +10,28 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
+const iconButtonElement = (
+  <IconButton
+    touch={true}
+    tooltip="more"
+    tooltipPosition="bottom-left"
+  >
+    <MoreVertIcon color={Colors.grey400} />
+  </IconButton>
+);
 
+const rightIconMenu = (
+  <IconMenu iconButtonElement={iconButtonElement}>
+    <MenuItem>Delete</MenuItem>
+  </IconMenu>
+);
 
 class BroadcastSCEntry extends React.Component {
   constructor(props){
     super(props)
   }
+
+
 
   setSong(){
     this.props.changeSCSong(this.props.index)
@@ -29,6 +45,7 @@ class BroadcastSCEntry extends React.Component {
           primaryText={this.props.title}
           secondaryText={this.props.genre}
           leftAvatar={<Avatar src={this.props.artwork} />}
+          rightIconButton={rightIconMenu}
           // secondaryText={this.state.favorites[2].stream_url}
           // rightIcon={<PlayCircleOutline />}
         />
