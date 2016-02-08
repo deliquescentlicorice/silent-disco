@@ -19,6 +19,9 @@ import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import TextField from '../../node_modules/material-ui/lib/text-field';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
+import Tabs from '../../node_modules/material-ui/lib/tabs/tabs';
+import Tab from '../../node_modules/material-ui/lib/tabs/tab';
+
 
 import Paper from '../../node_modules/material-ui/lib/paper';
 
@@ -47,6 +50,7 @@ import $ from '../../public/js/jquery-1.11.1.min';
 //CLIENTID
 import SC_Client from '../../server/config/apiKeys'
 
+
 class BroadcastLive extends React.Component {
   constructor(props) {
     var user = JSON.parse(localStorage.getItem("me"));
@@ -63,9 +67,23 @@ class BroadcastLive extends React.Component {
       artistImage: user.avatar_url,
       selectedSource: null,
       audioSources: [],
-      isLoading: true
+      isLoading: true,
+      songQueue:[],
+      search: "",
+      searchResults:[],
+      nextSearch:'',
+      currentSong: {
+        title:"",
+        genre:"",
+        artwork_url:"",
+        user: {
+          avatar_url:""
+        }
+
+      }
     };
   }
+
 
   gotMediaDevices(devices) {
     var audioSources = [];
@@ -110,14 +128,13 @@ class BroadcastLive extends React.Component {
         creator: stream.creator,
         broadcaster: stream.broadcaster,
         playing: stream.playing,
-        favorites: fav,
-        currentSong: fav[2] || null
+        favorites: fav
       });
 
     });
   }
   startHTMLBroadcast(){
-    this.bc.startFromHTML("playerID");
+    this.bc.startFromHTML("soundcloudPlayer");
   }
 
   stopHTMLBroadcast(){
@@ -157,11 +174,66 @@ class BroadcastLive extends React.Component {
   changeSCSong(selectedSong){
     console.log("currentSong", this)
     console.log("selectedSong", selectedSong)
-
-    this.setState({
-      currentSong: selectedSong
-    })
+    let newQueue = this.state.songQueue
+    newQueue.push(selectedSong)
+    if(newQueue.length===1){
+      this.setState({
+        songQueue: newQueue,
+        currentSong: newQueue[0]
+      })
+    } else {
+      this.setState({
+        songQueue: newQueue
+      })
+    }
+    
     console.log(this.state)
+  }
+
+  searchInput(event, index, value) {
+    this.setState({
+      search: event.target.value
+    });
+  }
+
+  submitSearch(event) {
+    //get the value of search
+    let search = this.state.search
+
+    //query the soundcloud database
+    SC.initialize({
+      client_id: SC_Client.clientID
+    });
+
+    var page_size = 10;
+
+    SC.get('/tracks', {
+      limit: page_size, linked_partitioning: 1, q: search
+    }).then((tracks) => {
+      // page through results, 100 at a time
+      console.log('track results', tracks)
+      this.setState({
+        search: "",
+        searchResults:tracks.collection,
+        nextSearch:tracks.next_href
+      })
+      
+    });
+  }
+
+  loadMoreSongs(){
+    let query = this.state.nextSearch
+
+    SC.get(query).then((tracks) => {
+      // page through results, 100 at a time
+      console.log('track results', tracks)
+      this.setState({
+        search: "",
+        searchResults:tracks.collection,
+        nextSearch:tracks.next_href || ''
+      })
+      
+    });
   }
 
   renderSCEntry(key){
@@ -177,66 +249,98 @@ class BroadcastLive extends React.Component {
     )
 
     var partial = <Loading />
-    console.log("state", this.state)
     if (!this.state.isLoading) {
       partial = (
-        <div style={styles.cardContainer}>
-          <Card style={styles.mainBox}>
-            <a href="#">
-            <CardHeader
-              onClick={this.goToProfile.bind(this)}
-              title={this.state.artistAlias}
-              subtitle={this.state.artist}
-              avatar={this.state.artistImage}
-            /></a>
-            <CardMedia style={styles.streamImage}>
-              <img src={this.state.artistImage}/>
-            </CardMedia>
-        
+        <div>
+          <div style={styles.cardContainer}>
+            <Card style={styles.mainBox}>
+              <a href="#">
+              <CardHeader
+                onClick={this.goToProfile.bind(this)}
+                title={this.state.artistAlias}
+                subtitle={this.state.artist}
+                avatar={this.state.artistImage}
+              /></a>
+              <CardMedia style={styles.streamImage}>
+                <img src={this.state.artistImage}/>
+              </CardMedia>
+          
 
-            <CardActions>
-              <FloatingActionButton onClick={this.startBroadcast.bind(this)} disabled={this.disabled}>
+              <CardActions>
+                <FloatingActionButton onClick={this.startBroadcast.bind(this)} disabled={this.disabled}>
+                  <Mic />
+                </FloatingActionButton>
+                <FloatingActionButton onClick={this.stopBroadcast.bind(this)} disabled={!this.disabled}>
+                 <MicOff />
+                </FloatingActionButton>
+                {dropDown}
+              </CardActions>
+
+              <CardTitle title={this.state.name}/>
+              <CardText>
+                {this.state.description}
+              </CardText>
+            </Card>
+            <Card style={styles.box}>
+              <BroadcastStats listenerLiveCount={this.state.listenerLiveCount} listenerMaxCount={this.state.listenerMaxCount} heart={this.state.heartCount}/>
+              <canvas width="600" height="100" id="visualizer"></canvas>
+            </Card>
+          </div>
+          <div style={styles.cardContainer}>
+            <Card style={styles.box}>
+              <CardTitle title="Soundcloud Setlist"/>
+              <List subheader="Now Playing">
+                <ListItem
+                  // onClick={this.props.goToStream.bind(this)}
+                  primaryText={this.state.currentSong.title}
+                  secondaryText={this.state.currentSong.genre}
+                  leftAvatar={<Avatar src={this.state.currentSong.artwork_url || this.state.currentSong.user.avatar_url} />}
+                  // secondaryText={this.state.favorites[2].stream_url}
+                  // rightIcon={<PlayCircleOutline />}
+                />
+              </List>
+              <br/>
+              <audio autoPlay crossOrigin="anonymous" id="soundcloudPlayer" src={this.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } controls ></audio> <br/>
+              <br/>
+              <FloatingActionButton onClick={this.startHTMLBroadcast.bind(this)}>
                 <Mic />
               </FloatingActionButton>
-              <FloatingActionButton onClick={this.stopBroadcast.bind(this)} disabled={!this.disabled}>
+              <FloatingActionButton onClick={this.stopHTMLBroadcast.bind(this)} >
                <MicOff />
-              </FloatingActionButton>
-              {dropDown}
-            </CardActions>
-
-            <CardTitle title={this.state.name}/>
-            <CardText>
-              {this.state.description}
-            </CardText>
-          </Card>
-          <Card style={styles.box}>
-            <BroadcastStats listenerLiveCount={this.state.listenerLiveCount} listenerMaxCount={this.state.listenerMaxCount} heart={this.state.heartCount}/>
-            <canvas width="600" height="100" id="visualizer"></canvas>
-          </Card>
-          <Card style={styles.box}>
-            <CardTitle title="Now Playing"/>
-            <List>
-              <ListItem
-                // onClick={this.props.goToStream.bind(this)}
-                primaryText={this.state.currentSong.title}
-                secondaryText={this.state.currentSong.genre}
-                leftAvatar={<Avatar src={this.state.currentSong.artwork_url || this.state.currentSong.user.avatar_url} />}
-                // secondaryText={this.state.favorites[2].stream_url}
-                // rightIcon={<PlayCircleOutline />}
-              />
-            </List>
-            <audio crossOrigin="anonymous" id="playerID" src={this.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } controls ></audio>
-
-            <FloatingActionButton onClick={this.startHTMLBroadcast.bind(this)}>
-              <Mic />
-            </FloatingActionButton>
-            <FloatingActionButton onClick={this.stopHTMLBroadcast.bind(this)} >
-             <MicOff />
-            </FloatingActionButton>
-            <List>
-              {this.state.favorites.map(this.renderSCEntry.bind(this))}
-            </List>
-          </Card>
+              </FloatingActionButton><br/><br/>
+              <Tabs>
+                <Tab label="Up Next">
+                  <List subheader="">
+                    {this.state.songQueue.map(this.renderSCEntry.bind(this))}
+                  </List>
+                </Tab>
+                <Tab label="Favorites">
+                  <List subheader="Select Songs for the Queue">
+                    {this.state.favorites.map(this.renderSCEntry.bind(this))}
+                  </List>
+                </Tab>
+                <Tab label="Search Soundcloud">
+                  <TextField
+                    onChange={this.searchInput.bind(this)}
+                    hintText="Search Soundcloud"
+                    floatingLabelText="Search Soundcloud"
+                  /> 
+                  <FlatButton
+                    onClick={this.submitSearch.bind(this)}
+                    label="Search"
+                    primary={true} 
+                  />
+                  {this.state.searchResults.map(this.renderSCEntry.bind(this))}
+                    <FlatButton
+                      onClick={this.loadMoreSongs.bind(this)}
+                      label="More Songs"
+                      primary={true} 
+                    />
+                    
+                </Tab>
+              </Tabs>
+            </Card>
+          </div>
         </div>
       )
     }
