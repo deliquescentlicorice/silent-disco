@@ -55,7 +55,7 @@ class App extends React.Component {
 
   goToStream() {
     this.props.history.push({
-      pathname: '/stream/' + this.props.stream._id,
+      pathname: '/listen/' + this.props.stream._id,
     });
   }
 

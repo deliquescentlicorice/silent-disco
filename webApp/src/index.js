@@ -31,9 +31,9 @@ function redirectToLogin(nextState, replace) {
 var routes = (
   <Router history={createHistory()}>
     <Route path="/" component={App}/>
-    <Route path="/stream/:streamId" component={StreamLive}/>
-    <Route path='broadcast/setup' onEnter={redirectToLogin}  component={Broadcast}/>
-    <Route path='broadcast/:streamId' onEnter={redirectToLogin} component={BroadcastLive}/>
+    <Route path="/listen/:streamId" component={StreamLive}/>
+    <Route path='/broadcast/setup' onEnter={redirectToLogin} component={Broadcast}/>
+    <Route path='/broadcast/:streamId' onEnter={redirectToLogin} component={BroadcastLive}/>
     <Route path='/user/:userId' onEnter={redirectToLogin}  component={BroadcastProfile}/> 
     <Route path='/login' component={Login}/> 
   </Router>
