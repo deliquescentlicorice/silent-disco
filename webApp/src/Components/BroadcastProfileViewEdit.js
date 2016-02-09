@@ -10,10 +10,6 @@ import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
 class BroadcastProfileViewEdit extends React.Component {
-  cancelEdit() {
-    this.props.cancel()
-  }
-
   saveEdit() {
     var lastName = this.refs.last_name.getValue()
     var firstName = this.refs.first_name.getValue()
@@ -56,7 +52,7 @@ class BroadcastProfileViewEdit extends React.Component {
           {fields.map(this.renderField.bind(this))}
         </CardText>
         <CardActions style={styles.actions}>
-          <FlatButton label="Cancel" onClick={this.cancelEdit.bind(this)} />
+          <FlatButton label="Cancel" onClick={this.props.cancel} />
           <FlatButton label="Save" onClick={this.saveEdit.bind(this)} />
         </CardActions>
       </Card>
@@ -69,8 +65,8 @@ var styles = {
     'display': 'flex',
     'flexDirection':'row',
     'flexWrap': 'wrap',
-    alignItem:'center',
-    justifyContent:'center'
+    'alignItem':'center',
+    'justifyContent':'center'
   },
 
   box: {
@@ -78,12 +74,12 @@ var styles = {
   },
 
   actions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
+    'flexDirection': 'row',
+    'justifyContent': 'flex-end'
   },
 
   field: {
-    paddingBottom: '10px'
+    'paddingBottom': '10px'
   },
 
   title:{
