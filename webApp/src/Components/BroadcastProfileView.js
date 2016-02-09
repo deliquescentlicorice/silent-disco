@@ -1,36 +1,29 @@
 import React from 'react';
 
+// COMPONENTS
+import BroadcastEntry from './BroadcastEntry.js'
+
 // MATERIAL DESIGN CARD
 import Card from 'material-ui/lib/card/card';
 import CardActions from '../../node_modules/material-ui/lib/card/card-actions';
 import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
+import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
 import TrendingUp from '../../node_modules/material-ui/lib/svg-icons/action/trending-up';
 import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favorite';
 import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
-import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import TextField from '../../node_modules/material-ui/lib/text-field';
 import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 import Paper from '../../node_modules/material-ui/lib/paper';
 import List from '../../node_modules/material-ui/lib/lists/list';
 
-// COMPONENTS
-import BroadcastEntry from './BroadcastEntry.js'
-
 class BroadcastProfileView extends React.Component {
-  editProfile() {
-    this.props.edit();
-  }
-
   goToBroadcast() {
-    console.log("broadcast",this)
-    var broadcastId= this.props.details._id;
-    console.log("Going To Stream " + broadcastId);
-
+    var broadcastId = this.props.details._id;
     this.props.history.push({
       pathname: '/broadcast/'+broadcastId
     });
@@ -38,18 +31,18 @@ class BroadcastProfileView extends React.Component {
 
   listenerCountTotal(){
     var sum = 0;
-    for (var i=0; i <this.props.streams.length; i++) {
+    for (var i = 0; i < this.props.streams.length; i++) {
       sum = sum + this.props.streams[i].listenerMaxCount;
     }
-    return sum.toLocaleString()
+    return sum.toLocaleString();
   }
 
   heartCountTotal(){
     var sum = 0;
-    for (var i=0; i <this.props.streams.length; i++) {
+    for (var i = 0; i < this.props.streams.length; i++) {
       sum = sum + this.props.streams[i].heartCountNum;
     }
-    return sum.toLocaleString()
+    return sum.toLocaleString();
   }
 
   renderStream(key){
@@ -59,7 +52,6 @@ class BroadcastProfileView extends React.Component {
       key={key}
       index={key}
       details={this.props.streams[key]} />
-    return <div></div>
   }
 
   render() {
@@ -103,7 +95,7 @@ class BroadcastProfileView extends React.Component {
                 </CardText>
               </div>
               <CardActions>
-                <FlatButton label="edit" onClick={this.editProfile.bind(this)} />
+                <FlatButton label="edit" onClick={this.props.edit} />
               </CardActions>
             </Card>
             <Card>

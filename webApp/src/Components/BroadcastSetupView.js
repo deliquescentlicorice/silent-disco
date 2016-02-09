@@ -1,12 +1,14 @@
 import React from 'react';
-import TextField from '../../node_modules/material-ui/lib/text-field';
-import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
-import FontIcon from '../../node_modules/material-ui/lib/font-icon';
-import DropDownMenu from '../../node_modules/material-ui/lib/DropDownMenu';
-import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
+
+// MATERIAL DESIGN
 import Card from '../../node_modules/material-ui/lib/card/card';
 import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
+import TextField from '../../node_modules/material-ui/lib/text-field';
+import DropDownMenu from '../../node_modules/material-ui/lib/DropDownMenu';
+import MenuItem from '../../node_modules/material-ui/lib/menus/menu-item';
+import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
+import FontIcon from '../../node_modules/material-ui/lib/font-icon';
 
 class BroadcastSetupView extends React.Component {
   startBroadcast() {
@@ -15,7 +17,7 @@ class BroadcastSetupView extends React.Component {
       desc: this.refs.desc.getValue(),
       isLive: this.refs.isLive.props.value
     };
-    this.props.startBroadcast(streamData)
+    this.props.startBroadcast(streamData);
   }
 
   render() {
@@ -44,8 +46,7 @@ class BroadcastSetupView extends React.Component {
               primary={true} 
               onClick={this.startBroadcast.bind(this)} 
               label="Start Broadcasting"
-              icon={<FontIcon className="fa fa-microphone"/>}
-            />
+              icon={<FontIcon className="fa fa-microphone"/>} />
           </CardText>
         </Card>
       </div>
@@ -58,8 +59,8 @@ var styles = {
     'display': 'flex',
     'flexDirection':'row',
     'flexWrap': 'wrap',
-    alignItem:'center',
-    justifyContent:'center'
+    'alignItem': 'center',
+    'justifyContent': 'center'
   },
   box: {
     'flexGrow':1,

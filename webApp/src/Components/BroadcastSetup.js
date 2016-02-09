@@ -1,10 +1,16 @@
 import React from 'react';
+
+// ROUTER
 import { History } from 'react-router';
 import reactMixin from 'react-mixin';
-import $ from '../../public/js/jquery-1.11.1.min';
+
+// COMPONENTS
 import Loading from './Loading.js';
-import Auth from '../utils/Auth';
 import BroadcastSetupView from './BroadcastSetupView'
+
+// UTILITIES
+import Auth from '../utils/Auth';
+import $ from '../../public/js/jquery-1.11.1.min';
 
 class BroadcastSetup extends React.Component {
   constructor(props) {
@@ -65,6 +71,5 @@ class BroadcastSetup extends React.Component {
 }
 
 reactMixin.onClass(BroadcastSetup, History);
-
 
 export default BroadcastSetup;

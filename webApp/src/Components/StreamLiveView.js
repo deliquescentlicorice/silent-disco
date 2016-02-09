@@ -1,5 +1,6 @@
 import React from 'react';
 
+// COMPONENTS
 import BroadcastStats from './BroadcastStats';
 import StreamLiveViewLinkbar from './StreamLiveViewLinkbar';
 
@@ -24,21 +25,28 @@ class StreamLiveView extends React.Component {
           </CardMedia>
           <CardTitle
             title={this.props.state.name}
-            subtitle={<StreamLiveViewLinkbar 
-              broadcaster={this.props.state.broadcaster || 'pseudonymous'}
-              soundcloud={this.props.state.soundcloud} 
-              website={this.props.state.website}
-              websiteTitle={this.props.state.websiteTitle}
-              />} />
+            subtitle={
+              <StreamLiveViewLinkbar 
+                broadcaster={this.props.state.broadcaster || 'pseudonymous'}
+                soundcloud={this.props.state.soundcloud} 
+                website={this.props.state.website}
+                websiteTitle={this.props.state.websiteTitle} />
+            } />
           <CardText>
             {this.props.state.desc}
           </CardText>
           <CardActions>
-            <FloatingActionButton onClick={this.props.playSong} secondary={true} disabled={this.props.state.disabled}>
+            <FloatingActionButton
+              onClick={this.props.playSong}
+              secondary={true}
+              disabled={this.props.state.disabled}>
               <Play />
             </FloatingActionButton>
             <span></span>
-            <FloatingActionButton onClick={this.props.stopSong} secondary={true} disabled={!this.props.state.disabled}>
+            <FloatingActionButton
+              onClick={this.props.stopSong}
+              secondary={true}
+              disabled={!this.props.state.disabled}>
               <Pause />
             </FloatingActionButton>
             <FloatingActionButton onClick={this.props.addHeart}>
@@ -47,7 +55,10 @@ class StreamLiveView extends React.Component {
           </CardActions>
         </Card>
         <Card style={styles.box}>
-          <BroadcastStats listenerLiveCount={this.props.state.listenerLiveCount} listenerMaxCount={this.props.state.listenerMaxCount} heart={this.props.state.heartCount} />
+          <BroadcastStats
+            listenerLiveCount={this.props.state.listenerLiveCount}
+            listenerMaxCount={this.props.state.listenerMaxCount}
+            heart={this.props.state.heartCount} />
         </Card>
       </div>
     )
@@ -57,16 +68,16 @@ class StreamLiveView extends React.Component {
 var styles = {
   cardContainer:{
     'display': 'flex',
-    'flexDirection':'row',
+    'flexDirection': 'row',
     'flexWrap': 'wrap'
   },
 
   box: {
-    'flex':3
+    'flex': 3
   },
 
   mainBox: {
-    'flexGrow':1,
+    'flexGrow': 1,
     'maxWidth': '600px',
     'alignContent': 'center',
   },
@@ -76,7 +87,7 @@ var styles = {
   },
 
   card: {
-    'flexGrow':1,
+    'flexGrow': 1,
     'alignContent': 'center',
     'maxWidth': 325
     // 'border': '10px solid yellow',
