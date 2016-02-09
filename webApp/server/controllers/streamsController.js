@@ -117,6 +117,21 @@ module.exports = {
     });
   },
 
+  streamWasStartedOrStopped: function(streamId, status, callback) {
+    Stream.findById(streamId, function(err, stream) {
+      stream.playing = status === "started";
+      console.log('updated stream status');
+      stream.save(function(err, doc) {
+        if (err) {
+          callback(err);
+        }
+        else {
+          callback(doc);
+        }
+      });
+    });
+  },
+
   addListener: function(req, res, next) {
     var streamId = req.params.stream;
     Stream.findById(streamId, function(err, stream) {
