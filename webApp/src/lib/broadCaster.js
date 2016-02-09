@@ -95,9 +95,15 @@ Broadcaster.prototype.startFromHTML = function(elementId) {
 }
 
 Broadcaster.prototype.stop = function() {
-  this.recorder.disconnect();
-  this.stream.end();
-  this.client.close();
+  if (this.recorder) {
+    this.recorder.disconnect();
+  }
+  if (this.stream) {
+    this.stream.end();
+  }
+  if (this.client) {
+    this.client.close();
+  }
 }
 
 Broadcaster.prototype.onAudio = function(e) {
