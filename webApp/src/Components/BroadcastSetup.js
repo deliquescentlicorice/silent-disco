@@ -25,7 +25,7 @@ class BroadcastSetup extends React.Component {
     var serverURL = "http://localhost:3000/api/stream";
 
     this.setState({
-      name: streamData.streamName,
+      name: streamData.name,
       desc: streamData.desc,
       isLive: streamData.isLive,
       isLoading: true

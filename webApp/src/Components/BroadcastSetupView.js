@@ -15,7 +15,6 @@ class BroadcastSetupView extends React.Component {
       desc: this.refs.desc.getValue(),
       isLive: this.refs.isLive.props.value
     };
-
     this.props.startBroadcast(streamData)
   }
 
