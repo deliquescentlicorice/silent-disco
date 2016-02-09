@@ -25,7 +25,7 @@ module.exports = {
           listenerMaxCount: 0,
           listenerLiveCount: 0,
           timestamp: Date.now(),
-          playing: true,
+          playing: false,
           latitude: streamLatitude,
           longitude: streamLongitude,
           creator: user._id
@@ -49,7 +49,7 @@ module.exports = {
             listenerMaxCount: 0,
             listenerLiveCount: 0,
             timestamp: Date.now(),
-            playing: true,
+            playing: false,
             latitude: streamLatitude,
             longitude: streamLongitude,
             creator: user._id
@@ -101,6 +101,22 @@ module.exports = {
     });
   },
 
+  toggleStream: function(req, res, next) {
+    var streamId = req.params.stream;
+    Stream.findById(streamId, function(err, stream) {
+      stream.playing = !stream.playing;
+      console.log('updated stream status');
+      stream.save(function(err, doc) {
+        if (err) {
+          return err;
+        }
+        else {
+          res.status(200).send(doc);
+        }
+      });
+    });
+  }
+
   addListener: function(req, res, next) {
     var streamId = req.params.stream;
     Stream.findById(streamId, function(err, stream) {
@@ -151,7 +167,7 @@ module.exports = {
   },
 
   getAllStreams: function(req, res, next) {
-    Stream.find({}, function(err, docs) {
+    Stream.find({playing: true}, function(err, docs) {
       if (err) {
         throw err;
       }
