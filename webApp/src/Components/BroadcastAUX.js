@@ -10,7 +10,6 @@ import MicOff from '../../node_modules/material-ui/lib/svg-icons/av/mic-off';
 import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import TextField from '../../node_modules/material-ui/lib/text-field';
 
-
 class BroadcastAUX extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +17,6 @@ class BroadcastAUX extends React.Component {
 
     };
   }
-
 
   render() {
     return (
@@ -38,15 +36,4 @@ class BroadcastAUX extends React.Component {
   } 
 }
 
-
 export default BroadcastAUX;
-
-// <CardActions>
-//   <FloatingActionButton onClick={this.startBroadcast.bind(this)} disabled={this.state.disabled}>
-//     <Mic />
-//   </FloatingActionButton>
-//   <FloatingActionButton onClick={this.stopBroadcast.bind(this)} disabled={!this.state.disabled}>
-//    <MicOff />
-//   </FloatingActionButton>
-//   {dropDown}
-// </CardActions>

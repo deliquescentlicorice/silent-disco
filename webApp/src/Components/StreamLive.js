@@ -9,15 +9,13 @@ import NavBar from './NavBar.js';
 import Loading from './Loading.js'
 import StreamLiveView from './StreamLiveView.js';
 
-// MEDIA PLAYER
+// UTILITIES
 import Sound from '../../node_modules/react-sound';
-
 import $ from '../../public/js/jquery-1.11.1.min';
 
 var BASE_URL = 'http://' + document.location.host;
 
 class StreamLive extends React.Component {
-
   constructor(props){
     super(props);
     this.state = {
@@ -45,7 +43,6 @@ class StreamLive extends React.Component {
   }
 
   playSong() {
-    console.log("playSong")
     this.setState({
       status: "PLAYING",
       disabled: true
@@ -53,7 +50,6 @@ class StreamLive extends React.Component {
   }
 
   stopSong() {
-    console.log("stopSong")
     this.setState({
       status: "STOPPED",
       disabled: false
@@ -65,16 +61,16 @@ class StreamLive extends React.Component {
 
     // As of iOS 9.3 and OSX 10.11, Safari does not support fetch
     $.ajax({
-        url: PUT_HEART,
-        method: 'PUT',
-        contentType: "application/x-www-form-urlencoded",
-        data: ''
-      })
-      .done((responseData) => {
-        this.setState({
-          heartCount: responseData.heartCountNum.length > 5 ? '> 9 999' : responseData.heartCountNum
-        });
+      url: PUT_HEART,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      this.setState({
+        heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
       });
+    });
   }
 
   fetchStreamData() {
@@ -99,9 +95,9 @@ class StreamLive extends React.Component {
           soundcloud: userData.user.scPermalink,
           website: userData.user.website,
           websiteTitle: userData.user.websiteTitle
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   render() {
@@ -112,12 +108,13 @@ class StreamLive extends React.Component {
         state={this.state}
         playSong={this.playSong.bind(this)}
         stopSong={this.stopSong.bind(this)}
-        addHeart={this.addHeart.bind(this)} />
+        addHeart={this.addHeart.bind(this)}
+      />
     }
     return (
       <div>
         <div style={styles.container}>  
-          <NavBar title={'Now Playing'} history={this.history}/>
+          <NavBar title={'Now Playing'} history={this.history} />
           {partial}
         </div>
         
@@ -135,7 +132,7 @@ class StreamLive extends React.Component {
 var styles = {
   container: {
     'display': 'flex',
-    'flexDirection' :'column',
+    'flexDirection': 'column',
   }
 }
 

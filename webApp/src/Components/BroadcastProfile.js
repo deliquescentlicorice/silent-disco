@@ -10,13 +10,12 @@ import BroadcastProfileView from './BroadcastProfileView.js'
 import BroadcastProfileViewEdit from './BroadcastProfileViewEdit.js'
 import Loading from './Loading.js'
 
-// AJAX GET CALL
+// UTILITIES
 import $ from '../../public/js/jquery-1.11.1.min';
 
 class BroadcastProfile extends React.Component {
   constructor() {
     super();
-
     this.state = {
       user: {
         user: {},
@@ -67,6 +66,7 @@ class BroadcastProfile extends React.Component {
   }
 
   uploadChangedUserData(editedUser) {
+    // As of iOS 9.3 and OSX 10.11, Safari does not support fetch
     $.ajax({
         url: '/api/user/' + this.props.params.userId,
         method: 'PUT',
@@ -93,7 +93,6 @@ class BroadcastProfile extends React.Component {
         cancel={this.cancelEdit.bind(this)}
         save={this.saveEdit.bind(this)} />
     } else {
-      console.log(this.state.user.user)
       partial = <BroadcastProfileView
         edit={this.editProfile.bind(this)}
         user={this.state.user.user}

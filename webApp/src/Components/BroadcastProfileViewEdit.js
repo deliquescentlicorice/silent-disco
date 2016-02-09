@@ -3,29 +3,12 @@ import React from 'react';
 // MATERIAL DESIGN CARD
 import Card from 'material-ui/lib/card/card';
 import CardActions from '../../node_modules/material-ui/lib/card/card-actions';
-import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
-import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
-import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
-import FlatButton from '../../node_modules/material-ui/lib/flat-button';
-import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
-import TrendingUp from '../../node_modules/material-ui/lib/svg-icons/action/trending-up';
-import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favorite';
-import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import CardText from '../../node_modules/material-ui/lib/card/card-text';
+import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import TextField from '../../node_modules/material-ui/lib/text-field';
-import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
+import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
-import Paper from '../../node_modules/material-ui/lib/paper';
 
-
-/* 
-  Editable:
-  scUsername
-  first_name
-  last_name
-  website
-  website title
-*/
 class BroadcastProfileViewEdit extends React.Component {
   cancelEdit() {
     this.props.cancel()
@@ -82,7 +65,6 @@ class BroadcastProfileViewEdit extends React.Component {
 }
 
 var styles = {
-
   cardContainer:{
     'display': 'flex',
     'flexDirection':'row',
