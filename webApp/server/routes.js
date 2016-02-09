@@ -1,5 +1,6 @@
 var streamsController = require('./controllers/streamsController');
 var usersController = require('./controllers/usersController');
+var encoder = require('./controllers/encoder');
 var path = require('path');
 var express = require('express');
 var passport = require('passport');
@@ -20,12 +21,10 @@ module.exports = function(app, express, ensureAuth) {
   
   app.get('/api/user/:user', usersController.getUserWithStreams);
   app.put('/api/user/:user', usersController.modifyUser);
+
+  app.get('/stream/:id', encoder.listenHandler);
   app.get('/user', ensureAuth, function(req, res) {
     res.json(req.user);
-  });
-
-  app.get('/broadcast', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../public', 'index.html'));
   });
 
   app.get('/logout', function(req, res){
@@ -39,5 +38,10 @@ module.exports = function(app, express, ensureAuth) {
     // on success, closes out the pop-up
     // res.redirect('/broadcast/setup')
     res.sendFile(path.join(__dirname + '/../public', 'success.html'));
+  });
+
+  app.get('*', function(req, res) {
+    console.log('hitting the catchall route');
+    res.sendFile(path.join(__dirname + '/../src', 'index.html'));
   });
 };
