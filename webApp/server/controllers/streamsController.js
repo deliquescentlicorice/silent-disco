@@ -119,7 +119,7 @@ module.exports = {
 
   streamWasStartedOrStopped: function(streamId, status, callback) {
     Stream.findById(streamId, function(err, stream) {
-      stream.playing = stream === "started" ? true : false;
+      stream.playing = status === "started";
       console.log('updated stream status');
       stream.save(function(err, doc) {
         if (err) {
