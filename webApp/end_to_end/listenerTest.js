@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 casper.on('remote.message', function(msg) {
   this.echo('remote.msg: ' + msg);
 });
@@ -79,6 +80,24 @@ casper.run(function() {
   //     __utils__.echo(rootDiv.childElementCount);
   //     return true;
   //   }, true, 'so, so helpless');
+  // });
+
+  // casper.then(function() {
+  //   test.assertEvalEquals(function() {
+  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
+  //     var styles = divs.map(function(item) {
+  //       return window.getComputedStyle(item);
+  //     });
+  //     // .filter(function(elem) {
+  //     //   return elem.borderRadius === '15px';
+  //     // });
+  //     __utils__.echo(Object.keys(styles[0]));
+  //     return styles.length > 0;
+  //   }, true, 'there is a div with border radius 15');
+  // });
+
+  // casper.wait(10000, function() {
+  //   test.assertExists('h1');
   // });
 
   // casper.then(function() {
