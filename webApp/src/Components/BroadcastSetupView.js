@@ -11,11 +11,24 @@ import RaisedButton from '../../node_modules/material-ui/lib/raised-button';
 import FontIcon from '../../node_modules/material-ui/lib/font-icon';
 
 class BroadcastSetupView extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      isLive: "AUX"
+    };
+  }
+
+  setSource(event, index, value) {
+    this.setState({
+      isLive: value
+    });
+  }
+
   startBroadcast() {
     var streamData = {
       name: this.refs.streamName.getValue(),
       desc: this.refs.desc.getValue(),
-      isLive: this.refs.isLive.props.value
+      isLive: this.state.isLive
     };
     this.props.startBroadcast(streamData);
   }
@@ -38,7 +51,7 @@ class BroadcastSetupView extends React.Component {
               hintText="Description"
               floatingLabelText="Description"
             /><br/><br/>
-            <DropDownMenu ref="isLive" value={this.props.isLive}>
+            <DropDownMenu ref="isLive" onChange={this.setSource.bind(this)} value={this.state.isLive}>
               <MenuItem value={"AUX"} primaryText="AUX or Mic"/>
               <MenuItem value={"SC"} primaryText="SoundCloud"/>
             </DropDownMenu><br/><br/>
