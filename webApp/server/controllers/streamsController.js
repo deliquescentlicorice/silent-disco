@@ -115,7 +115,7 @@ module.exports = {
         }
       });
     });
-  }
+  },
 
   addListener: function(req, res, next) {
     var streamId = req.params.stream;
