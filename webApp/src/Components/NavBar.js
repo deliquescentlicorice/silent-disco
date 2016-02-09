@@ -69,7 +69,7 @@ class NavBar extends React.Component {
       goListen={this.goToListen.bind(this)}
       goBroadcast={this.createBroadcast.bind(this)}
       goProfile={this.goToProfile.bind(this)}
-      goLogout={this.endSession.bind(this)}
+      goLogout={this.endSessionAndRedirect.bind(this)}
       goLogin={this.goToLogin.bind(this)}
       title={this.props.title}
       open={this.state.open}
