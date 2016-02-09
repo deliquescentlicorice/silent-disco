@@ -22,6 +22,7 @@ casper.test.begin("Testing radio from listener's perspective", 6, function suite
   });
 
   casper.then(function() {
+
     test.assertEval(function() {
       var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
         .map(function(elem) {
