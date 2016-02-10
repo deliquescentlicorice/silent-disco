@@ -44,11 +44,9 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
   });
 
 
-
   casper.then(function() {
     test.assertSelectorHasText('.left-navbar > div:nth-child(2) span', 'Listen', 'menu item reads listen');
     this.click('.left-navbar > div:nth-child(2) span');
-
   });
 
   casper.then(function() {
@@ -79,19 +77,48 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
   });
   });
 
-  // casper.thenOpen('http://localhost:3000/login', function() {
-  //   test.assertEvalEquals(function() {
-  //     return document.location.pathname;
-  //   }, '/login', 'login is the actual pathname')
-  // });
-
   casper.then(function() {
     this.wait(1000, function() {
       test.assertEvalEquals(function() {
         return document.location.pathname;
       }, '/login', 'login button sends user to login page');
     });
+    //check that the soundcloud button exists, then click it
+    test.assertEvalEquals(function() {
+      var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
+        .filter(function(elem) {
+          return elem.classList.length === 0;
+        });
+        return buttonSpans.length;
+    }, 1, 'there is a nontrivial button');
   });
+
+  casper.thenEvaluate(function() {
+          var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
+        .filter(function(elem) {
+          return elem.classList.length === 0;
+        });
+        buttonSpans[0].classList.add('soundcloud');
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.soundcloud ', 'Login With SoundCloud', 'soundcloud button has expected text');
+    this.click('.soundcloud');
+  });
+
+  casper.waitForPopup('', function() {
+    this.test.assertEquals(this.popups.length, 1);
+  });
+
+  casper.withPopup('', function() {
+
+  });
+
+  casper.then(function() {
+    this.wait(1000, function() {
+      //here I need to fill out the form to authenticate
+    })
+  })
 
 });
 
