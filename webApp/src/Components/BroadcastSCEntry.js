@@ -18,7 +18,7 @@ class BroadcastSCEntry extends React.Component {
   }
 
   setSong(){
-    this.props.addSongToQueue(this.props.index)
+    this.props.addSongToQueue(this.props.track)
   }
   
   render() {
@@ -26,9 +26,9 @@ class BroadcastSCEntry extends React.Component {
       <div>
         <ListItem
           onClick={this.setSong.bind(this)}
-          primaryText={this.props.index.title}
-          secondaryText={this.props.index.genre}
-          leftAvatar={<Avatar src={this.props.index.artwork_url || this.props.index.user.avatar_url} />}
+          primaryText={this.props.track.title}
+          secondaryText={this.props.track.genre}
+          leftAvatar={<Avatar src={this.props.track.artwork_url || this.props.track.user.avatar_url} />}
         />
         <Divider inset={true} />
       </div>

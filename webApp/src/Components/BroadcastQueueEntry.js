@@ -17,16 +17,16 @@ class BroadcastQueueEntry extends React.Component {
   }
 
   removeSong(){
-    this.props.removeSongFromQueue(this.props.key)
+    this.props.removeSongFromQueue(this.props.index)
   }
   
   render() {
     return (
       <div>
         <ListItem
-          primaryText={this.props.index.title}
-          secondaryText={this.props.index.genre}
-          leftAvatar={<Avatar src={this.props.index.artwork_url || this.props.index.user.avatar_url} />}
+          primaryText={this.props.track.title}
+          secondaryText={this.props.track.genre}
+          leftAvatar={<Avatar src={this.props.track.artwork_url || this.props.track.user.avatar_url} />}
           rightIconButton={<Close onClick={this.removeSong.bind(this)}/>}
           disabled={true}
         />
