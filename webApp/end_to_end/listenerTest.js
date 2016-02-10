@@ -91,7 +91,6 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
         return document.location.pathname;
       }, '/login', 'login button sends user to login page');
     });
-
   });
 
 });
