@@ -29,7 +29,7 @@ module.exports = {
       } else {
         // var uniqPath = hash.encode(counter);
         // counter++;
-        var uniqPath = new Date().toString()
+        var uniqPath = new Date().getTime().toString()
         var oldPath = files.picture[0].path.split('.');
         var ext = oldPath[oldPath.length - 1];
         req.imgPath = 'server/images/'+ uniqPath + '.' + ext;
