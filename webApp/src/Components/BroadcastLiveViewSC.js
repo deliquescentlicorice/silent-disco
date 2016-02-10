@@ -62,7 +62,6 @@ class BroadcastLiveViewSC extends React.Component {
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.box}>
-          <CardTitle title="Soundcloud Setlist"/>
           <List subheader="Now Playing">
             <ListItem
               primaryText={this.props.currentSong.title}
@@ -71,18 +70,15 @@ class BroadcastLiveViewSC extends React.Component {
               disabled={true} />
           </List>
           <br/>
-          <BroadcastAudioPlayer
-            src={this.props.currentSong.stream_url + '?client_id=' + SC_Client.clientID} 
-            handleMediaEnd={this.props.handleMediaEnd} />
-
-          <br/>
-          <br/>
           <FloatingActionButton onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
             <Mic />
           </FloatingActionButton>
           <FloatingActionButton onClick={this.props.stopHTMLBroadcast} disabled={!this.props.disabled}>
-           <MicOff />
-          </FloatingActionButton><br/><br/>
+            <MicOff />
+          </FloatingActionButton>
+          <BroadcastAudioPlayer
+            src={this.props.currentSong.stream_url + '?client_id=' + SC_Client.clientID}
+            handleMediaEnd={this.props.handleMediaEnd} />
           <Tabs>
             <Tab label="Playlist">
               <List subheader="Up Next">
