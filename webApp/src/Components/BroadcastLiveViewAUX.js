@@ -21,13 +21,13 @@ class BroadcastAUX extends React.Component {
   render() {
     return (
       <CardActions>
-        <FloatingActionButton onClick={this.props.startBroadcast.bind(this)} disabled={this.props.disabled}>
+        <FloatingActionButton onClick={this.props.startBroadcast} disabled={this.props.disabled}>
           <Mic />
         </FloatingActionButton>
-        <FloatingActionButton onClick={this.props.stopBroadcast.bind(this)} disabled={!this.props.disabled}>
+        <FloatingActionButton onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
          <MicOff />
         </FloatingActionButton>
-        <DropDownMenu value={this.props.selectedSource} onChange={this.props.sourceInput.bind(this)}>
+        <DropDownMenu value={this.props.selectedSource} onChange={this.props.sourceInput}>
           <MenuItem value={null} key={null} primaryText={"Select a source..."} />
           {this.props.audioSources.map(source => <MenuItem value={source.id} key={source.id} primaryText={source.label} />)}
         </DropDownMenu>

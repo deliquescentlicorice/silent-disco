@@ -2,7 +2,7 @@ import React from 'react';
 
 // COMPONENTS
 import BroadcastStats from './BroadcastStats.js';
-import BroadcastAUX from './BroadcastAUX.js';
+import BroadcastLiveViewAUX from './BroadcastLiveViewAUX.js';
 import BroadcastLiveViewSC from './BroadcastLiveViewSC.js';
 
 // MATERIAL DESIGN
@@ -36,12 +36,32 @@ import List from '../../node_modules/material-ui/lib/lists/list';
 
 class BroadcastLiveView extends React.Component {
   render() {
-    var dropDown = (
-      <DropDownMenu value={this.props.state.selectedSource} onChange={this.props.sourceInput}>
-        <MenuItem value={null} key={null} primaryText={"Select a source..."} />
-        {this.props.state.audioSources.map(source => <MenuItem value={source.id} key={source.id} primaryText={source.label} />)}
-      </DropDownMenu>
-    )
+    var partial;
+
+    if (this.props.isLive === "AUX") {
+      partial = <BroadcastLiveViewAUX
+        startBroadcast={this.props.startBroadcast}
+        stopBroadcast={this.props.stopBroadcast}
+        sourceInput={this.props.sourceInput}
+        audioSources={this.props.state.audioSources}
+        selectedSource={this.props.state.selectedSource}
+        disabled={this.props.state.disabled} />
+    } else if (this.props.isLive === "SC") {
+      partial = <BroadcastLiveViewSC
+        submitSearch={this.props.submitSearch}
+        addSongToQueue={this.props.addSongToQueue}
+        removeSongFromQueue={this.props.removeSongFromQueue}
+        currentSong={this.props.state.currentSong}
+        handleMediaEnd={this.props.handleMediaEnd}
+        startHTMLBroadcast={this.props.startHTMLBroadcast}
+        stopHTMLBroadcast={this.props.stopHTMLBroadcast}
+        loadMoreSongs={this.props.loadMoreSongs}
+        songQueue={this.props.state.songQueue}
+        endedSongQueue={this.props.state.endedSongQueue}
+        favorites={this.props.state.favorites}
+        searchResults={this.props.state.searchResults}
+        disabled={this.props.state.disabled} />
+    }
 
     return (
       <div>
@@ -57,19 +77,11 @@ class BroadcastLiveView extends React.Component {
             <CardMedia style={styles.streamImage}>
               <img src={this.props.state.artistImage}/>
             </CardMedia>
-            <CardActions>
-              <FloatingActionButton onClick={this.props.startBroadcast} disabled={this.props.state.disabled}>
-                <Mic />
-              </FloatingActionButton>
-              <FloatingActionButton onClick={this.props.stopBroadcast} disabled={!this.props.state.disabled}>
-               <MicOff />
-              </FloatingActionButton>
-              {dropDown}
-            </CardActions>
             <CardTitle title={this.props.state.name}/>
             <CardText>
               {this.props.state.description}
             </CardText>
+            {partial}
           </Card>
           <Card style={styles.box}>
             <BroadcastStats 
@@ -79,19 +91,6 @@ class BroadcastLiveView extends React.Component {
             <canvas width="600" height="100" id="visualizer"></canvas>
           </Card>
         </div>
-        <BroadcastLiveViewSC
-          submitSearch={this.props.submitSearch}
-          addSongToQueue={this.props.addSongToQueue}
-          removeSongFromQueue={this.props.removeSongFromQueue}
-          currentSong={this.props.state.currentSong}
-          handleMediaEnd={this.props.handleMediaEnd}
-          startHTMLBroadcast={this.props.startHTMLBroadcast}
-          stopHTMLBroadcast={this.props.stopHTMLBroadcast}
-          loadMoreSongs={this.props.loadMoreSongs}
-          songQueue={this.props.state.songQueue}
-          endedSongQueue={this.props.state.endedSongQueue}
-          favorites={this.props.state.favorites}
-          searchResults={this.props.state.searchResults} />
       </div>
     )
   }

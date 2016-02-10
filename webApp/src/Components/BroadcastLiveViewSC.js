@@ -77,10 +77,10 @@ class BroadcastLiveViewSC extends React.Component {
 
           <br/>
           <br/>
-          <FloatingActionButton onClick={this.props.startHTMLBroadcast}>
+          <FloatingActionButton onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
             <Mic />
           </FloatingActionButton>
-          <FloatingActionButton onClick={this.props.stopHTMLBroadcast}>
+          <FloatingActionButton onClick={this.props.stopHTMLBroadcast} disabled={!this.props.disabled}>
            <MicOff />
           </FloatingActionButton><br/><br/>
           <Tabs>
