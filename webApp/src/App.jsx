@@ -45,7 +45,6 @@ class App extends React.Component {
       url: REQUEST_URL_ALL
     })
     .done((streamList) => {
-      console.log(streamList)
       this.setState({
         streams: streamList,
         isLoading: false
