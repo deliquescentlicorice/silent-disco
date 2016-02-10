@@ -231,7 +231,7 @@ describe('Stream Controller', function() {
 
   it('should have a method that adds one listener to a given stream', function(done) {
 
-    expect(controller.upHeart).to.exist;
+    expect(controller.addListener).to.exist;
 
     var dummy = {
       id: 1
@@ -260,7 +260,7 @@ describe('Stream Controller', function() {
                 .get('/api/stream/' + res.body._id)
                 .expect(200)
                 .expect(function(res) {
-                  expect(res.body.listenerLiveCount).to.be.above(0)
+                  expect(res.body.listenerLiveCount).to.be.above(0);
                 })
                 .end(done);
             }

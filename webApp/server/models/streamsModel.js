@@ -7,6 +7,7 @@ var streamSchema = new mongoose.Schema({
   description: String,
   heartCountNum: Number,
   listenerMaxCount: Number,
+  listenerTotalCount: Number,
   listenerLiveCount: Number,
   playing: Boolean,
   // image: String,
