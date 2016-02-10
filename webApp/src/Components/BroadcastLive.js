@@ -40,6 +40,8 @@ import Loading from './Loading.js';
 import BroadcastStats from './BroadcastStats.js';
 import BroadcastAUX from './BroadcastAUX.js';
 import BroadcastSCEntry from './BroadcastSCEntry.js';
+import BroadcastQueueEntry from './BroadcastQueueEntry.js';
+import BroadcastAudioPlayer from './BroadcastAudioPlayer.js';
 
 // VISUALIZER
 import visualizer from './visualizer.js';
@@ -79,8 +81,8 @@ class BroadcastLive extends React.Component {
         user: {
           avatar_url:""
         }
-
-      }
+      }, 
+      endedSongQueue:[]
     };
   }
 
@@ -107,9 +109,21 @@ class BroadcastLive extends React.Component {
     this.fetchData();
   }
 
+
+  componentDidMount() {
+    // document.getElementById("soundcloudPlayer").addEventListener('ended', this.handleMediaEnd.bind(this))
+    // if(this.refs.soundcloudPlayer){
+    //   this.refs.soundcloudPlayer.addEventListener('ended', this.handleMediaEnd.bind(this))
+    // }
+
+  }
+
   componentWillUnmount() {
     this.bc.stop();
+    this.refs.soundcloudPlayer.removeEventListner('ended', this.handleMediaEnd.bind(this));
   }
+
+
 
   fetchData() {
     $.ajax({
@@ -117,7 +131,6 @@ class BroadcastLive extends React.Component {
     })
     .done((stream) => {
       let fav = JSON.parse(localStorage.getItem("favorites"));
-      console.log('State',stream);
       this.setState({
         name: stream.name,
         description: stream.description,
@@ -155,6 +168,40 @@ class BroadcastLive extends React.Component {
       disabled: false
     })
     this.bc.stop();
+  }
+
+  handleMediaEnd() {
+    let newQueue = this.state.songQueue
+    let endedQueue = this.state.endedSongQueue
+    console.log("newQueue", newQueue)
+    if(newQueue.length===1){
+      let playedSong = newQueue.shift()
+      console.log("shifted queue", newQueue)
+      endedQueue.push(playedSong)
+      this.setState({
+        songQueue: newQueue,
+        currentSong: {
+          title:"",
+          genre:"",
+          artwork_url:"",
+          user: {
+            avatar_url:""
+          }
+        },
+        endedSongQueue: endedQueue
+      })
+      console.log(endedQueue)
+    } else if(newQueue.length>1){
+      let playedSong = newQueue.shift()
+      console.log("shifted queue", newQueue)
+      endedQueue.push(playedSong)
+      this.setState({
+        songQueue: newQueue,
+        currentSong: newQueue[0],
+        endedSongQueue: endedQueue
+      })
+      console.log(endedQueue)
+    } 
   }
 
   sourceInput(event, index, value) {
@@ -224,7 +271,7 @@ class BroadcastLive extends React.Component {
   loadMoreSongs(){
     let query = this.state.nextSearch
 
-    SC.get(query).then((tracks) => {
+    $.get(query).then((tracks) => {
       // page through results, 100 at a time
       console.log('track results', tracks)
       this.setState({
@@ -236,11 +283,45 @@ class BroadcastLive extends React.Component {
     });
   }
 
-  renderSCEntry(key){
-    return <BroadcastSCEntry history={this.history} changeSCSong={this.changeSCSong.bind(this)} state={this.state} key={key.id} index={key} title={key.title} genre={key.genre} stream_url={key.stream_url} artwork={key.artwork_url || key.user.avatar_url} />
+  removeSongFromQueue(song){
+    let newQueue = this.state.songQueue
+    newQueue.splice(song,1)
+    this.setState({
+      songQueue: newQueue
+    })
+    
+  }
+
+  renderSCEntry(index, key){
+    return <BroadcastSCEntry 
+      history={this.history} 
+      changeSCSong={this.changeSCSong.bind(this)} 
+      state={this.state} 
+      key={key} 
+      index={index} 
+      title={index.title} 
+      genre={index.genre} 
+      stream_url={index.stream_url} 
+      artwork={index.artwork_url || index.user.avatar_url} 
+    />
+  }
+
+  renderQueueEntry(index, key){
+    return <BroadcastQueueEntry 
+      history={this.history} 
+      removeSongFromQueue={this.removeSongFromQueue.bind(this)} 
+      state={this.state} 
+      key={key} 
+      index={index} 
+      title={index.title} 
+      genre={index.genre} 
+      stream_url={index.stream_url} 
+      artwork={index.artwork_url || index.user.avatar_url} 
+    />
   }
 
   render() {
+
     var dropDown = (
       <DropDownMenu value={this.state.selectedSource} onChange={this.sourceInput.bind(this)}>
         <MenuItem value={null} key={null} primaryText={"Select a source..."} />
@@ -282,7 +363,10 @@ class BroadcastLive extends React.Component {
               </CardText>
             </Card>
             <Card style={styles.box}>
-              <BroadcastStats listenerLiveCount={this.state.listenerLiveCount} listenerMaxCount={this.state.listenerMaxCount} heart={this.state.heartCount}/>
+              <BroadcastStats 
+                listenerLiveCount={this.state.listenerLiveCount} 
+                listenerMaxCount={this.state.listenerMaxCount} 
+                heart={this.state.heartCount}/>
               <canvas width="600" height="100" id="visualizer"></canvas>
             </Card>
           </div>
@@ -291,16 +375,19 @@ class BroadcastLive extends React.Component {
               <CardTitle title="Soundcloud Setlist"/>
               <List subheader="Now Playing">
                 <ListItem
-                  // onClick={this.props.goToStream.bind(this)}
                   primaryText={this.state.currentSong.title}
                   secondaryText={this.state.currentSong.genre}
                   leftAvatar={<Avatar src={this.state.currentSong.artwork_url || this.state.currentSong.user.avatar_url} />}
-                  // secondaryText={this.state.favorites[2].stream_url}
-                  // rightIcon={<PlayCircleOutline />}
+                  disabled={true}
                 />
               </List>
               <br/>
-              <audio autoPlay crossOrigin="anonymous" id="soundcloudPlayer" src={this.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } controls ></audio> <br/>
+              <BroadcastAudioPlayer
+                src={this.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } 
+                handleMediaEnd = {this.handleMediaEnd.bind(this)}
+              />
+
+              <br/>
               <br/>
               <FloatingActionButton onClick={this.startHTMLBroadcast.bind(this)}>
                 <Mic />
@@ -309,9 +396,12 @@ class BroadcastLive extends React.Component {
                <MicOff />
               </FloatingActionButton><br/><br/>
               <Tabs>
-                <Tab label="Up Next">
-                  <List subheader="">
-                    {this.state.songQueue.map(this.renderSCEntry.bind(this))}
+                <Tab label="Playlist">
+                  <List subheader="Up Next">
+                    {this.state.songQueue.map(this.renderQueueEntry.bind(this))}
+                  </List>
+                  <List subheader="Played">
+                    {this.state.endedSongQueue.map(this.renderQueueEntry.bind(this))}
                   </List>
                 </Tab>
                 <Tab label="Favorites">
