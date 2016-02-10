@@ -120,7 +120,6 @@ class BroadcastLive extends React.Component {
 
   componentWillUnmount() {
     this.bc.stop();
-    this.refs.soundcloudPlayer.removeEventListner('ended', this.handleMediaEnd.bind(this));
   }
 
 
