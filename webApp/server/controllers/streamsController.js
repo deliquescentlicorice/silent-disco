@@ -24,6 +24,7 @@ module.exports = {
           description: streamDesc,
           heartCountNum: 0,
           listenerMaxCount: 0,
+          listenerTotalCount: 0,
           listenerLiveCount: 0,
           timestamp: Date.now(),
           playing: false,
@@ -48,6 +49,7 @@ module.exports = {
             description: streamDesc,
             heartCountNum: 0,
             listenerMaxCount: 0,
+            listenerTotalCount: 0,
             listenerLiveCount: 0,
             timestamp: Date.now(),
             playing: false,
@@ -137,6 +139,7 @@ module.exports = {
     var streamId = req.params.stream;
     Stream.findById(streamId, function(err, stream) {
       stream.listenerLiveCount++;
+      stream.listenerTotalCount++;
       stream.listenerMaxCount = Math.max(stream.listenerMaxCount, stream.listenerLiveCount);
       stream.save(function(err, doc) {
         if (err) {
