@@ -1,4 +1,3 @@
-
 casper.on('remote.message', function(msg) {
   this.echo('remote.msg: ' + msg);
 });
@@ -24,14 +23,22 @@ casper.test.begin("Testing radio from listener's perspective", 4, function suite
         }).filter(function(style) {
           return style.transitionProperty === 'transform';
         });
-        return changedDivs.length === 1 && changedDivs[0].left === '0px';
+      return changedDivs.length === 1 && changedDivs[0].left === '0px';
     }, 'exactly one div changed on click, and that div is on the left');
-    //find the 'listen' menu item and click on it
+    test.assertEvalEquals(function() {
+        var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
+          .filter(function(elem) {
+            return window.getComputedStyle(elem).transitionProperty === 'transform';
+          });
+          changedDivs[0].addClass('left-navbar');
+          this.click('.left-navbar span');
+      }, true);
+      //find the 'listen' menu item and click on it
       //listen is a span with the text Listen… -> so I think I have to use assertEvalEquals
-        //find the navbar, add a class to it, find the span inside the navbar, check for the listen text,
-        //click on it, run the test, then remove the class (worried about asynchronicity…)
-        //I should check visibility
-    //how can I check that nothing happened, though?
+      //find the navbar, add a class to it, find the span inside the navbar, check for the listen text,
+      //click on it, run the test, then remove the class (worried about asynchronicity…)
+      //I should check visibility
+      //how can I check that nothing happened, though?
   });
 });
 
@@ -77,27 +84,27 @@ casper.run(function() {
 //     //I seem to have an extra script tag and an extra div?
 //   });
 
-  // casper.wait(1000, function() {
-  //   test.assertEvalEquals(function() {
-  //     var rootDiv = document.getElementById('root');
-  //     __utils__.echo(rootDiv.childElementCount);
-  //     return true;
-  //   }, true, 'so, so helpless');
-  // });
+// casper.wait(1000, function() {
+//   test.assertEvalEquals(function() {
+//     var rootDiv = document.getElementById('root');
+//     __utils__.echo(rootDiv.childElementCount);
+//     return true;
+//   }, true, 'so, so helpless');
+// });
 
-  // casper.then(function() {
-  //   test.assertEvalEquals(function() {
-  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //     var styles = divs.map(function(item) {
-  //       return window.getComputedStyle(item);
-  //     });
-  //     // .filter(function(elem) {
-  //     //   return elem.borderRadius === '15px';
-  //     // });
-  //     __utils__.echo(Object.keys(styles[0]));
-  //     return styles.length > 0;
-  //   }, true, 'there is a div with border radius 15');
-  // });
+// casper.then(function() {
+//   test.assertEvalEquals(function() {
+//     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
+//     var styles = divs.map(function(item) {
+//       return window.getComputedStyle(item);
+//     });
+//     // .filter(function(elem) {
+//     //   return elem.borderRadius === '15px';
+//     // });
+//     __utils__.echo(Object.keys(styles[0]));
+//     return styles.length > 0;
+//   }, true, 'there is a div with border radius 15');
+// });
 
 //casperjs --engine=slimerjs test listenerTest.js
 //doc this ^, not the obvious command
@@ -137,56 +144,56 @@ casper.run(function() {
 //     //I seem to have an extra script tag and an extra div?
 //   });
 
-  // casper.wait(1000, function() {
-  //   test.assertEvalEquals(function() {
-  //     var rootDiv = document.getElementById('root');
-  //     __utils__.echo(rootDiv.childElementCount);
-  //     return true;
-  //   }, true, 'so, so helpless');
-  // });
+// casper.wait(1000, function() {
+//   test.assertEvalEquals(function() {
+//     var rootDiv = document.getElementById('root');
+//     __utils__.echo(rootDiv.childElementCount);
+//     return true;
+//   }, true, 'so, so helpless');
+// });
 
-  // casper.then(function() {
-  //   test.assertEvalEquals(function() {
-  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //     var styles = divs.map(function(item) {
-  //       return window.getComputedStyle(item);
-  //     });
-  //     // .filter(function(elem) {
-  //     //   return elem.borderRadius === '15px';
-  //     // });
-  //     __utils__.echo(Object.keys(styles[0]));
-  //     return styles.length > 0;
-  //   }, true, 'there is a div with border radius 15');
-  // });
+// casper.then(function() {
+//   test.assertEvalEquals(function() {
+//     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
+//     var styles = divs.map(function(item) {
+//       return window.getComputedStyle(item);
+//     });
+//     // .filter(function(elem) {
+//     //   return elem.borderRadius === '15px';
+//     // });
+//     __utils__.echo(Object.keys(styles[0]));
+//     return styles.length > 0;
+//   }, true, 'there is a div with border radius 15');
+// });
 
-  //theory; I'm hitting the loading page, then not leaving. That would be bad
+//theory; I'm hitting the loading page, then not leaving. That would be bad
 
-  // casper.waitForSelector('button', function() {
-  //   test.assertEvalEquals(function() {
-  //     return __utils__.findOne('h1').textContent;
-  //   }, 'Listen', 'user lands at Listen page');
-  //   });
+// casper.waitForSelector('button', function() {
+//   test.assertEvalEquals(function() {
+//     return __utils__.findOne('h1').textContent;
+//   }, 'Listen', 'user lands at Listen page');
+//   });
 
-  // casper.then(function() {
-  //   this.click('.penguin button');
-  // });
+// casper.then(function() {
+//   this.click('.penguin button');
+// });
 
-  // casper.then(function() {
-  //   this.wait(1000, function() {
-  //     test.assertEvalEquals(function() {
-  //       var navbarPossibs = [];
-  //       var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //       for (var i = 0; i < divs.length; i++) {
-  //         //so at least I can get the element by reactId
-  //         // if (divs[i].getAttribute('data-reactid') === '.0.0.0.1') {
-  //         if (divs[i].style.left === '0px' && divs[i].style.width === '256px') {
-  //           navbarPossibs.push(divs[i]);
-  //         }
-  //       }
-  //       return navbarPossibs.length;
-  //     }, 1, 'navbar appears on left side');
-  //   });
-  // });
+// casper.then(function() {
+//   this.wait(1000, function() {
+//     test.assertEvalEquals(function() {
+//       var navbarPossibs = [];
+//       var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
+//       for (var i = 0; i < divs.length; i++) {
+//         //so at least I can get the element by reactId
+//         // if (divs[i].getAttribute('data-reactid') === '.0.0.0.1') {
+//         if (divs[i].style.left === '0px' && divs[i].style.width === '256px') {
+//           navbarPossibs.push(divs[i]);
+//         }
+//       }
+//       return navbarPossibs.length;
+//     }, 1, 'navbar appears on left side');
+//   });
+// });
 
 //   casper.run(function() {
 //     test.done();
