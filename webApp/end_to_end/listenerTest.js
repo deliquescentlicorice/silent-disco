@@ -8,14 +8,20 @@ casper.on('page.error', function(msg, trace) {
 
 phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 4, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 6, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
     test.assertTitle('Silent Disco', 'title is expected title');
     test.assertExists('h1', 'a header exists');
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
+  });
+
+  casper.then(function() {
     this.click('button');
+  });
+
+  casper.then(function() {
     test.assertEval(function() {
       var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
         .map(function(elem) {
@@ -25,22 +31,29 @@ casper.test.begin("Testing radio from listener's perspective", 4, function suite
         });
       return changedDivs.length === 1 && changedDivs[0].left === '0px';
     }, 'exactly one div changed on click, and that div is on the left');
-    test.assertEvalEquals(function() {
-        var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
-          .filter(function(elem) {
-            return window.getComputedStyle(elem).transitionProperty === 'transform';
-          });
-          changedDivs[0].addClass('left-navbar');
-          this.click('.left-navbar span');
-      }, true);
-      //find the 'listen' menu item and click on it
-      //listen is a span with the text Listen… -> so I think I have to use assertEvalEquals
-      //find the navbar, add a class to it, find the span inside the navbar, check for the listen text,
-      //click on it, run the test, then remove the class (worried about asynchronicity…)
-      //I should check visibility
-      //how can I check that nothing happened, though?
   });
-});
+
+  casper.thenEvaluate(function() {
+    var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
+      .filter(function(elem) {
+        return window.getComputedStyle(elem).transitionProperty === 'transform';
+      });
+      changedDivs[0].classList.add('left-navbar');
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.left-navbar span', 'Listen', 'menu item reads listen');
+    this.click('.left-navbar span');
+  });
+
+  casper.then(function() {
+    test.assertVisible('.left-navbar', 'left navbar still visible after click on listen');
+  });
+
+  casper.then(function() {
+    //find the login button, then click it
+  })
+  });
 
 casper.run(function() {
   this.test.done();
