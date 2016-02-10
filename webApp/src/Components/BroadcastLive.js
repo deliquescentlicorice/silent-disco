@@ -36,7 +36,6 @@ class BroadcastLive extends React.Component {
       audioSources: [],
       isLoading: true,
       songQueue:[],
-      search: "",
       searchResults:[],
       nextSearch:'',
       currentSong: {
@@ -181,11 +180,7 @@ class BroadcastLive extends React.Component {
     }
   }
 
-  submitSearch(event) {
-    //get the value of search
-    let search = this.state.search;
-
-    //query the soundcloud database
+  submitSearch(query) {
     SC.initialize({
       client_id: SC_Client.clientID
     });
@@ -193,11 +188,10 @@ class BroadcastLive extends React.Component {
     var page_size = 10;
 
     SC.get('/tracks', {
-      limit: page_size, linked_partitioning: 1, q: search
+      limit: page_size, linked_partitioning: 1, q: query
     }).then((tracks) => {
       // page through results, 100 at a time
       this.setState({
-        search: "",
         searchResults:tracks.collection,
         nextSearch:tracks.next_href
       });

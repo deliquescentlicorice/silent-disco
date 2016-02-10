@@ -40,6 +40,7 @@ import List from '../../node_modules/material-ui/lib/lists/list';
 class BroadcastLiveViewSC extends React.Component {
   searchSC() {
     this.props.submitSearch(this.refs.soundQuery.getValue())
+    this.props.submitSearch(this.refs.soundQuery.setValue(""))
   }
 
   renderSCEntry(index, key){
