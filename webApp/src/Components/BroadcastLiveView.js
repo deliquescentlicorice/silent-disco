@@ -3,12 +3,7 @@ import React from 'react';
 // COMPONENTS
 import BroadcastStats from './BroadcastStats.js';
 import BroadcastAUX from './BroadcastAUX.js';
-import BroadcastSCEntry from './BroadcastSCEntry.js';
-import BroadcastQueueEntry from './BroadcastQueueEntry.js';
-import BroadcastAudioPlayer from './BroadcastAudioPlayer.js';
-
-// CLIENTID
-import SC_Client from '../../server/config/apiKeys';
+import BroadcastLiveViewSC from './BroadcastLiveViewSC.js';
 
 // MATERIAL DESIGN
 import Card from 'material-ui/lib/card/card';
@@ -40,26 +35,6 @@ import PlayCircleOutline from 'material-ui/lib/svg-icons/av/play-circle-outline'
 import List from '../../node_modules/material-ui/lib/lists/list';
 
 class BroadcastLiveView extends React.Component {
-  searchSC() {
-    this.props.submitSearch(this.refs.soundQuery.getValue())
-  }
-
-  renderSCEntry(index, key){
-    return <BroadcastSCEntry
-      addSongToQueue={this.props.addSongToQueue}
-      key={key}
-      index={index} 
-    />
-  }
-
-  renderQueueEntry(index, key){
-    return <BroadcastQueueEntry
-      removeSongFromQueue={this.props.removeSongFromQueue}
-      key={key}
-      index={index}
-    />
-  }
-
   render() {
     var dropDown = (
       <DropDownMenu value={this.props.state.selectedSource} onChange={this.props.sourceInput}>
@@ -104,72 +79,23 @@ class BroadcastLiveView extends React.Component {
             <canvas width="600" height="100" id="visualizer"></canvas>
           </Card>
         </div>
-        <div style={styles.cardContainer}>
-          <Card style={styles.box}>
-            <CardTitle title="Soundcloud Setlist"/>
-            <List subheader="Now Playing">
-              <ListItem
-                primaryText={this.props.state.currentSong.title}
-                secondaryText={this.props.state.currentSong.genre}
-                leftAvatar={<Avatar src={this.props.state.currentSong.artwork_url || this.props.state.currentSong.user.avatar_url} />}
-                disabled={true}
-              />
-            </List>
-            <br/>
-            <BroadcastAudioPlayer
-              src={this.props.state.currentSong.stream_url + '?client_id=' + SC_Client.clientID } 
-              handleMediaEnd = {this.props.handleMediaEnd}
-            />
-
-            <br/>
-            <br/>
-            <FloatingActionButton onClick={this.props.startHTMLBroadcast}>
-              <Mic />
-            </FloatingActionButton>
-            <FloatingActionButton onClick={this.props.stopHTMLBroadcast}>
-             <MicOff />
-            </FloatingActionButton><br/><br/>
-            <Tabs>
-              <Tab label="Playlist">
-                <List subheader="Up Next">
-                  {this.props.state.songQueue.map(this.renderQueueEntry.bind(this))}
-                </List>
-                <List subheader="Played">
-                  {this.props.state.endedSongQueue.map(this.renderQueueEntry.bind(this))}
-                </List>
-              </Tab>
-              <Tab label="Favorites">
-                <List subheader="Select Songs for the Queue">
-                  {this.props.state.favorites.map(this.renderSCEntry.bind(this))}
-                </List>
-              </Tab>
-              <Tab label="Search Soundcloud">
-                <TextField
-                  ref="soundQuery"
-                  hintText="Search Soundcloud"
-                  floatingLabelText="Search Soundcloud"
-                /> 
-                <FlatButton
-                  onClick={this.searchSC.bind(this)}
-                  label="Search"
-                  primary={true} 
-                />
-                {this.props.state.searchResults.map(this.renderSCEntry.bind(this))}
-                  <FlatButton
-                    onClick={this.props.loadMoreSongs}
-                    label="More Songs"
-                    primary={true} 
-                  />
-                  
-              </Tab>
-            </Tabs>
-          </Card>
-        </div>
+        <BroadcastLiveViewSC
+          submitSearch={this.props.submitSearch}
+          addSongToQueue={this.props.addSongToQueue}
+          removeSongFromQueue={this.props.removeSongFromQueue}
+          currentSong={this.props.state.currentSong}
+          handleMediaEnd={this.props.handleMediaEnd}
+          startHTMLBroadcast={this.props.startHTMLBroadcast}
+          stopHTMLBroadcast={this.props.stopHTMLBroadcast}
+          loadMoreSongs={this.props.loadMoreSongs}
+          songQueue={this.props.state.songQueue}
+          endedSongQueue={this.props.state.endedSongQueue}
+          favorites={this.props.state.favorites}
+          searchResults={this.props.state.searchResults} />
       </div>
     )
   }
 }
-
 
 var styles = {
   cardContainer:{
