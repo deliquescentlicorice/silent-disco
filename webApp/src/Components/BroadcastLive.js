@@ -97,7 +97,11 @@ class BroadcastLive extends React.Component {
   }
 
   startHTMLBroadcast() {
-    this.bc.startFromHTML("soundcloudPlayer");
+    this.setState({
+      disabled: true
+    }, () => {
+      this.bc.startFromHTML("soundcloudPlayer");
+    });
   }
 
   stopHTMLBroadcast() {
@@ -108,8 +112,9 @@ class BroadcastLive extends React.Component {
     if (this.state.selectedSource) {
       this.setState({
         disabled: true
+      }, () => {
+        this.bc.start(this.state.selectedSource);
       });
-      this.bc.start(this.state.selectedSource);
     }
   }
 
