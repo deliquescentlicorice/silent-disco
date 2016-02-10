@@ -230,8 +230,50 @@ casper.run(function() {
   //   }, true, 'there is a div with border radius 15');
   // });
 
-  // casper.wait(10000, function() {
-  //   test.assertExists('h1');
+//casperjs --engine=slimerjs test listenerTest.js
+//doc this ^, not the obvious command
+//from Listen,  click on left navbar
+//click on Listen menu item, does nothing
+//check for login button
+//login button takes user to login page
+//login with soundcloud
+//check for create broadcast, profile, logout options
+//click on stream in list
+//route to a stream (check URL)
+//click play (no more than once) (ie, button, disabled after clicked)
+//click pause, play button is reenabled
+//click heart, should upheart the song
+// });
+
+
+// casper.on('remote.message', function(msg) {
+//   this.echo('remote.msg: ' + msg);
+// });
+
+// casper.userAgent('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36');
+
+// casper.test.begin("Testing Radio from listener's perspective", 1, function suite(test) {
+//   casper.start('http://localhost:3000', function() {
+//     this.echo(this.getPageContent());
+//     test.assertTitle('Silent Disco', 'application title is the one expected');
+//     //my guess is that casper only sees index.html, which has a single div
+//     // test.assertEvalEquals(function() {
+//     //   var divs = document.querySelectorAll('div');
+//     //   var rootDiv = document.getElementById('root');
+//     //   var mysteryDivZ = window.getComputedStyle(Array.prototype.slice.call(divs)[1]).zIndex;
+//     //   __utils__.echo(rootDiv.childElementCount);
+//     //   //returns 0; but everything I care about is a child of root!
+//     //   return true;
+//     // }, true, 'so helpless');
+//     //I seem to have an extra script tag and an extra div?
+//   });
+
+  // casper.wait(1000, function() {
+  //   test.assertEvalEquals(function() {
+  //     var rootDiv = document.getElementById('root');
+  //     __utils__.echo(rootDiv.childElementCount);
+  //     return true;
+  //   }, true, 'so, so helpless');
   // });
 
   // casper.then(function() {
