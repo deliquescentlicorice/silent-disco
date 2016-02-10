@@ -53,9 +53,8 @@ class BroadcastSetup extends React.Component {
           isLoading: false
         });
         this.props.history.push({
-          pathname: '/broadcast/'+responseData._id,
+          pathname: '/broadcast/' + responseData._id,
           state: {
-            streamId: responseData._id,
             isLive: this.state.isLive
           }
         });
