@@ -8,7 +8,7 @@ var Broadcaster = function(streamId, inputSourcesCB, renderAudioCallback) {
 
   //binaryJS client - server/socket connection
   this.stream;
-  this.client;
+  // window.bClient;
   this.streamId = streamId;
 
   this.ctx = new AudioContext();
@@ -28,53 +28,54 @@ Broadcaster.prototype.start = function(sourceId) {
     return 'Broadcast source not set!';
   }
 
-  var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
-  this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
+  // var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+  // window.bClient = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
-  this.client.on('open', function() {
+  //window.bClient.on('open', function() {
 
-    this.stream = this.client.createStream({
-      sampleRate: this.ctx.sampleRate,
-      streamId: this.streamId
-    });
+  this.stream = window.bClient.createStream({
+    sampleRate: this.ctx.sampleRate,
+    streamId: this.streamId,
+    type:'stream'
+  });
 
-    var constraints = {
-      audio: {
-        optional: [{
-          sourceId: sourceId
-        }]
-      },
-      video: false
-    };
+  var constraints = {
+    audio: {
+      optional: [{
+        sourceId: sourceId
+      }]
+    },
+    video: false
+  };
 
-    navigator.getUserMedia(constraints, function(stream) {
-      var audioInput = this.ctx.createMediaStreamSource(stream);
+  navigator.getUserMedia(constraints, function(stream) {
+    var audioInput = this.ctx.createMediaStreamSource(stream);
 
-      var bufferSize = 0; // let implementation decide
-      this.recorder = this.ctx.createScriptProcessor(bufferSize, 2, 2);
+    var bufferSize = 0; // let implementation decide
+    this.recorder = this.ctx.createScriptProcessor(bufferSize, 2, 2);
 
-      this.recorder.onaudioprocess = function(e) {
-        this.onAudio(e);
-      }.bind(this);
+    this.recorder.onaudioprocess = function(e) {
+      this.onAudio(e);
+    }.bind(this);
 
-      audioInput.connect(this.recorder);
-      this.recorder.connect(this.ctx.destination);
+    audioInput.connect(this.recorder);
+    this.recorder.connect(this.ctx.destination);
 
-    }.bind(this), function(e) {
-      console.log('error connectiing to audio source');
-      throw e;
-    });
+  }.bind(this), function(e) {
+    console.log('error connectiing to audio source');
+    throw e;
+  });
 
-  }.bind(this));
+  //}.bind(this));
 }
 
 Broadcaster.prototype.startFromHTML = function(elementId) {
   var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
-  this.client = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
+  window.bClient = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
 
-  this.client.on('open', function() {
+  window.bClient.on('open', function() {
 
-    this.stream = this.client.createStream({
+    this.stream = window.bClient.createStream({
       sampleRate: this.ctx.sampleRate,
       streamId: this.streamId
     });
@@ -101,9 +102,9 @@ Broadcaster.prototype.stop = function() {
   if (this.stream) {
     this.stream.end();
   }
-  if (this.client) {
-    this.client.close();
-  }
+  // if (window.bClient) {
+  //   window.bClient.close();
+  // }
 }
 
 Broadcaster.prototype.onAudio = function(e) {
@@ -113,7 +114,7 @@ Broadcaster.prototype.onAudio = function(e) {
   var stereoBuff = this._interleave(left, right);
 
   this.stream.write(this._convertFloat32ToInt16(stereoBuff));
-  
+
   if (this.renderAudioCallback) {
     this.renderAudioCallback(left); //callback to render audio value
   }
