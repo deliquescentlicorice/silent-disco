@@ -49,12 +49,21 @@ class StreamLive extends React.Component {
       if (meta.type === 'event') {
         if (meta.action === 'enterStream') {
           console.log('onEnterStream-' + meta.streamId);
-          //todo
+          if (meta.streamId === this.state.streamId) {
+            this.setState({
+              listenerLiveCount: this.state.listenerLiveCount+1,
+              listenerMaxCount: this.state.listenerMaxCount+1
+            });
+          }
         }
 
         if (meta.action === 'leaveStream') {
           console.log('onLeaveStream-' + meta.streamId);
-          //todo
+          if (meta.streamId === this.state.streamId) {
+            this.setState({
+              listenerLiveCount: this.state.listenerLiveCount-1
+            });
+          }
         }
 
         if (meta.action === 'upHeart') {
@@ -67,6 +76,50 @@ class StreamLive extends React.Component {
         }
       }
     }.bind(this));
+  }
+
+  componentWillUnmount(){
+    var PUT_NOLISTENER = BASE_URL + '/api/nolistener/' + this.state.streamId;
+     $.ajax({
+      url: PUT_NOLISTENER,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      window.bClient.removeEventListner('stream', function(data, meta) {
+        if (meta.type === 'event') {
+          if (meta.action === 'enterStream') {
+            console.log('onEnterStream-' + meta.streamId);
+            if (meta.streamId === this.state.streamId) {
+              this.setState({
+                listenerLiveCount: this.state.listenerLiveCount+1,
+                listenerMaxCount: this.state.listenerMaxCount+1
+              });
+            }
+          }
+
+          if (meta.action === 'leaveStream') {
+            console.log('onLeaveStream-' + meta.streamId);
+            if (meta.streamId === this.state.streamId) {
+              this.setState({
+                listenerLiveCount: this.state.listenerLiveCount-1
+              });
+            }
+          }
+
+          if (meta.action === 'upHeart') {
+            console.log('onUpHeart-' + meta.streamId);
+            if (meta.streamId === this.state.streamId) {
+              this.setState({
+                heartCount: this.state.heartCount+1
+              });
+            }
+          }
+        }
+      }.bind(this));
+      
+    });
   }
 
   playSong() {
