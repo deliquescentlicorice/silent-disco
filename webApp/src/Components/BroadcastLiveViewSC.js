@@ -43,23 +43,26 @@ class BroadcastLiveViewSC extends React.Component {
     this.props.submitSearch(this.refs.soundQuery.setValue(""))
   }
 
-  renderSCEntry(index, key){
+  renderSCEntry(track, key){
     return <BroadcastSCEntry
       addSongToQueue={this.props.addSongToQueue}
       key={key}
-      index={index} 
+      index={key}
+      track={track}
     />
   }
 
-  renderQueueEntry(index, key){
+  renderQueueEntry(track, key){
     return <BroadcastQueueEntry
       removeSongFromQueue={this.props.removeSongFromQueue}
       key={key}
-      index={index}
+      index={key}
+      track={track}
     />
   }
 
   render() {
+    console.log(this.props)
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.box}>
@@ -74,7 +77,7 @@ class BroadcastLiveViewSC extends React.Component {
           <FloatingActionButton onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
             <Mic />
           </FloatingActionButton>
-          <FloatingActionButton onClick={this.props.stopHTMLBroadcast} disabled={!this.props.disabled}>
+          <FloatingActionButton onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
             <MicOff />
           </FloatingActionButton>
           <BroadcastAudioPlayer
