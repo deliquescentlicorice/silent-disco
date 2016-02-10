@@ -49,6 +49,7 @@ class NavBarView extends React.Component {
                   primaryTogglesNestedList={true}
                   nestedItems={[
                     <ListItem
+                      className="licorice"
                       key={1}
                       primaryText="Login"
                       onClick={this.props.goLogin} />,

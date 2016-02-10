@@ -56,7 +56,9 @@ casper.test.begin("Testing radio from listener's perspective", 8, function suite
   casper.then(function() {
     //last-child of navbar is broadcast, last-child of that is a wrapper div, last-child of that is login
     test.assertSelectorHasText('.left-navbar:last-child:last-child:last-child span', 'Login', 'last menu item reads login');
-    this.click('.left-navbar:last-child:last-child:last-child span');
+    // this.click('.left-navbar:last-child:last-child:last-child span');
+    this.click('.licorice');
+    //so my hypothesis is that I'm not finding the right item :(
   });
 
   // casper.thenOpen('http://localhost:3000/login', function() {
@@ -71,7 +73,6 @@ casper.test.begin("Testing radio from listener's perspective", 8, function suite
         return document.location.pathname;
       }, '/login', 'login button sends user to login page');
     });
-
   });
 
 });
