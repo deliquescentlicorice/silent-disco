@@ -39,7 +39,7 @@ module.exports = function(server) {
         });
       } else {
         console.log(meta);
-        emit(client, data);
+        emit(client, meta);
       }
     });
 
@@ -53,9 +53,7 @@ module.exports = function(server) {
         if (bServer.clients.hasOwnProperty(id)) {
           var otherClient = bServer.clients[id];
           if (otherClient != client) {
-            client.send(data, {
-              type: "event"
-            });
+            client.send('', meta);
           }
         }
       }
