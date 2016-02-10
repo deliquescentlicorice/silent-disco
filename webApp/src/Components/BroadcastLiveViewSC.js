@@ -62,7 +62,6 @@ class BroadcastLiveViewSC extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.box}>
