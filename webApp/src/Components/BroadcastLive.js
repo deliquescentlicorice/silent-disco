@@ -191,7 +191,6 @@ class BroadcastLive extends React.Component {
       limit: page_size, linked_partitioning: 1, q: search
     }).then((tracks) => {
       // page through results, 100 at a time
-      console.log('track results', tracks)
       this.setState({
         search: "",
         searchResults:tracks.collection,
@@ -235,6 +234,7 @@ class BroadcastLive extends React.Component {
         stopHTMLBroadcast={this.stopHTMLBroadcast.bind(this)}
         submitSearch={this.submitSearch.bind(this)}
         loadMoreSongs={this.loadMoreSongs.bind(this)}
+        isLive={this.props.location.state.isLive}
         state={this.state} />
     }
     return (
