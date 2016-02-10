@@ -28,6 +28,9 @@ casper.test.begin("Testing radio from listener's perspective", 4, function suite
     }, 'exactly one div changed on click, and that div is on the left');
     //find the 'listen' menu item and click on it
       //listen is a span with the text Listen… -> so I think I have to use assertEvalEquals
+        //find the navbar, add a class to it, find the span inside the navbar, check for the listen text,
+        //click on it, run the test, then remove the class (worried about asynchronicity…)
+        //I should check visibility
     //how can I check that nothing happened, though?
   });
 });
