@@ -43,6 +43,7 @@ class StreamLive extends React.Component {
 
   componentDidMount() {
     this.fetchStreamData();
+
     //add bclient on handler here
     window.bClient.on('stream', function(data, meta) {
       if (meta.type === 'event') {
@@ -87,17 +88,17 @@ class StreamLive extends React.Component {
 
     // As of iOS 9.3 and OSX 10.11, Safari does not support fetch
     $.ajax({
-        url: PUT_HEART,
-        method: 'PUT',
-        contentType: "application/x-www-form-urlencoded",
-        data: ''
-      })
-      .done((responseData) => {
-        upHeart(this.props.params.streamId);
-        this.setState({
-          heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
-        });
+      url: PUT_HEART,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      upHeart(this.props.params.streamId);
+      this.setState({
+        heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
       });
+    });
   }
 
   fetchStreamData() {
