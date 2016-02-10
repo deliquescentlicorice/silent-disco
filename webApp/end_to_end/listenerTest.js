@@ -8,7 +8,7 @@ casper.on('page.error', function(msg, trace) {
 
 phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 8, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 10, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
@@ -42,11 +42,10 @@ casper.test.begin("Testing radio from listener's perspective", 8, function suite
     changedDivs[0].classList.add('left-navbar');
   });
 
-  //really, I want a pseudo-class selector for the 2nd child of left-navbar
 
   casper.then(function() {
-    test.assertSelectorHasText('.left-navbar:nth-child(2) span', 'Listen', 'menu item reads listen');
-    this.click('.left-navbar:nth-child(2) span');
+    test.assertSelectorHasText('.left-navbar > div:nth-child(2) span', 'Listen', 'menu item reads listen');
+    this.click('.left-navbar > div:nth-child(2) span');
   });
 
   casper.then(function() {
@@ -55,17 +54,10 @@ casper.test.begin("Testing radio from listener's perspective", 8, function suite
 
   casper.then(function() {
     //last-child of navbar is broadcast, last-child of that is a wrapper div, last-child of that is login
-    test.assertSelectorHasText('.left-navbar:last-child:last-child:last-child span', 'Login', 'last menu item reads login');
-    // this.click('.left-navbar:last-child:last-child:last-child span');
-    this.click('.licorice');
-    //so my hypothesis is that I'm not finding the right item :(
+    test.assertSelectorHasText('.left-navbar > div:last-child > div:last-child > div:last-child span', 
+      'Login', 'last menu item reads login');
+    this.click('.left-navbar > div:last-child > div:last-child > div:last-child span');
   });
-
-  // casper.thenOpen('http://localhost:3000/login', function() {
-  //   test.assertEvalEquals(function() {
-  //     return document.location.pathname;
-  //   }, '/login', 'login is the actual pathname')
-  // });
 
   casper.then(function() {
     this.wait(1000, function() {
@@ -73,7 +65,42 @@ casper.test.begin("Testing radio from listener's perspective", 8, function suite
         return document.location.pathname;
       }, '/login', 'login button sends user to login page');
     });
+    //check that the soundcloud button exists, then click it
+    test.assertEvalEquals(function() {
+      var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
+        .filter(function(elem) {
+          return elem.classList.length === 0;
+        });
+        return buttonSpans.length;
+    }, 1, 'there is a nontrivial button');
   });
+
+  casper.thenEvaluate(function() {
+          var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
+        .filter(function(elem) {
+          return elem.classList.length === 0;
+        });
+        buttonSpans[0].classList.add('soundcloud');
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.soundcloud ', 'Login With SoundCloud', 'soundcloud button has expected text');
+    this.click('.soundcloud');
+  });
+
+  casper.waitForPopup('', function() {
+    this.test.assertEquals(this.popups.length, 1);
+  });
+
+  casper.withPopup('', function() {
+
+  });
+
+  casper.then(function() {
+    this.wait(1000, function() {
+      //here I need to fill out the form to authenticate
+    })
+  })
 
 });
 
