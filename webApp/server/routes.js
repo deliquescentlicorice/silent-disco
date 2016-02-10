@@ -12,7 +12,7 @@ module.exports = function(app, express, ensureAuth) {
   app.put('/api/stream/:stream', streamsController.upHeart);
   app.put('/api/stream/status/:stream', streamsController.toggleStream);
   app.put('/api/listener/:stream', streamsController.addListener);
-  app.put('api/nolistener/:stream', streamsController.removeListener);
+  app.put('/api/nolistener/:stream', streamsController.removeListener);
 
   app.put('/api/deejay/:stream', streamsController.modifyStreamDetails);
 

@@ -159,7 +159,7 @@ module.exports = {
           return err;
         }
         else {
-          res.status(200).doc;
+          res.status(200).send(doc);
         }
       });
     });
