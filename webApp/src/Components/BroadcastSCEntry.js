@@ -12,24 +12,23 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
-
 class BroadcastSCEntry extends React.Component {
   constructor(props){
     super(props)
   }
 
   setSong(){
-    this.props.changeSCSong(this.props.index)
+    this.props.addSongToQueue(this.props.index)
   }
   
   render() {
     return (
       <div>
         <ListItem
-          onClick={ this.setSong.bind(this) }
-          primaryText={this.props.title}
-          secondaryText={this.props.genre}
-          leftAvatar={<Avatar src={this.props.artwork} />}
+          onClick={this.setSong.bind(this)}
+          primaryText={this.props.index.title}
+          secondaryText={this.props.index.genre}
+          leftAvatar={<Avatar src={this.props.index.artwork_url || this.props.index.user.avatar_url} />}
         />
         <Divider inset={true} />
       </div>

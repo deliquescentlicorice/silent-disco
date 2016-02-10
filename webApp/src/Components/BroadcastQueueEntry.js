@@ -11,7 +11,6 @@ import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import Close from '../../node_modules/material-ui/lib/svg-icons/navigation/close';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
-
 class BroadcastQueueEntry extends React.Component {
   constructor(props){
     super(props)
@@ -25,9 +24,9 @@ class BroadcastQueueEntry extends React.Component {
     return (
       <div>
         <ListItem
-          primaryText={this.props.title}
-          secondaryText={this.props.genre}
-          leftAvatar={<Avatar src={this.props.artwork} />}
+          primaryText={this.props.index.title}
+          secondaryText={this.props.index.genre}
+          leftAvatar={<Avatar src={this.props.index.artwork_url || this.props.index.user.avatar_url} />}
           rightIconButton={<Close onClick={this.removeSong.bind(this)}/>}
           disabled={true}
         />
