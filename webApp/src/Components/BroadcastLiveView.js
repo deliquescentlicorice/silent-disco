@@ -39,13 +39,20 @@ class BroadcastLiveView extends React.Component {
     var partial;
 
     if (this.props.isLive === "AUX") {
-      partial = <BroadcastLiveViewAUX
-        startBroadcast={this.props.startBroadcast}
-        stopBroadcast={this.props.stopBroadcast}
-        sourceInput={this.props.sourceInput}
-        audioSources={this.props.state.audioSources}
-        selectedSource={this.props.state.selectedSource}
-        disabled={this.props.state.disabled} />
+      partial = (
+        <div>
+          <div style={styles.visualizerContainer}>
+            <canvas style={styles.visualizer} id="visualizer"></canvas>
+          </div>
+          <BroadcastLiveViewAUX
+            startBroadcast={this.props.startBroadcast}
+            stopBroadcast={this.props.stopBroadcast}
+            sourceInput={this.props.sourceInput}
+            audioSources={this.props.state.audioSources}
+            selectedSource={this.props.state.selectedSource}
+            disabled={this.props.state.disabled} />
+        </div>
+      )
     } else if (this.props.isLive === "SC") {
       partial = <BroadcastLiveViewSC
         submitSearch={this.props.submitSearch}
@@ -81,14 +88,15 @@ class BroadcastLiveView extends React.Component {
             <CardText>
               {this.props.state.description}
             </CardText>
+          </Card>
+          <Card style={styles.box}>
             {partial}
           </Card>
           <Card style={styles.box}>
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
               listenerMaxCount={this.props.state.listenerMaxCount} 
-              heart={this.props.state.heartCount}/>
-            <canvas width="600" height="100" id="visualizer"></canvas>
+              heart={this.props.state.heartCount} />
           </Card>
         </div>
       </div>
@@ -104,11 +112,11 @@ var styles = {
   },
 
   box: {
-    'flex':3
+    'flex': 2
   },
 
   mainBox: {
-    'flexGrow':1,
+    'flex': 1,
     'maxWidth': '600px'
   },
 
@@ -117,7 +125,18 @@ var styles = {
   },
 
   count:{
-    fontWeight: 'bold'
+    'fontWeight': 'bold'
+  },
+
+  visualizer: {
+    'width': '100%',
+    'height': 200
+  },
+
+  visualizerContainer: {
+    'height': 200,
+    'margin': '5px',
+    'border': '1px solid black'
   }
 }
 
