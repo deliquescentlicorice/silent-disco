@@ -61,7 +61,7 @@ class BroadcastLiveView extends React.Component {
         currentSong={this.props.state.currentSong}
         handleMediaEnd={this.props.handleMediaEnd}
         startHTMLBroadcast={this.props.startHTMLBroadcast}
-        stopHTMLBroadcast={this.props.stopHTMLBroadcast}
+        stopBroadcast={this.props.stopBroadcast}
         loadMoreSongs={this.props.loadMoreSongs}
         songQueue={this.props.state.songQueue}
         endedSongQueue={this.props.state.endedSongQueue}
