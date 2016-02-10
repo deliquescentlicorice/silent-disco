@@ -20,6 +20,7 @@ module.exports = {
         var newStream = new Stream({
           name: streamName,
           broadcaster: user.scUsername,
+          image: user.scAvatarUri,
           description: streamDesc,
           heartCountNum: 0,
           listenerMaxCount: 0,
@@ -45,6 +46,7 @@ module.exports = {
           var newStream = new Stream({
             name: streamName,
             broadcaster: user.scUsername,
+            image: user.scAvatarUri,
             description: streamDesc,
             heartCountNum: 0,
             listenerMaxCount: 0,

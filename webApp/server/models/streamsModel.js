@@ -10,7 +10,7 @@ var streamSchema = new mongoose.Schema({
   listenerTotalCount: Number,
   listenerLiveCount: Number,
   playing: Boolean,
-  // image: String,
+  image: String,
   timestamp: Date,
   latitude: Number,
   longitude: Number,
