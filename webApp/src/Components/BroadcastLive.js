@@ -96,15 +96,13 @@ class BroadcastLive extends React.Component {
   }
 
   startHTMLBroadcast() {
-    this.setState({
-      disabled: true
-    }, () => {
-      this.bc.startFromHTML("soundcloudPlayer");
-    });
-  }
-
-  stopHTMLBroadcast() {
-    this.bc.stop();
+    if (this.state.songQueue) {
+      this.setState({
+        disabled: true
+      }, () => {
+        this.bc.startFromHTML("soundcloudPlayer");
+      });
+    }
   }
 
   startBroadcast() {
@@ -120,8 +118,9 @@ class BroadcastLive extends React.Component {
   stopBroadcast() {
     this.setState({
       disabled: false
+    }, () => {
+      this.bc.stop();
     });
-    this.bc.stop();
   }
 
   handleMediaEnd() {
@@ -228,9 +227,8 @@ class BroadcastLive extends React.Component {
         goProfile={this.goToProfile.bind(this)}
         startBroadcast={this.startBroadcast.bind(this)}
         stopBroadcast={this.stopBroadcast.bind(this)}
-        handleMediaEnd={this.handleMediaEnd.bind(this)}
         startHTMLBroadcast={this.startHTMLBroadcast.bind(this)}
-        stopHTMLBroadcast={this.stopHTMLBroadcast.bind(this)}
+        handleMediaEnd={this.handleMediaEnd.bind(this)}
         submitSearch={this.submitSearch.bind(this)}
         loadMoreSongs={this.loadMoreSongs.bind(this)}
         isLive={this.props.location.state.isLive}
