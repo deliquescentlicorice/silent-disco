@@ -8,7 +8,7 @@ casper.on('page.error', function(msg, trace) {
 
 phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 6, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 8, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
@@ -38,12 +38,14 @@ casper.test.begin("Testing radio from listener's perspective", 6, function suite
       .filter(function(elem) {
         return window.getComputedStyle(elem).transitionProperty === 'transform';
       });
-      changedDivs[0].classList.add('left-navbar');
+    changedDivs[0].classList.add('left-navbar');
   });
 
+  //really, I want a pseudo-class selector for the 2nd child of left-navbar
+
   casper.then(function() {
-    test.assertSelectorHasText('.left-navbar span', 'Listen', 'menu item reads listen');
-    this.click('.left-navbar span');
+    test.assertSelectorHasText('.left-navbar:nth-child(2) span', 'Listen', 'menu item reads listen');
+    this.click('.left-navbar:nth-child(2) span');
   });
 
   casper.then(function() {
@@ -51,9 +53,27 @@ casper.test.begin("Testing radio from listener's perspective", 6, function suite
   });
 
   casper.then(function() {
-    //find the login button, then click it
-  })
+    //last-child of navbar is broadcast, last-child of that is a wrapper div, last-child of that is login
+    test.assertSelectorHasText('.left-navbar:last-child:last-child:last-child span', 'Login', 'last menu item reads login');
+    this.click('.left-navbar:last-child:last-child:last-child span');
   });
+
+  // casper.thenOpen('http://localhost:3000/login', function() {
+  //   test.assertEvalEquals(function() {
+  //     return document.location.pathname;
+  //   }, '/login', 'login is the actual pathname')
+  // });
+
+  casper.then(function() {
+    this.wait(1000, function() {
+      test.assertEvalEquals(function() {
+        return document.location.pathname;
+      }, '/login', 'login button sends user to login page');
+    });
+
+  });
+
+});
 
 casper.run(function() {
   this.test.done();
