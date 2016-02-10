@@ -23,8 +23,8 @@ mongoose.connect(localMongo);
 // server setup
 var app = express();
 var port = process.env.PORT || 3000;
-var binaryServer = require('binaryjs').BinaryServer;
-var binarySocketHandler = require('./binarySockets.js');
+
+// var binarySocketHandler = require('./binarySockets.js');
 
 // dev stuff
 var version = process.env.version || 'DEV';
@@ -76,9 +76,8 @@ require('./routes.js')(app, express, scAuth.ensureAuth);
 // server startup
 var server = app.listen(port);
 console.log('Listening on port:' + port);
-var bServer = binaryServer({
-  server: server
-});
-bServer.on('connection', binarySocketHandler.connect);
+
+var binarySockets = require('./binarySockets');
+binarySockets(server);
 
 module.exports = app;
