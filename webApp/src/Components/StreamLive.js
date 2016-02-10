@@ -93,7 +93,7 @@ class StreamLive extends React.Component {
         data: ''
       })
       .done((responseData) => {
-        // upHeart(this.props.params.streamId);
+        upHeart(this.props.params.streamId);
         this.setState({
           heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
         });

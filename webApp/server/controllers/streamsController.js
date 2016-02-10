@@ -4,7 +4,6 @@ var usersController = require('./usersController');
 
 module.exports = {
   createStream: function(req, res, next) {
-    console.log('reached createStream method');
     var streamName = req.body.name;
     var streamDesc = req.body.desc;
     //to make location into array
@@ -184,7 +183,6 @@ module.exports = {
   },
 
   getAllStreams: function(req, res, next) {
-    console.log('getAllStreams fired');
     Stream.find({playing: true}, function(err, docs) {
       if (err) {
         throw err;
