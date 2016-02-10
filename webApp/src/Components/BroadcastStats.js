@@ -24,6 +24,9 @@ class BroadcastStats extends React.Component {
           <span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face style={styles.icon} /></span>
         </div><br />
         <div>
+          <span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Max Listeners <Face style={styles.icon} /></span>
+        </div><br />
+        <div>
           <span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Currently Listening <Face style={styles.icon} /></span>
         </div><br/>
         <div>

@@ -29,6 +29,7 @@ class StreamLive extends React.Component {
       broadcaster: "",
       image: "",
       listenerLiveCount: "",
+      listenerTotalCount: "",
       listenerMaxCount: "",
       heartCount: 0,
       creator: "",
@@ -151,56 +152,32 @@ class StreamLive extends React.Component {
   }
 
   render() {
-    var partial = < Loading / > ;
+    var partial = <Loading />;
 
     if (!this.state.isLoading) {
-      partial = < StreamLiveView
-      state = {
-        this.state
-      }
-      playSong = {
-        this.playSong.bind(this)
-      }
-      stopSong = {
-        this.stopSong.bind(this)
-      }
-      addHeart = {
-        this.addHeart.bind(this)
-      }
+      partial = <StreamLiveView
+        state={this.state}
+        playSong={this.playSong.bind(this)}
+        stopSong={this.stopSong.bind(this)}
+        addHeart={this.addHeart.bind(this)}
       />
     }
-    return ( < div >
-      < div style = {
-        styles.container
-      } >
-      < NavBar title = {
-        'Now Playing'
-      }
-      history = {
-        this.history
-      }
-      /> {
-      partial
-    } < /div>
-
-    < Sound url = {
-      '/stream/' + this.state.streamId
-    }
-    playStatus = {
-      this.state.status
-    }
-    onLoading = {
-      this.handleSongLoading
-    }
-    onPlaying = {
-      this.handleSongPlaying
-    }
-    onFinishedPlaying = {
-      this.handleSongFinishedPlaying
-    }
-    /> < /div >
-  )
-}
+    return (
+      <div>
+        <div style={styles.container}>  
+          <NavBar title={'Now Playing'} history={this.history} />
+          {partial}
+        </div>
+        
+        <Sound
+          url={'/stream/' + this.state.streamId}
+          playStatus={this.state.status}
+          onLoading={this.handleSongLoading}
+          onPlaying={this.handleSongPlaying}
+          onFinishedPlaying={this.handleSongFinishedPlaying} />
+      </div>
+    )
+  }
 }
 
 var styles = {
