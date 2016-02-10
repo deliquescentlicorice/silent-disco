@@ -12,7 +12,7 @@ class BroadcastAudioPlayer extends React.Component {
   }
 
   componentWillUnmount() {
-    this.refs.soundcloudPlayer.removeEventListner('ended', this.props.handleMediaEnd.bind(this));
+    this.refs.soundcloudPlayer.removeEventListener('ended', this.props.handleMediaEnd.bind(this));
   }
   
   render() {
