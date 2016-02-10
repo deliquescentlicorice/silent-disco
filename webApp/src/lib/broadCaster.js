@@ -77,7 +77,8 @@ Broadcaster.prototype.startFromHTML = function(elementId) {
 
     this.stream = window.bClient.createStream({
       sampleRate: this.ctx.sampleRate,
-      streamId: this.streamId
+      streamId: this.streamId,
+      type:'stream'
     });
 
     var audioElement = document.getElementById(elementId);
