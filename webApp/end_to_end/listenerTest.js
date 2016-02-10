@@ -44,9 +44,11 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
   });
 
 
+
   casper.then(function() {
     test.assertSelectorHasText('.left-navbar > div:nth-child(2) span', 'Listen', 'menu item reads listen');
     this.click('.left-navbar > div:nth-child(2) span');
+
   });
 
   casper.then(function() {
@@ -75,6 +77,25 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
       return buttonSpans.length;
     }, 1, 'there is a nontrivial button');
   });
+  });
+
+  // casper.thenOpen('http://localhost:3000/login', function() {
+  //   test.assertEvalEquals(function() {
+  //     return document.location.pathname;
+  //   }, '/login', 'login is the actual pathname')
+  // });
+
+  casper.then(function() {
+    this.wait(1000, function() {
+      test.assertEvalEquals(function() {
+        return document.location.pathname;
+      }, '/login', 'login button sends user to login page');
+    });
+
+  });
+
+});
+
 
   casper.thenEvaluate(function() {
     var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
