@@ -23,7 +23,7 @@ module.exports = function(server) {
 
         //handle listeners arriving to stream before it starts broadcasting
         encoder.stdin[streamId] = stream;
-        
+
         //if there is a queue of clients waiting for this stream to start
         if (encoder.streamQueue[streamId]) {
           encoder.streamQueue[streamId].forEach(function(req) {
@@ -39,7 +39,7 @@ module.exports = function(server) {
         });
       } else {
         console.log(meta);
-        emit(client, meta);
+        emit(meta);
       }
     });
 
@@ -48,12 +48,13 @@ module.exports = function(server) {
       console.log('binary js client connection closed');
     });
 
-    var emit = function(client, data) {
+    var emit = function(meta) {
       for (var id in bServer.clients) {
         if (bServer.clients.hasOwnProperty(id)) {
           var otherClient = bServer.clients[id];
           if (otherClient != client) {
-            client.send('', meta);
+            console.log('emit:' + meta);
+            otherClient.send('', meta);
           }
         }
       }
