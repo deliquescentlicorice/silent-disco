@@ -194,8 +194,20 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
     this.click('.hamburger');
   });
 
+  casper.thenEvaluate(function() {
+    //find the first stream, then click on it
+    var divs = divs.filter(function(elem){
+return elem.textContent === 'muzak';
+});
+    divs[0].classList.add('muzak');
+  });
+
   casper.then(function() {
-    test.assertNotVisible('.left-navbar');
+    this.click('.muzak');
+  });
+
+  casper.then(function() {
+//except the stream should actually exist…
   });
 
 });
