@@ -4,17 +4,8 @@ import React from 'react';
 import ListItem from '../../node_modules/material-ui/lib/lists/list-item';
 import Divider from '../../node_modules/material-ui/lib/divider';
 import Avatar from '../../node_modules/material-ui/lib/avatar';
-import Close from '../../node_modules/material-ui/lib/svg-icons/navigation/close';
 
-class BroadcastQueueEntry extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
-  removeSong(){
-    this.props.removeSongFromQueue(this.props.index)
-  }
-  
+class BroadcastPlayedEntry extends React.Component {
   render() {
     return (
       <div>
@@ -22,7 +13,6 @@ class BroadcastQueueEntry extends React.Component {
           primaryText={this.props.track.title}
           secondaryText={this.props.track.genre}
           leftAvatar={<Avatar src={this.props.track.artwork_url || this.props.track.user.avatar_url} />}
-          rightIconButton={<Close onClick={this.removeSong.bind(this)}/>}
           disabled={true}
         />
         <Divider inset={true} />
@@ -35,4 +25,4 @@ var styles = {
   
 }
 
-export default BroadcastQueueEntry;
+export default BroadcastPlayedEntry;
