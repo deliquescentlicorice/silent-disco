@@ -74,6 +74,9 @@ class BroadcastLiveView extends React.Component {
       <div>
         <div style={styles.cardContainer}>
           <Card style={styles.mainBox}>
+            {partial}
+          </Card>
+          <Card style={styles.box}>
             <a href="#">
             <CardHeader
               onClick={this.props.goProfile}
@@ -88,11 +91,6 @@ class BroadcastLiveView extends React.Component {
             <CardText>
               {this.props.state.description}
             </CardText>
-          </Card>
-          <Card style={styles.box}>
-            {partial}
-          </Card>
-          <Card style={styles.box}>
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
               listenerMaxCount={this.props.state.listenerMaxCount} 
@@ -117,8 +115,7 @@ var styles = {
   },
 
   mainBox: {
-    'flex': 1,
-    'maxWidth': '600px'
+    'flex': 3,
   },
 
   streamImage:{

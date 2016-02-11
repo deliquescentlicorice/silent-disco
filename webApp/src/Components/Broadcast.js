@@ -10,6 +10,7 @@ import NoBroadcast from './NoBroadcast';
 import NavBar from './NavBar';
 
 // MATERIAL DESIGN
+import Card from 'material-ui/lib/card/card';
 import FlatButton from '../../node_modules/material-ui/lib/flat-button';
 
 class Broadcast extends React.Component {  
@@ -22,16 +23,19 @@ class Broadcast extends React.Component {
       partial = <NoBroadcast />
     }
     return (
-      <div>
+      <Card style={styles.app}>
         <NavBar title="Broadcast" history={this.props.history} />
         {partial}
-      </div>
+      </Card>
     )
   } 
 }
 
 var styles = {
-
+  app: {
+    'maxWidth': '1280px',
+    'margin': '15px auto'
+  }
 }
 
 reactMixin.onClass(Broadcast, History);

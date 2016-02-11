@@ -125,27 +125,31 @@ class BroadcastLive extends React.Component {
   }
 
   startHTMLBroadcast() {
-    this.bc.startFromHTML("soundcloudPlayer");
-  }
-
-  stopHTMLBroadcast() {
-    this.bc.stop();
+    if (this.state.songQueue) {
+      this.setState({
+        disabled: true
+      }, () => {
+        this.bc.startFromHTML("soundcloudPlayer");
+      });
+    }
   }
 
   startBroadcast() {
     if (this.state.selectedSource) {
       this.setState({
         disabled: true
+      }, () => {
+        this.bc.start(this.state.selectedSource);
       });
-      this.bc.start(this.state.selectedSource);
     }
   }
 
   stopBroadcast() {
     this.setState({
       disabled: false
+    }, () => {
+      this.bc.stop();
     });
-    this.bc.stop();
   }
 
   handleMediaEnd() {
@@ -185,7 +189,7 @@ class BroadcastLive extends React.Component {
 
   goToProfile() {
     this.props.history.push({
-      pathname: '/user/'+ this.state.creator
+      pathname: '/user/' + this.state.creator
     });
   }
 
@@ -204,11 +208,7 @@ class BroadcastLive extends React.Component {
     }
   }
 
-  submitSearch(event) {
-    //get the value of search
-    let search = this.state.search;
-
-    //query the soundcloud database
+  submitSearch(query) {
     SC.initialize({
       client_id: SC_Client.clientID
     });
@@ -216,11 +216,10 @@ class BroadcastLive extends React.Component {
     var page_size = 10;
 
     SC.get('/tracks', {
-      limit: page_size, linked_partitioning: 1, q: search
+      limit: page_size, linked_partitioning: 1, q: query
     }).then((tracks) => {
       // page through results, 100 at a time
       this.setState({
-        search: "",
         searchResults:tracks.collection,
         nextSearch:tracks.next_href
       });
@@ -257,9 +256,8 @@ class BroadcastLive extends React.Component {
         goProfile={this.goToProfile.bind(this)}
         startBroadcast={this.startBroadcast.bind(this)}
         stopBroadcast={this.stopBroadcast.bind(this)}
-        handleMediaEnd={this.handleMediaEnd.bind(this)}
         startHTMLBroadcast={this.startHTMLBroadcast.bind(this)}
-        stopHTMLBroadcast={this.stopHTMLBroadcast.bind(this)}
+        handleMediaEnd={this.handleMediaEnd.bind(this)}
         submitSearch={this.submitSearch.bind(this)}
         loadMoreSongs={this.loadMoreSongs.bind(this)}
         isLive={this.props.location.state.isLive}

@@ -13,6 +13,7 @@ import NavBar from './Components/NavBar.js';
 import Loading from './Components/Loading.js';
 
 // MATERIAL UI
+import Card from 'material-ui/lib/card/card';
 import List from '../node_modules/material-ui/lib/lists/list';
 
 //for development; we'll change this in production
@@ -85,11 +86,18 @@ class App extends React.Component {
       )
     }
     return (
-      <div>
+      <Card style={styles.app}>
         <NavBar title="Listen" history={this.history}/>
         {partial}
-      </div>
+      </Card>
     )
+  }
+}
+
+var styles = {
+  app: {
+    'maxWidth': '1280px',
+    'margin': '15px auto'
   }
 }
 
