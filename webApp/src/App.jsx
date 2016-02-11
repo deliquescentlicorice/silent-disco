@@ -15,6 +15,8 @@ import Loading from './Components/Loading.js';
 // MATERIAL UI
 import Card from 'material-ui/lib/card/card';
 import List from '../node_modules/material-ui/lib/lists/list';
+import Card from '../node_modules/material-ui/lib/card/card';
+import CardText from '../node_modules/material-ui/lib/card/card-text';
 
 window.protocol = (window.location.protocol === "https:") ? 'https://' : 'http://';
 
@@ -81,11 +83,22 @@ class App extends React.Component {
   render() {
     var partial = <Loading />
     if (!this.state.isLoading) {
-      partial = (
-        <List>
-          {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
-        </List>
-      )
+      if(this.state.streams.length===0){
+        partial = (
+          <Card>
+            <CardText>
+              No Streams Are Currently Available
+            </CardText>
+          </Card>
+        )
+      } else{
+        partial = (
+          <List>
+            {Object.keys(this.state.streams).map(this.renderStream.bind(this))}
+          </List>
+        )
+      }
+      
     }
     return (
       <Card style={styles.app}>
