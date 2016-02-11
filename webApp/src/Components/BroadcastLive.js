@@ -24,14 +24,16 @@ class BroadcastLive extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-      heartCount: 4000,
-      listenerLiveCount: 1000,
-      listenerMaxCount: 1000000,
+      heartCount: 0,
+      listenerLiveCount: 0,
+      listenerMaxCount: 0,
+      listenerTotalCount: 0,
       name: "Screw It, We're Doing It Live",
       description: "Description of the station",
       artist: user.full_name || "pseudonymous",
       artistAlias: user.username || "QuantumRadio Broadcaster",
       artistImage: user.avatar_url,
+      streamImage: "",
       selectedSource: null,
       audioSources: [],
       isLoading: true,
@@ -75,6 +77,30 @@ class BroadcastLive extends React.Component {
     this.bc.stop();
   }
 
+  componentDidMount(){
+    //add bclient on handler here
+    window.bClient.on('stream', function(data, meta) {
+      if (meta.type === 'event') {
+        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
+          if (meta.streamId === this.props.params.streamId) {
+
+            $.ajax({
+              url: '/api/stream/' + this.props.params.streamId
+            })
+            .done((stream) => {
+              this.setState({
+                heartCount: stream.heartCountNum,
+                listenerLiveCount: stream.listenerLiveCount,
+                listenerMaxCount: stream.listenerMaxCount,
+                listenerTotalCount: stream.listenerTotalCount
+              });
+            });
+          }
+        }
+      }
+    }.bind(this));
+  }
+
   fetchData() {
     $.ajax({
       url: '/api/stream/' + this.props.params.streamId
@@ -87,9 +113,11 @@ class BroadcastLive extends React.Component {
         heartCount: stream.heartCountNum,
         listenerLiveCount: stream.listenerLiveCount,
         listenerMaxCount: stream.listenerMaxCount,
+        listenerTotalCount: stream.listenerTotalCount,
         isLoading: false,
         creator: stream.creator,
         broadcaster: stream.broadcaster,
+        streamImage: stream.streamImage,
         playing: stream.playing,
         favorites: fav
       });

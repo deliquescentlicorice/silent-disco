@@ -21,7 +21,7 @@ class StreamLiveView extends React.Component {
       <div style={styles.cardContainer}>
         <Card style={styles.mainBox}>
           <CardMedia style={styles.streamImage}>
-            <img src={this.props.state.image} />
+            <img src={this.props.state.streamImage} />
           </CardMedia>
           <CardTitle
             title={this.props.state.name}
@@ -57,6 +57,7 @@ class StreamLiveView extends React.Component {
         <Card style={styles.box}>
           <BroadcastStats
             listenerLiveCount={this.props.state.listenerLiveCount}
+            listenerTotalCount={this.props.state.listenerTotalCount}
             listenerMaxCount={this.props.state.listenerMaxCount}
             heart={this.props.state.heartCount} />
         </Card>
@@ -73,11 +74,11 @@ var styles = {
   },
 
   box: {
-    'flex': 3
+    'flex': 1
   },
 
   mainBox: {
-    'flexGrow': 1,
+    'flex': 2,
     'maxWidth': '600px',
     'alignContent': 'center',
   },

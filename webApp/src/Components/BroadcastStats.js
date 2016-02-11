@@ -7,6 +7,9 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
+// UTILITIES
+import $ from '../../public/js/jquery-1.11.1.min';
+
 
 class BroadcastStats extends React.Component {
   constructor(props) {
@@ -21,10 +24,7 @@ class BroadcastStats extends React.Component {
       <CardText>
         <h2>STATS <TrendingUp /></h2>
         <div>
-          <span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Total Listeners <Face style={styles.icon} /></span>
-        </div><br />
-        <div>
-          <span style={styles.count}>{this.props.listenerMaxCount.toLocaleString()}</span><span> Max Listeners <Face style={styles.icon} /></span>
+          <span style={styles.count}>{this.props.listenerTotalCount.toLocaleString()}</span><span> Total Listener Count <Face style={styles.icon} /></span>
         </div><br />
         <div>
           <span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Currently Listening <Face style={styles.icon} /></span>

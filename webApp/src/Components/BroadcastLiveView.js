@@ -82,7 +82,7 @@ class BroadcastLiveView extends React.Component {
               avatar={this.props.state.artistImage}
             /></a>
             <CardMedia style={styles.streamImage}>
-              <img src={this.props.state.artistImage}/>
+              <img src={this.props.state.streamImage}/>
             </CardMedia>
             <CardTitle title={this.props.state.name}/>
             <CardText>
@@ -96,6 +96,7 @@ class BroadcastLiveView extends React.Component {
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
               listenerMaxCount={this.props.state.listenerMaxCount} 
+              listenerTotalCount={this.props.state.listenerTotalCount}
               heart={this.props.state.heartCount} />
           </Card>
         </div>

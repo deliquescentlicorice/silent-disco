@@ -27,7 +27,8 @@ class StreamLive extends React.Component {
       desc: "",
       name: "",
       broadcaster: "",
-      image: "",
+      broadcasterImage: "",
+      streamImage: "",
       listenerLiveCount: "",
       listenerTotalCount: "",
       listenerMaxCount: "",
@@ -48,36 +49,31 @@ class StreamLive extends React.Component {
     //add bclient on handler here
     window.bClient.on('stream', function(data, meta) {
       if (meta.type === 'event') {
-        if (meta.action === 'enterStream') {
+        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
           console.log('onEnterStream-' + meta.streamId);
           if (meta.streamId === this.state.streamId) {
-            this.setState({
-              listenerLiveCount: this.state.listenerLiveCount+1,
-              listenerMaxCount: this.state.listenerMaxCount+1
-            });
-          }
-        }
 
-        if (meta.action === 'leaveStream') {
-          console.log('onLeaveStream-' + meta.streamId);
-          if (meta.streamId === this.state.streamId) {
-            console.log("Leave Stream Triggered")
-            this.setState({
-              listenerLiveCount: this.state.listenerLiveCount-1
-            });
-          }
-        }
-
-        if (meta.action === 'upHeart') {
-          console.log('onUpHeart-' + meta.streamId);
-          if (meta.streamId === this.state.streamId) {
-            this.setState({
-              heartCount: this.state.heartCount+1
+            $.ajax({
+              url: BASE_URL + '/api/stream/' + this.state.streamId
+            })
+            .done((streamData) => {
+              $.ajax({
+                url: BASE_URL + '/api/user/' + streamData.creator
+              })
+              .done((userData) => {
+                this.setState({
+                  listenerLiveCount: streamData.listenerLiveCount,
+                  listenerMaxCount: streamData.listenerMaxCount,
+                  listenerTotalCount: streamData.listenerTotalCount,
+                  heartCount: streamData.heartCountNum
+                });
+              });
             });
           }
         }
       }
     }.bind(this));
+  
   }
 
   componentWillUnmount(){
@@ -126,29 +122,31 @@ class StreamLive extends React.Component {
 
   fetchStreamData() {
     $.ajax({
-        url: BASE_URL + '/api/stream/' + this.state.streamId
+      url: BASE_URL + '/api/stream/' + this.state.streamId
+    })
+    .done((streamData) => {
+      $.ajax({
+        url: BASE_URL + '/api/user/' + streamData.creator
       })
-      .done((streamData) => {
-        $.ajax({
-            url: BASE_URL + '/api/user/' + streamData.creator
-          })
-          .done((userData) => {
-            this.setState({
-              name: streamData.name,
-              broadcaster: streamData.broadcaster,
-              desc: streamData.description,
-              listenerLiveCount: streamData.listenerLiveCount,
-              creator: streamData.creator,
-              heartCount: streamData.heartCountNum,
-              listenerMaxCount: streamData.listenerMaxCount,
-              isLoading: false,
-              image: userData.user.scAvatarUri,
-              soundcloud: userData.user.scPermalink,
-              website: userData.user.website,
-              websiteTitle: userData.user.websiteTitle
-            });
-          });
+      .done((userData) => {
+        this.setState({
+          name: streamData.name,
+          broadcaster: streamData.broadcaster,
+          desc: streamData.description,
+          listenerLiveCount: streamData.listenerLiveCount,
+          creator: streamData.creator,
+          heartCount: streamData.heartCountNum,
+          listenerMaxCount: streamData.listenerMaxCount,
+          listenerTotalCount: streamData.listenerTotalCount,
+          isLoading: false,
+          broadcasterImage: userData.user.scAvatarUri,
+          streamImage: streamData.streamImage,
+          soundcloud: userData.user.scPermalink,
+          website: userData.user.website,
+          websiteTitle: userData.user.websiteTitle
+        });
       });
+    });
   }
 
   render() {
