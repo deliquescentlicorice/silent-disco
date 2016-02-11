@@ -6,6 +6,7 @@ import SC_Client from '../../server/config/apiKeys';
 // COMPONENTS
 import BroadcastSCEntry from './BroadcastSCEntry.js';
 import BroadcastQueueEntry from './BroadcastQueueEntry.js';
+import BroadcastPlayedEntry from './BroadcastPlayedEntry.js';
 import BroadcastAudioPlayer from './BroadcastAudioPlayer.js';
 
 // MATERIAL DESIGN
@@ -61,6 +62,14 @@ class BroadcastLiveViewSC extends React.Component {
     />
   }
 
+  renderPlayedEntry(track, key){
+    return <BroadcastPlayedEntry
+      key={key}
+      index={key}
+      track={track}
+    />
+  }
+
   render() {
     return (
       <div style={styles.cardContainer}>
@@ -88,7 +97,7 @@ class BroadcastLiveViewSC extends React.Component {
                 {this.props.songQueue.map(this.renderQueueEntry.bind(this))}
               </List>
               <List subheader="Played">
-                {this.props.endedSongQueue.map(this.renderQueueEntry.bind(this))}
+                {this.props.endedSongQueue.map(this.renderPlayedEntry.bind(this))}
               </List>
             </Tab>
             <Tab label="Favorites">
