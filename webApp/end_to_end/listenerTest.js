@@ -6,9 +6,9 @@ casper.on('page.error', function(msg, trace) {
   this.echo('page.error: ' + msg);
 });
 
-phantom.cookiesEnabled = true;
+// phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 14, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 20, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
@@ -87,14 +87,19 @@ casper.test.begin("Testing radio from listener's perspective", 14, function suit
     this.click('.soundcloud');
   });
 
-  //conjecture: the regexes aren't working, or I'm not entering them correctly
+  casper.then(function() {
+    this.wait(1000, function() {
 
-  //should not work
-  casper.waitForPopup('soundcloud', function() {
+    });
+  });
+
+
+  //the next several tests work irregularly; timing isn't guaranteed
+  casper.waitForPopup('', function() {
     test.assertEquals(this.popups.length, 1, 'a single popup window appears');
   });
 
-  casper.withPopup('soundcloud', function() {
+  casper.withPopup('', function() {
     test.assertTitle('Authorize access to your account on SoundCloud - Create, record and share your sounds for free',
       'popup title is the expected title');
     //facebook and google OAuth buttons appear
@@ -104,7 +109,7 @@ casper.test.begin("Testing radio from listener's perspective", 14, function suit
 
   casper.thenOpen('http://localhost:3000', function() {
     //dump spoofed data into localstorage
-    test.assertEvalEquals(function() {
+    this.evaluate(function() {
       var spoof = {
         avatar_url: "https://i1.sndcdn.com/avatars-000202938842-4r611z-large.jpg",
         city: null,
@@ -139,18 +144,58 @@ casper.test.begin("Testing radio from listener's perspective", 14, function suit
         website: null,
         website_title: null
       };
+      spoof = JSON.stringify(spoof);
       localStorage.setItem('me', spoof);
-    });
-    this.wait(5000, function() {
-      this.echo(this.popups[0]);
-      // test.assertEquals(this.popups.length, 0, 'popup disappears');
-      this.echo(this.getCurrentUrl());
+      __utils__.echo(localStorage.getItem('me'));
     });
   });
 
-  // casper.withPopup(/^https://accounts.google.com/, function() {
-  //   test.assertTitle('Sign in - Google Accounts - Google Chrome', 'google popup title is the expected title');
-  // });
+  casper.then(function() {
+    this.reload(function() {
+      this.echo('reloaded!');
+    });
+  });
+
+  casper.then(function() {
+    this.click('button');
+  });
+
+  casper.thenEvaluate(function() {
+    var changedDivs = Array.prototype.slice.call(document.querySelectorAll('div'))
+      .filter(function(elem) {
+        return window.getComputedStyle(elem).transitionProperty === 'transform';
+      });
+    changedDivs[0].classList.add('left-navbar');
+  });
+
+  casper.then(function() {
+    test.assertEval(function() {
+      return !!localStorage.getItem('me');
+    });
+    test.assertSelectorHasText('.left-navbar > div:last-child > div span', 'Broadcast', 'menu item reads broadcast');
+    test.assertSelectorHasText('.left-navbar > div:last-child > div > div:last-child > div:first-child div',
+      'Create Broadcast', 'first broadcast submenu item: create broadcast');
+    test.assertSelectorHasText('.left-navbar > div:last-child > div > div:last-child > div:nth-child(2) div',
+      'Profile', 'second broadcast submenu item: profile');
+    test.assertSelectorHasText('.left-navbar > div:last-child > div > div:last-child > div:last-child div',
+      'Logout', 'last broadcast submenu item: logout');
+  });
+
+  casper.thenEvaluate(function() {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('button'))
+      .filter(function(elem) {
+        return window.getComputedStyle(elem).top === '0px';
+      });
+    buttons[0].classList.add('hamburger');
+  });
+
+  casper.then(function() {
+    this.click('.hamburger');
+  });
+
+  casper.then(function() {
+    test.assertNotVisible('.left-navbar');
+  });
 
 });
 
