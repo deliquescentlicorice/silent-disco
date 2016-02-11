@@ -17,7 +17,7 @@ module.exports = function(server) {
         console.log(meta);
         console.log("Stream start...@" + meta.sampleRate + "Hz");
         console.log("Stream Id:" + meta.streamId);
-        
+
         //support multiple streams  
         var streamId = meta.streamId;
         encoder.stdin[streamId] = stream;
@@ -27,6 +27,13 @@ module.exports = function(server) {
           if (err) {
             console.log(err);
           }
+        });
+
+        //emit stream start to all connected clients
+        emit({
+          type: "event",
+          streamId: streamId,
+          action: "streamStart"
         });
 
         //handle listeners arriving to stream before it starts broadcasting
@@ -46,6 +53,14 @@ module.exports = function(server) {
               console.log(err);
             }
           });
+
+          //emit stream end to all connected clients
+          emit({
+            type: "event",
+            streamId: streamId,
+            action: "streamEnd"
+          });
+
           encoder.stdin[streamId].end();
           delete encoder.stdin[streamId];
         });
