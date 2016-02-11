@@ -27,8 +27,10 @@ class StreamLive extends React.Component {
       desc: "",
       name: "",
       broadcaster: "",
-      image: "",
+      broadcasterImage: "",
+      streamImage: "",
       listenerLiveCount: "",
+      listenerTotalCount: "",
       listenerMaxCount: "",
       heartCount: 0,
       creator: "",
@@ -43,29 +45,47 @@ class StreamLive extends React.Component {
 
   componentDidMount() {
     this.fetchStreamData();
+
     //add bclient on handler here
     window.bClient.on('stream', function(data, meta) {
       if (meta.type === 'event') {
-        if (meta.action === 'enterStream') {
+        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
           console.log('onEnterStream-' + meta.streamId);
-          //todo
-        }
-
-        if (meta.action === 'leaveStream') {
-          console.log('onLeaveStream-' + meta.streamId);
-          //todo
-        }
-
-        if (meta.action === 'upHeart') {
-          console.log('onUpHeart-' + meta.streamId);
           if (meta.streamId === this.state.streamId) {
-            this.setState({
-              heartCount: this.state.heartCount+1
+
+            $.ajax({
+              url: BASE_URL + '/api/stream/' + this.state.streamId
+            })
+            .done((streamData) => {
+              $.ajax({
+                url: BASE_URL + '/api/user/' + streamData.creator
+              })
+              .done((userData) => {
+                this.setState({
+                  listenerLiveCount: streamData.listenerLiveCount,
+                  listenerMaxCount: streamData.listenerMaxCount,
+                  listenerTotalCount: streamData.listenerTotalCount,
+                  heartCount: streamData.heartCountNum
+                });
+              });
             });
           }
         }
       }
     }.bind(this));
+  
+  }
+
+  componentWillUnmount(){
+    var PUT_NOLISTENER = BASE_URL + '/api/nolistener/' + this.state.streamId;
+     $.ajax({
+      url: PUT_NOLISTENER,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    }).done((responseData) => {
+      leaveStream(this.state.streamId);
+    });
   }
 
   playSong() {
@@ -87,97 +107,75 @@ class StreamLive extends React.Component {
 
     // As of iOS 9.3 and OSX 10.11, Safari does not support fetch
     $.ajax({
-        url: PUT_HEART,
-        method: 'PUT',
-        contentType: "application/x-www-form-urlencoded",
-        data: ''
-      })
-      .done((responseData) => {
-        upHeart(this.props.params.streamId);
-        this.setState({
-          heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
-        });
+      url: PUT_HEART,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      upHeart(this.props.params.streamId);
+      this.setState({
+        heartCount: responseData.heartCountNum.length > 5 ? '> 9,999' : responseData.heartCountNum
       });
+    });
   }
 
   fetchStreamData() {
     $.ajax({
-        url: BASE_URL + '/api/stream/' + this.state.streamId
+      url: BASE_URL + '/api/stream/' + this.state.streamId
+    })
+    .done((streamData) => {
+      $.ajax({
+        url: BASE_URL + '/api/user/' + streamData.creator
       })
-      .done((streamData) => {
-        $.ajax({
-            url: BASE_URL + '/api/user/' + streamData.creator
-          })
-          .done((userData) => {
-            this.setState({
-              name: streamData.name,
-              broadcaster: streamData.broadcaster,
-              desc: streamData.description,
-              listenerLiveCount: streamData.listenerLiveCount,
-              creator: streamData.creator,
-              heartCount: streamData.heartCountNum,
-              listenerMaxCount: streamData.listenerMaxCount,
-              isLoading: false,
-              image: userData.user.scAvatarUri,
-              soundcloud: userData.user.scPermalink,
-              website: userData.user.website,
-              websiteTitle: userData.user.websiteTitle
-            });
-          });
+      .done((userData) => {
+        this.setState({
+          name: streamData.name,
+          broadcaster: streamData.broadcaster,
+          desc: streamData.description,
+          listenerLiveCount: streamData.listenerLiveCount,
+          creator: streamData.creator,
+          heartCount: streamData.heartCountNum,
+          listenerMaxCount: streamData.listenerMaxCount,
+          listenerTotalCount: streamData.listenerTotalCount,
+          isLoading: false,
+          broadcasterImage: userData.user.scAvatarUri,
+          streamImage: streamData.streamImage,
+          soundcloud: userData.user.scPermalink,
+          website: userData.user.website,
+          websiteTitle: userData.user.websiteTitle
+        });
       });
+    });
   }
 
   render() {
-    var partial = < Loading / > ;
+    var partial = <Loading />;
 
     if (!this.state.isLoading) {
-      partial = < StreamLiveView
-      state = {
-        this.state
-      }
-      playSong = {
-        this.playSong.bind(this)
-      }
-      stopSong = {
-        this.stopSong.bind(this)
-      }
-      addHeart = {
-        this.addHeart.bind(this)
-      }
+      partial = <StreamLiveView
+        state={this.state}
+        playSong={this.playSong.bind(this)}
+        stopSong={this.stopSong.bind(this)}
+        addHeart={this.addHeart.bind(this)}
       />
     }
-    return ( < div >
-      < div style = {
-        styles.container
-      } >
-      < NavBar title = {
-        'Now Playing'
-      }
-      history = {
-        this.history
-      }
-      /> {
-      partial
-    } < /div>
-
-    < Sound url = {
-      '/stream/' + this.state.streamId
-    }
-    playStatus = {
-      this.state.status
-    }
-    onLoading = {
-      this.handleSongLoading
-    }
-    onPlaying = {
-      this.handleSongPlaying
-    }
-    onFinishedPlaying = {
-      this.handleSongFinishedPlaying
-    }
-    /> < /div >
-  )
-}
+    return (
+      <div>
+        <div style={styles.container}>  
+          <NavBar title={'Now Playing'} history={this.history} />
+          {partial}
+        </div>
+        
+        <Sound
+          url={'/stream/' + this.state.streamId}
+          playStatus={this.state.status}
+          onLoading={this.handleSongLoading}
+          onPlaying={this.handleSongPlaying}
+          onFinishedPlaying={this.handleSongFinishedPlaying} />
+      </div>
+    )
+  }
 }
 
 var styles = {

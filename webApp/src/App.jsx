@@ -18,6 +18,8 @@ import List from '../node_modules/material-ui/lib/lists/list';
 //for development; we'll change this in production
 var REQUEST_URL_ALL = 'http://' + document.location.host + '/api/streams';
 
+var BASE_URL = 'http://' + document.location.host;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -53,8 +55,19 @@ class App extends React.Component {
   }
 
   goToStream() {
-    this.props.history.push({
-      pathname: '/listen/' + this.props.stream._id,
+    
+    var PUT_LISTENER = BASE_URL + '/api/listener/' + this.props.stream._id;
+     $.ajax({
+      url: PUT_LISTENER,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      enterStream(this.props.stream._id);
+      this.props.history.push({
+        pathname: '/listen/' + this.props.stream._id,
+      });
     });
   }
 

@@ -51,6 +51,7 @@ class BroadcastSetupView extends React.Component {
               hintText="Description"
               floatingLabelText="Description"
             /><br/><br/>
+            <p>Choose Your Audio Source</p>
             <DropDownMenu ref="isLive" onChange={this.setSource.bind(this)} value={this.state.isLive}>
               <MenuItem value={"AUX"} primaryText="AUX or Mic"/>
               <MenuItem value={"SC"} primaryText="SoundCloud"/>

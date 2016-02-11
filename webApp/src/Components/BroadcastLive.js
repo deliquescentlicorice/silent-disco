@@ -24,18 +24,21 @@ class BroadcastLive extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-      heartCount: 4000,
-      listenerLiveCount: 1000,
-      listenerMaxCount: 1000000,
+      heartCount: 0,
+      listenerLiveCount: 0,
+      listenerMaxCount: 0,
+      listenerTotalCount: 0,
       name: "Screw It, We're Doing It Live",
       description: "Description of the station",
       artist: user.full_name || "pseudonymous",
       artistAlias: user.username || "QuantumRadio Broadcaster",
       artistImage: user.avatar_url,
+      streamImage: "",
       selectedSource: null,
       audioSources: [],
       isLoading: true,
       songQueue:[],
+      search: "",
       searchResults:[],
       nextSearch:'',
       currentSong: {
@@ -74,6 +77,30 @@ class BroadcastLive extends React.Component {
     this.bc.stop();
   }
 
+  componentDidMount(){
+    //add bclient on handler here
+    window.bClient.on('stream', function(data, meta) {
+      if (meta.type === 'event') {
+        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
+          if (meta.streamId === this.props.params.streamId) {
+
+            $.ajax({
+              url: '/api/stream/' + this.props.params.streamId
+            })
+            .done((stream) => {
+              this.setState({
+                heartCount: stream.heartCountNum,
+                listenerLiveCount: stream.listenerLiveCount,
+                listenerMaxCount: stream.listenerMaxCount,
+                listenerTotalCount: stream.listenerTotalCount
+              });
+            });
+          }
+        }
+      }
+    }.bind(this));
+  }
+
   fetchData() {
     $.ajax({
       url: '/api/stream/' + this.props.params.streamId
@@ -86,9 +113,11 @@ class BroadcastLive extends React.Component {
         heartCount: stream.heartCountNum,
         listenerLiveCount: stream.listenerLiveCount,
         listenerMaxCount: stream.listenerMaxCount,
+        listenerTotalCount: stream.listenerTotalCount,
         isLoading: false,
         creator: stream.creator,
         broadcaster: stream.broadcaster,
+        streamImage: stream.streamImage,
         playing: stream.playing,
         favorites: fav
       });
@@ -96,31 +125,27 @@ class BroadcastLive extends React.Component {
   }
 
   startHTMLBroadcast() {
-    if (this.state.songQueue) {
-      this.setState({
-        disabled: true
-      }, () => {
-        this.bc.startFromHTML("soundcloudPlayer");
-      });
-    }
+    this.bc.startFromHTML("soundcloudPlayer");
+  }
+
+  stopHTMLBroadcast() {
+    this.bc.stop();
   }
 
   startBroadcast() {
     if (this.state.selectedSource) {
       this.setState({
         disabled: true
-      }, () => {
-        this.bc.start(this.state.selectedSource);
       });
+      this.bc.start(this.state.selectedSource);
     }
   }
 
   stopBroadcast() {
     this.setState({
       disabled: false
-    }, () => {
-      this.bc.stop();
     });
+    this.bc.stop();
   }
 
   handleMediaEnd() {
@@ -179,7 +204,11 @@ class BroadcastLive extends React.Component {
     }
   }
 
-  submitSearch(query) {
+  submitSearch(event) {
+    //get the value of search
+    let search = this.state.search;
+
+    //query the soundcloud database
     SC.initialize({
       client_id: SC_Client.clientID
     });
@@ -187,10 +216,11 @@ class BroadcastLive extends React.Component {
     var page_size = 10;
 
     SC.get('/tracks', {
-      limit: page_size, linked_partitioning: 1, q: query
+      limit: page_size, linked_partitioning: 1, q: search
     }).then((tracks) => {
       // page through results, 100 at a time
       this.setState({
+        search: "",
         searchResults:tracks.collection,
         nextSearch:tracks.next_href
       });
@@ -227,8 +257,9 @@ class BroadcastLive extends React.Component {
         goProfile={this.goToProfile.bind(this)}
         startBroadcast={this.startBroadcast.bind(this)}
         stopBroadcast={this.stopBroadcast.bind(this)}
-        startHTMLBroadcast={this.startHTMLBroadcast.bind(this)}
         handleMediaEnd={this.handleMediaEnd.bind(this)}
+        startHTMLBroadcast={this.startHTMLBroadcast.bind(this)}
+        stopHTMLBroadcast={this.stopHTMLBroadcast.bind(this)}
         submitSearch={this.submitSearch.bind(this)}
         loadMoreSongs={this.loadMoreSongs.bind(this)}
         isLive={this.props.location.state.isLive}

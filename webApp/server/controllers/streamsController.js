@@ -20,6 +20,8 @@ module.exports = {
         var newStream = new Stream({
           name: streamName,
           broadcaster: user.scUsername,
+          broadcasterImage: user.scAvatarUri,
+          streamImage: 'http://lorempixel.com/400/400/abstract',
           description: streamDesc,
           heartCountNum: 0,
           listenerMaxCount: 0,
@@ -45,6 +47,8 @@ module.exports = {
           var newStream = new Stream({
             name: streamName,
             broadcaster: user.scUsername,
+            broadcasterImage: user.scAvatarUri,
+            streamImage: 'http://lorempixel.com/400/400/abstract',
             description: streamDesc,
             heartCountNum: 0,
             listenerMaxCount: 0,

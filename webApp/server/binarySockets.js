@@ -68,6 +68,7 @@ module.exports = function(server) {
           if (otherClient != client) {
             console.log('emit:' + meta);
             otherClient.send('', meta);
+
           }
         }
       }
