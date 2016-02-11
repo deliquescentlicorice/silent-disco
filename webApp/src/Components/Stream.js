@@ -5,29 +5,26 @@ import reactMixin from 'react-mixin';
 
 // HELPERS
 import _ from 'lodash';
-import $ from '../public/js/jquery-1.11.1.min';
+import $ from '../../public/js/jquery-1.11.1.min';
 
 // COMPONENTS
-import StreamEntry from './Components/StreamEntry.js';
-import NavBar from './Components/NavBar.js';
-import Loading from './Components/Loading.js';
-import NoStream from './Components/NoStream.js';
+import StreamEntry from './StreamEntry';
+import NavBar from './NavBar';
+import Loading from './Loading';
+import NoStream from './NoStream';
 
 // MATERIAL UI
-import Card from 'material-ui/lib/card/card';
-import List from '../node_modules/material-ui/lib/lists/list';
-import Card from '../node_modules/material-ui/lib/card/card';
-import CardText from '../node_modules/material-ui/lib/card/card-text';
-import CardMedia from '../node_modules/material-ui/lib/card/card-media';
-
-window.protocol = (window.location.protocol === "https:") ? 'https://' : 'http://';
+import List from '../../node_modules/material-ui/lib/lists/list';
+import Card from '../../node_modules/material-ui/lib/card/card';
+import CardText from '../../node_modules/material-ui/lib/card/card-text';
+import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
 
 //for development; we'll change this in production
-var REQUEST_URL_ALL = window.protocol + document.location.host + '/api/streams';
+var REQUEST_URL_ALL = 'http://' + document.location.host + '/api/streams';
 
-var BASE_URL = window.protocol + document.location.host;
+var BASE_URL = 'http://' + document.location.host;
 
-class App extends React.Component {
+class Stream extends React.Component {
   constructor(props) {
     super(props);
 
@@ -39,6 +36,26 @@ class App extends React.Component {
 
   componentDidMount() {
     this.fetchData();
+
+    //add bclient on handler here
+    console.log(window.bClient)
+    window.bClient.on('stream', function(data, meta) {
+      if (meta.type === 'event') {
+        if (meta.action === 'streamEnd' || meta.action === 'streamStart') {
+          console.log("Stream Event")
+          $.ajax({
+            url: REQUEST_URL_ALL
+          })
+          .done((streamList) => {
+            this.setState({
+              streams: streamList,
+              isLoading: false
+            });
+          });
+        }
+      }
+    }.bind(this));
+
   }
 
   fetchData() {
@@ -102,21 +119,14 @@ class App extends React.Component {
       
     }
     return (
-      <Card style={styles.app}>
+      <div>
         <NavBar title="Listen" history={this.history}/>
         {partial}
-      </Card>
+      </div>
     )
   }
 }
 
-var styles = {
-  app: {
-    'maxWidth': '1280px',
-    'margin': '15px auto'
-  }
-}
+reactMixin.onClass(Stream, History);
 
-reactMixin.onClass(App, History);
-
-export default App;
+export default Stream;
