@@ -105,8 +105,42 @@ casper.test.begin("Testing radio from listener's perspective", 14, function suit
   casper.thenOpen('http://localhost:3000', function() {
     //dump spoofed data into localstorage
     test.assertEvalEquals(function() {
-      localStorage.setItem('me', )
-    })
+      var spoof = {
+        avatar_url: "https://i1.sndcdn.com/avatars-000202938842-4r611z-large.jpg",
+        city: null,
+        country: null,
+        description: null,
+        discogs_name: null,
+        first_name: "Max",
+        followers_count: 1,
+        followings_count: 0,
+        full_name: "Max Kahn",
+        id: 203676733,
+        kind: "user",
+        last_modified: "2016/02/11 01:22:58 +0000",
+        last_name: "Kahn",
+        locale: "",
+        myspace_name: null,
+        online: false,
+        permalink: "max-kahn-987548411",
+        permalink_url: "http://soundcloud.com/max-kahn-987548411",
+        plan: "Free",
+        playlist_count: 0,
+        primary_email_confirmed: true,
+        private_playlists_count: 0,
+        private_tracks_count: 0,
+        public_favorites_count: 0,
+        quota: Object,
+        subscriptions: Array[0],
+        track_count: 0,
+        upload_seconds_left: 10800,
+        uri: "https://api.soundcloud.com/users/203676733",
+        username: "Max Kahn",
+        website: null,
+        website_title: null
+      };
+      localStorage.setItem('me', spoof);
+    });
     this.wait(5000, function() {
       this.echo(this.popups[0]);
       // test.assertEquals(this.popups.length, 0, 'popup disappears');
