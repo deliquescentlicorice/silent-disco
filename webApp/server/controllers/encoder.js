@@ -16,19 +16,11 @@ var BYTES_PER_SECOND = exports.SAMPLE_RATE * BLOCK_ALIGN;
 
 // Array of HttpServerResponse objects that are listening clients.
 var clients = [];
-// not sure if this is needed
-var maxClients = 25;
 
 exports.listenHandler = function(req, res) {
   var streamId = req.params.id;
 
   console.log('streamid:' + streamId);
-
-  if (clients.length >= maxClients) {
-    res.writeHead(503);
-    return res.end("The maximum number of clients (" + exports.maxClients + ") are aleady connected, try connecting again later...")
-  }
-
   console.log(req.headers);
 
   var headers = {
@@ -46,14 +38,16 @@ exports.listenHandler = function(req, res) {
     //handle user arriving to stream early
     exports.streamQueue[streamId] = exports.streamQueue[streamId] || [];
     //add to stream queue
-    exports.streamQueue[streamId].push([req,res]);
+    exports.streamQueue[streamId].push([req, res]);
   }
 }
 
 exports.addStreamHandlers = function(streamId, req, res) {
   // start sending the incoming PCM data to the MP3 encoder
   var callback = function(chunk) {
-    encoder.stdin.write(chunk);
+    if (!res.finished) {
+      encoder.stdin.write(chunk);
+    }
   }
 
   //mp3 encoder options  
@@ -79,6 +73,7 @@ exports.addStreamHandlers = function(streamId, req, res) {
 
   exports.stdin[streamId].on("end", function() {
     console.log('stream on end - ending response');
+    encoder.stdin.end();
     res.end();
   });
 
