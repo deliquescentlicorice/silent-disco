@@ -44,6 +44,14 @@ class BroadcastLiveViewSC extends React.Component {
     this.props.submitSearch(this.refs.soundQuery.setValue(""))
   }
 
+  renderEntriesOrReturnPlaceholder(array, renderCallback, placeholderText) {
+    if (array.length === 0) {
+      return <ListItem>{placeholderText}</ListItem>
+    } else {
+      return array.map(renderCallback);
+    }
+  }
+
   renderSCEntry(track, key){
     return <BroadcastSCEntry
       addSongToQueue={this.props.addSongToQueue}
@@ -71,6 +79,15 @@ class BroadcastLiveViewSC extends React.Component {
   }
 
   render() {
+    var moreSongsButton = this.props.searchResults < 10 ? (
+      <span></span>
+    ) : (
+      <FlatButton
+        onClick={this.props.loadMoreSongs}
+        label="More Songs"
+        primary={true} />
+    )
+
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.box}>
@@ -82,43 +99,46 @@ class BroadcastLiveViewSC extends React.Component {
               disabled={true} />
           </List>
           <br/>
-          <FloatingActionButton onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
-            <Mic />
-          </FloatingActionButton>
-          <FloatingActionButton onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
-            <MicOff />
-          </FloatingActionButton>
-          <BroadcastAudioPlayer
-            src={this.props.currentSong.stream_url + '?client_id=' + SC_Client.clientID}
-            handleMediaEnd={this.props.handleMediaEnd} />
+          <CardActions style={styles.controls}>
+            <div>
+              <FloatingActionButton style={styles.button} onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
+                <Mic />
+              </FloatingActionButton>
+              <FloatingActionButton style={styles.button} onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
+                <MicOff />
+              </FloatingActionButton>
+            </div>
+            <BroadcastAudioPlayer
+              src={this.props.currentSong.stream_url + '?client_id=' + SC_Client.clientID}
+              handleMediaEnd={this.props.handleMediaEnd} />
+          </CardActions>
           <Tabs>
             <Tab label="Playlist">
               <List subheader="Up Next">
-                {this.props.songQueue.map(this.renderQueueEntry.bind(this))}
+                {this.renderEntriesOrReturnPlaceholder(this.props.songQueue, this.renderQueueEntry.bind(this), "No Songs in Queue")}
               </List>
               <List subheader="Played">
-                {this.props.endedSongQueue.map(this.renderPlayedEntry.bind(this))}
+                {this.renderEntriesOrReturnPlaceholder(this.props.endedSongQueue, this.renderPlayedEntry.bind(this), "No Songs Have Been Played")}
               </List>
             </Tab>
             <Tab label="Favorites">
               <List subheader="Select Songs for the Queue">
-                {this.props.favorites.map(this.renderSCEntry.bind(this))}
+                {this.renderEntriesOrReturnPlaceholder(this.props.favorites, this.renderSCEntry.bind(this), "You Don't Have Any SoundCloud Favorites")}
               </List>
             </Tab>
             <Tab label="Search Soundcloud">
-              <TextField
-                ref="soundQuery"
-                hintText="Search Soundcloud"
-                floatingLabelText="Search Soundcloud" /> 
-              <FlatButton
-                onClick={this.searchSC.bind(this)}
-                label="Search"
-                primary={true} />
-              {this.props.searchResults.map(this.renderSCEntry.bind(this))}
+              <div style={styles.searchControl}>
+                <TextField
+                  ref="soundQuery"
+                  hintText="Search Soundcloud"
+                  floatingLabelText="Search Soundcloud" />
                 <FlatButton
-                  onClick={this.props.loadMoreSongs}
-                  label="More Songs"
+                  onClick={this.searchSC.bind(this)}
+                  label="Search"
                   primary={true} />
+              </div>
+              {this.renderEntriesOrReturnPlaceholder(this.props.searchResults, this.renderSCEntry.bind(this), "No Results")}
+              {moreSongsButton}
             </Tab>
           </Tabs>
         </Card>
@@ -128,10 +148,24 @@ class BroadcastLiveViewSC extends React.Component {
 }
 
 var styles = {
-  cardContainer:{
+  cardContainer: {
     'display': 'flex',
     'flexDirection':'row',
     'flexWrap': 'wrap'
+  },
+
+  controls: {
+    'display': 'flex',
+    'justifyContent': 'space-around',
+    'alignItems': 'center'
+  },
+
+  button: {
+    'margin': '8px'
+  },
+
+  searchControl: {
+    'margin': '0 15px'
   },
 
   box: {
