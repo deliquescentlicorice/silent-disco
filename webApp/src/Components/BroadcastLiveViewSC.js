@@ -137,7 +137,7 @@ class BroadcastLiveViewSC extends React.Component {
                   label="Search"
                   primary={true} />
               </div>
-              {this.renderEntriesOrReturnPlaceholder(this.props.searchResults, this.renderSCEntry.bind(this), "No Results")}
+              {this.renderEntriesOrReturnPlaceholder(this.props.searchResults, this.renderSCEntry.bind(this), "No Songs")}
               {moreSongsButton}
             </Tab>
           </Tabs>
