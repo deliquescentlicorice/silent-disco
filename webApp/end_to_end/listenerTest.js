@@ -94,11 +94,11 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
   });
 
   casper.thenEvaluate(function() {
-          var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
-        .filter(function(elem) {
-          return elem.classList.length === 0;
-        });
-        buttonSpans[0].classList.add('soundcloud');
+    var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
+      .filter(function(elem) {
+        return elem.classList.length === 0;
+      });
+    buttonSpans[0].classList.add('soundcloud');
   });
 
   casper.then(function() {
@@ -106,19 +106,36 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
     this.click('.soundcloud');
   });
 
-  casper.waitForPopup('', function() {
-    this.test.assertEquals(this.popups.length, 1);
+  //conjecture: the regexes aren't working, or I'm not entering them correctly
+
+  //should not work
+  casper.waitForPopup('soundcloud', function() {
+    test.assertEquals(this.popups.length, 1, 'a single popup window appears');
   });
 
-  casper.withPopup('', function() {
-
+  casper.withPopup('soundcloud', function() {
+    test.assertTitle('Authorize access to your account on SoundCloud - Create, record and share your sounds for free',
+      'popup title is the expected title');
+    //facebook and google OAuth buttons appear
+    test.assertExists('.facebook-signin');
+    test.assertExists('.google-plus-signin');
   });
 
-  casper.then(function() {
-    this.wait(1000, function() {
-      //here I need to fill out the form to authenticate
+  casper.thenOpen('http://localhost:3000', function() {
+    //dump spoofed data into localstorage
+    test.assertEvalEquals(function() {
+      localStorage.setItem('me', )
     })
-  })
+    this.wait(5000, function() {
+      this.echo(this.popups[0]);
+      // test.assertEquals(this.popups.length, 0, 'popup disappears');
+      this.echo(this.getCurrentUrl());
+    });
+  });
+
+  // casper.withPopup(/^https://accounts.google.com/, function() {
+  //   test.assertTitle('Sign in - Google Accounts - Google Chrome', 'google popup title is the expected title');
+  // });
 
 });
 
