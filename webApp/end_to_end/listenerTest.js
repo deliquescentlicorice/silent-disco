@@ -169,7 +169,7 @@ casper.test.begin("Testing radio from listener's perspective", 35, function suit
         id: 203676733,
         kind: "user",
         last_modified: "2016/02/11 01:22:58 +0000",
-        last_name: "Doe",
+        last_name: "Kahn",
         locale: "",
         myspace_name: null,
         online: false,
