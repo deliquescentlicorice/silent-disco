@@ -41,15 +41,16 @@ if (version === 'DEV') {
   }));
   app.use(require('webpack-hot-middleware')(compiler));
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }));
 } else {
   // need to run <npm run build:webpack> before running app in production mode
   config = require('../webpack.config.prod');
   app.use(config.output.publicPath, express.static(config.output.path));
 }
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // auth + session
 app.use(cookieParser());
