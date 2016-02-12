@@ -36,21 +36,35 @@ class BroadcastAUX extends React.Component {
     )
   }
 
+  forceNewBroadcastAfterStop() {
+    return this.props.hasBroadcasted ? (
+      <div>Thank you for broadcasting!</div>
+    ) : (
+      <div>
+        <FloatingActionButton
+          style={styles.button}
+          onClick={this.props.startBroadcast}
+          disabled={this.props.disabled}>
+          <Mic />
+        </FloatingActionButton>
+        <FloatingActionButton
+          style={styles.button}
+          onClick={this.props.stopBroadcast}
+          disabled={!this.props.disabled}>
+         <MicOff />
+        </FloatingActionButton>
+      </div>
+    )
+  }
+
   render() {
     return (
-      <div>
+      <div style={styles.mainBox}>
         <div style={styles.visualizerContainer}>
           {this.showInstructionsIfOffTheAir()}
         </div>
         <CardActions style={styles.controls}>
-          <div>
-            <FloatingActionButton style={styles.button} onClick={this.props.startBroadcast} disabled={this.props.disabled}>
-              <Mic />
-            </FloatingActionButton>
-            <FloatingActionButton style={styles.button} onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
-             <MicOff />
-            </FloatingActionButton>
-          </div>
+          {this.forceNewBroadcastAfterStop()}
           <div style={styles.broadcastStatus}>
             {this.offTheAirIndicator()}
           </div>
@@ -65,6 +79,14 @@ class BroadcastAUX extends React.Component {
 }
 
 var styles = {
+  mainBox: {
+    'display': 'flex',
+    'flex': 3,
+    'flexDirection': 'column',
+    'justifyContent': 'center'
+  },
+
+
   controls: {
     'display': 'flex',
     'justifyContent': 'space-around',
