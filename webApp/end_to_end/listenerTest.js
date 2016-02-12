@@ -22,7 +22,20 @@ casper.test.begin("Testing radio from listener's perspective", 35, function suit
     }, 1, 'one pink button appears on landing page');
   });
 
-  casper.thenOpen('http://localhost:3000/listen', function() {
+  casper.thenEvaluate(function() {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('button'))
+      .filter(function(elem) {
+        return window.getComputedStyle(elem)['background-color'] === 'rgb(255, 64, 129)';
+      });
+      buttons[0].classList.add('pink-listen');
+  });
+
+  casper.then(function() {
+    this.click('.pink-listen');
+    this.echo(this.getCurrentUrl());
+  });
+
+  casper.then(function() {
     test.assertExists('h1', 'a header exists');
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
   });
