@@ -46,12 +46,13 @@ class Landing extends React.Component {
             <h2 style={styles.subtextFont}>Real Time Radio</h2>
           </div>
           <div style={styles.boxCenter}>
-            <a href='/listen' style={{textDecoration:'none'}}><RaisedButton label="Listen" primary={true} style={styles.buttonCover}/></a>
+            <a href='/listen' style={{textDecoration:'none'}}><RaisedButton label="Tune In" primary={true} style={styles.buttonCover}/></a>
           </div>
         </div>
 
         <div style={styles.whiteSection}>
           <div style={styles.flexRow}>
+
             <div style={styles.boxLeft}>
               <div style={styles.boxLeft}>
                 <h1 style={styles.titleFontBlack}>Listen</h1>
@@ -68,16 +69,19 @@ class Landing extends React.Component {
             <div style={styles.boxRight}>
               <img style={styles.img} src='http://digitalsynopsis.com/wp-content/uploads/2013/12/flat-design-apple-icon-devices.jpg'/>
             </div>
+
           </div>
         </div>
 
         <div style={styles.whiteSection}>
           <div style={styles.flexRow}>
+
             <div style={styles.boxLeft}>
               <div style={styles.LeftRight}>
                 <img style={styles.img} src='http://digitalsynopsis.com/wp-content/uploads/2013/12/flat-design-apple-icon-devices.jpg'/>
               </div>
             </div>
+
             <div style={styles.boxRight}>
               <div style={styles.boxRight}>
                 <h1 style={styles.titleFontBlack}>Broadcast</h1>
@@ -85,10 +89,11 @@ class Landing extends React.Component {
                   Create a live broadcast from your desktop or laptop using your microphone, line-in or SoundCloud
                 </h2>
               </div>
-              <div style={styles.boxLeft}>
+              <div style={styles.boxRight}>
                 <a href='/broadcast/setup' style={{textDecoration:'none'}}><FlatButton label="Broadcast" primary={true} style={styles.buttonSection}/></a>
               </div>
             </div>
+            
           </div>
         </div>
 
@@ -148,7 +153,7 @@ var styles = {
     flexDirection:'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    alignItem: 'center'
+    alignItems: 'center'
   },
 
   img: {

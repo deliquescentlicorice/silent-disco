@@ -21,6 +21,8 @@ import $ from '../../public/js/jquery-1.11.1.min';
 // MATERIAL UI
 import Card from 'material-ui/lib/card/card';
 
+var BASE_URL = window.protocol + document.location.host;
+
 class BroadcastLive extends React.Component {
   constructor(props) {
     var user = JSON.parse(localStorage.getItem("me"));
@@ -32,10 +34,10 @@ class BroadcastLive extends React.Component {
       listenerLiveCount: 0,
       listenerMaxCount: 0,
       listenerTotalCount: 0,
-      name: "Screw It, We're Doing It Live",
-      description: "Description of the station",
-      artist: user.full_name || "pseudonymous",
-      artistAlias: user.username || "QuantumRadio Broadcaster",
+      name: "",
+      description: "",
+      artist: user.full_name || "",
+      artistAlias: user.username || "",
       artistImage: user.avatar_url,
       streamImage: "",
       selectedSource: null,
@@ -77,32 +79,28 @@ class BroadcastLive extends React.Component {
     this.fetchData();
   }
 
-  componentWillUnmount() {
-    this.bc.stop();
-  }
-
   componentDidMount(){
     //add bclient on handler here
-    window.bClient.on('stream', function(data, meta) {
-      if (meta.type === 'event') {
-        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
-          if (meta.streamId === this.props.params.streamId) {
+    window.bClient.on('stream', this.handleSocketEvent.bind(this));
+  }
 
-            $.ajax({
-              url: '/api/stream/' + this.props.params.streamId
-            })
-            .done((stream) => {
-              this.setState({
-                heartCount: stream.heartCountNum,
-                listenerLiveCount: stream.listenerLiveCount,
-                listenerMaxCount: stream.listenerMaxCount,
-                listenerTotalCount: stream.listenerTotalCount
-              });
-            });
-          }
-        }
-      }
-    }.bind(this));
+  componentWillUnmount() {
+    window.bClient.off('stream', this.handleSocketEvent.bind(this));
+    if(this.state.disabled){
+      var PUT_STREAM_STATUS = BASE_URL + '/api/stream/status/' + this.props.params.streamId;
+      $.ajax({
+        url: PUT_STREAM_STATUS,
+        method: 'PUT',
+        contentType: "application/x-www-form-urlencoded",
+        data: ''
+      })
+      .done((responseData) => {
+        this.bc.stop();
+        this.setState({
+          disabled: false
+        });
+      });
+    }
   }
 
   fetchData() {
@@ -128,6 +126,27 @@ class BroadcastLive extends React.Component {
     });
   }
 
+  handleSocketEvent(data, meta) {
+    if (meta.type === 'event') {
+      if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
+        if (meta.streamId === this.props.params.streamId) {
+
+          $.ajax({
+            url: '/api/stream/' + this.props.params.streamId
+          })
+          .done((stream) => {
+            this.setState({
+              heartCount: stream.heartCountNum,
+              listenerLiveCount: stream.listenerLiveCount,
+              listenerMaxCount: stream.listenerMaxCount,
+              listenerTotalCount: stream.listenerTotalCount
+            });
+          });
+        }
+      }
+    }
+  }
+
   startHTMLBroadcast() {
     if (this.state.currentSong.title) {
       this.setState({
@@ -149,11 +168,21 @@ class BroadcastLive extends React.Component {
   }
 
   stopBroadcast() {
-    this.setState({
-      disabled: false,
-      hasBroadcasted: true
-    }, () => {
-      this.bc.stop();
+    var PUT_STREAM_STATUS = BASE_URL + '/api/stream/status/' + this.props.params.streamId;
+     $.ajax({
+      url: PUT_STREAM_STATUS,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      this.setState({
+        disabled: false,
+        hasBroadcasted: true
+      }, () => {
+        this.bc.stop();
+      });
+      
     });
   }
 

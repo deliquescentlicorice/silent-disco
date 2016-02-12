@@ -17,6 +17,12 @@ class NoStream extends React.Component {
     super(props);
   }
 
+  createBroadcast() {
+    this.props.history.push({
+      pathname: '/broadcast/setup'
+    });
+  }
+
 
   render() {
     return (
@@ -26,7 +32,7 @@ class NoStream extends React.Component {
         </h1>
         <div style={styles.flexColumn}>
           <div style={styles.boxCenter}>
-            <a href='/broadcast/setup' style={{textDecoration:'none'}}><FlatButton label="Start a Broadcast" primary={true} style={styles.buttonSection}/></a>
+            <FlatButton onClick={this.createBroadcast.bind(this)} label="Start a Broadcast" primary={true} style={styles.buttonSection}/>
           </div>
         </div>
       </div>
@@ -55,4 +61,7 @@ var styles = {
     alignSelf: 'center'
   },
 }
+
+reactMixin.onClass(NoStream, History);
+
 export default NoStream;
