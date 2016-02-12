@@ -27,6 +27,7 @@ class BroadcastLive extends React.Component {
     super(props);
     this.state = {
       disabled: false,
+      hasBroadcasted: false,
       heartCount: 0,
       listenerLiveCount: 0,
       listenerMaxCount: 0,
@@ -149,7 +150,8 @@ class BroadcastLive extends React.Component {
 
   stopBroadcast() {
     this.setState({
-      disabled: false
+      disabled: false,
+      hasBroadcasted: true
     }, () => {
       this.bc.stop();
     });
