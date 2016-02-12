@@ -8,7 +8,7 @@ casper.on('page.error', function(msg, trace) {
 
 // phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 29, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 34, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
@@ -252,21 +252,6 @@ casper.test.begin("Testing radio from listener's perspective", 29, function suit
     test.assertSelectorHasText('span', 'Tell Us About Your Stream', 'invitation to describe stream appears');
   });
 
-<<<<<<< HEAD
-
-  casper.thenEvaluate(function() {
-    var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
-      .filter(function(elem) {
-        return elem.classList.length === 0;
-      });
-    buttonSpans[0].classList.add('soundcloud');
-  });
-
-  casper.then(function() {
-    test.assertSelectorHasText('.soundcloud ', 'Login With SoundCloud', 'soundcloud button has expected text');
-    this.click('.soundcloud');
-  });
-
   casper.then(function() {
     this.wait(1000, function() {
 
@@ -386,80 +371,20 @@ return elem.textContent === 'muzak';
   });
 
   casper.then(function() {
-//except the stream should actually exist…
-  });
-
-//casperjs --engine=slimerjs test listenerTest.js
-//doc this ^, not the obvious command
-//from Listen,  click on left navbar
-//click on Listen menu item, does nothing
-//check for login button
-//login button takes user to login page
-//login with soundcloud
-//check for create broadcast, profile, logout options
-//click on stream in list
-//route to a stream (check URL)
-//click play (no more than once) (ie, button, disabled after clicked)
-//click pause, play button is reenabled
-//click heart, should upheart the song
-// });
-
-
-// casper.on('remote.message', function(msg) {
-//   this.echo('remote.msg: ' + msg);
-// });
-
-// casper.userAgent('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36');
-  // casper.then(function() {
-  //   test.assertEvalEquals(function() {
-  //     var inputs = document.querySelectorAll('input');
-  //     return inputs.length;
-  //   }, 2, 'two input fields appear');
-  //   test.assertEvalEquals(function() {
-  //     var buttons = document.querySelectorAll('button');
-  //     return buttons.length;
-  //   }, 3, 'there are 3 buttons on the broadcast setup page');
-  // });
-
-  // casper.thenEvaluate(function() {
-  //   var inputs = document.querySelectorAll('input');
-  //   inputs[0].classList.add('name-input');
-  //   inputs[1].classList.add('description-input');
-  //   var buttons = document.querySelectorAll('button');
-  //   buttons[2].classList.add('start-broadcasting');
-  // });
-
-  // casper.then(function() {
-  //   this.sendKeys('.name-input', 'Max');
-  //   this.sendKeys('.description-input', 'example stream goes here');
-  // });
-
-
-
-  // casper.then(function() {
-  //   this.click('.start-broadcasting');
-  // });
-
-  // casper.then(function() {
-  //     var v = slimer.geckoVersion;
-  //     this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
-  // });
-    this.wait(1000, function() {
-    });
+    this.wait(1000, function() {});
   });
 
   casper.then(function() {
-      var v = slimer.geckoVersion;
-      this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
-      this.echo(this.getCurrentUrl());
-      test.assertEvalEquals(function() {
-        var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
-          .filter(function(elem) {
-            return elem.hasAttribute('title');
-          });
-          return divs.length;
-      }, 2, 'two title divs appear on broadcast live page');
-      //here, I need to check that name and description are correct
+    var v = slimer.geckoVersion;
+    this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
+    this.echo(this.getCurrentUrl());
+    test.assertEvalEquals(function() {
+      var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+        .filter(function(elem) {
+          return elem.hasAttribute('title');
+        });
+      return divs.length;
+    }, 2, 'two title divs appear on broadcast live page');
   });
 
   casper.thenEvaluate(function() {
@@ -467,24 +392,93 @@ return elem.textContent === 'muzak';
       .filter(function(elem) {
         return elem.hasAttribute('title');
       });
-      divs[1].classList.add('stream-title');
-      __utils__.echo(divs[1].parentNode.classList);
-      divs[1].parentNode.classList.add('.stream-description-wrapper');
+    divs[1].classList.add('stream-title');
+    divs[1].parentNode.classList.add('stream-description-wrapper');
   });
 
   casper.then(function() {
-    this.wait(1000, function() {
-
-    });
+    this.wait(1000, function() {});
   });
 
   casper.then(function() {
     test.assertSelectorHasText('.stream-title > span', 'Max', 'stream name displays correctly');
-    test.assertSelectorHasText('body', 'example stream goes here',
+    test.assertSelectorHasText('.stream-description-wrapper > div', 'example stream goes here',
       'stream description displays correctly');
+    test.assertEvalEquals(function() {
+      var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+        .filter(function(elem) {
+          return window.getComputedStyle(elem)['padding-left'] === '24px' 
+            && window.getComputedStyle(elem)['padding-right'] === '48px';
+        });
+      return divs.length;
+    }, 1, 'a single padded menu div exists on broadcast live page');
   });
 
+  casper.thenEvaluate(function() {
+    var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+      .filter(function(elem) {
+        return window.getComputedStyle(elem)['padding-left'] === '24px' 
+          && window.getComputedStyle(elem)['padding-right'] === '48px';
+      });
+    divs[0].classList.add('select-audio');
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.select-audio', 'Select a source', 'drop-down menu is correctly labeled');
+    this.click('.select-audio');
+  });
+
+  casper.then(function() {
+    this.reload(function() {
+      this.echo('reloaded!');
+    });
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('body', 'Built-in Audio Analog Stereo', 'at least the menu item appears somewhere');
+    test.assertEvalEquals(function() {
+      var possibButtons = Array.prototype.slice.call(document.querySelectorAll('span'))
+        .filter(function(elem) {
+          return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' 
+            && window.getComputedStyle(elem)['font-size'] === '15px';
+        });
+      return possibButtons.length;
+    }, 3, 'there are three options in drop-down menu (assume no line-in)');
+  });
+
+  casper.thenEvaluate(function() {
+    var possibButtons = Array.prototype.slice.call(document.querySelectorAll('span'))
+      .filter(function(elem) {
+        return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' 
+          && window.getComputedStyle(elem)['font-size'] === '15px';
+      });
+      possibButtons[2].classList.add('microphone');
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.microphone', 'Built-in Audio Analog Stereo', 'last item in drop-down is the microphone');
+    this.click('.microphone');
+  })
+
   //find the drop-down menu, find the built-in microphone, then select it
+  //find the drop-down menu, click on the built-in microphone in the menu
+  //then check that we have the same built-in microphone, and not anything else
+  //then launch the stream
+  //
+
+  // casper.thenEvaluate(function() {
+  //     //find the first stream, then click on it
+  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+  //       .filter(function(elem) {
+  //         return elem.textContent === 'muzak';
+  //       }); 
+  //       divs[0].classList.add('muzak');
+  //     });
+
+  //   casper.then(function() {
+  //     this.click('.muzak');
+  //   });
+
 });
 
 casper.run(function() {
@@ -497,7 +491,7 @@ casper.run(function() {
 //before running, run this command from the command line:
 //export SLIMERJSLAUNCHER=/opt/firefox39/firefox (or wherever firefox39 is installed.)
 //*must* be 39, any lower, and no audio support, any higher, and Slimer won't work
-  //we need a firefox 39 or higher
+//we need a firefox 39 or higher
 //casperjs test --engine=slimerjs -P  ioRadioTester listenerTest.js
 //doc this ^, not the obvious command
 //from Listen,  click on left navbar
