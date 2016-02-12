@@ -9,7 +9,6 @@ import PlayCircleOutline from 'material-ui/lib/svg-icons/av/play-circle-outline'
 class StreamEntry extends React.Component {
   render() {
     return (
-
       <div>
         <ListItem
           onClick={this.props.goToStream.bind(this)}
