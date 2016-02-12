@@ -50,6 +50,7 @@
     "connect": "^3.3.4",
     "cookie-parser": "^1.4.1",
     "express-session": "^1.13.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "history": "^1.17.0",
     "icecast-stack": "0.2.x",
     "kerberos": "0.0.18",

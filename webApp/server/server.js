@@ -30,23 +30,26 @@ var port = process.env.PORT || 3000;
 var webpack = require('webpack');
 var version = process.env.version || 'DEV';
 var config;
+
 if (version === 'DEV') {
   config = require('../webpack.config.dev');
+
+  var compiler = webpack(config);
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+  }));
+  app.use(require('webpack-hot-middleware')(compiler));
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 } else {
+  // need to run <npm run build:webpack> before running app in production mode
   config = require('../webpack.config.prod');
+  app.use(config.output.publicPath, express.static(config.output.path));
 }
-
-var compiler = webpack(config);
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}));
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 // auth + session
 app.use(cookieParser());
@@ -82,6 +85,7 @@ passport.use(new SoundCloudStrategy({
 
 // routes
 app.use(express.static(__dirname + '/../src'));
+
 require('./routes.js')(app, express, scAuth.ensureAuth);
 
 // server startup
