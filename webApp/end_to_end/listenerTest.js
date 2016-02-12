@@ -12,7 +12,7 @@ casper.test.begin("Testing radio from listener's perspective", 34, function suit
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
-    test.assertTitle('Silent Disco', 'title is expected title');
+    test.assertTitle('Socket Radio', 'title is expected title');
     test.assertExists('h1', 'a header exists');
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
   });
