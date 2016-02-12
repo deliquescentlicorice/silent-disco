@@ -19,10 +19,11 @@ import Card from '../../node_modules/material-ui/lib/card/card';
 import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
 
-//for development; we'll change this in production
-var REQUEST_URL_ALL = 'http://' + document.location.host + '/api/streams';
+window.protocol = (window.location.protocol === "https:") ? 'https://' : 'http://';
 
-var BASE_URL = 'http://' + document.location.host;
+var REQUEST_URL_ALL = window.protocol + document.location.host + '/api/streams';
+
+var BASE_URL = window.protocol + document.location.host;
 
 class Stream extends React.Component {
   constructor(props) {
