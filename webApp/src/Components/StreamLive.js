@@ -16,7 +16,7 @@ import StreamLiveView from './StreamLiveView.js';
 import Sound from '../../node_modules/react-sound';
 import $ from '../../public/js/jquery-1.11.1.min';
 
-var BASE_URL = 'http://' + document.location.host;
+var BASE_URL = window.protocol + document.location.host;
 
 class StreamLive extends React.Component {
   constructor(props) {
