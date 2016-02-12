@@ -8,7 +8,7 @@ casper.on('page.error', function(msg, trace) {
 
 // phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 26, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 29, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
@@ -231,7 +231,7 @@ casper.test.begin("Testing radio from listener's perspective", 26, function suit
     __utils__.echo(navigator.mediaDevices.enumerateDevices);
     var overSources = function(callback) {
       navigator.mediaDevices.enumerateDevices()
-        .then(callback(devices));
+        .then(callback);
     };
     MediaStreamTrack.getSources = MediaStreamTrack.getSources || overSources;
   });
@@ -389,12 +389,6 @@ return elem.textContent === 'muzak';
 //except the stream should actually exist…
   });
 
-});
-
-casper.run(function() {
-  this.test.done();
-});
-
 //casperjs --engine=slimerjs test listenerTest.js
 //doc this ^, not the obvious command
 //from Listen,  click on left navbar
@@ -450,20 +444,61 @@ casper.run(function() {
   //     var v = slimer.geckoVersion;
   //     this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
   // });
+    this.wait(1000, function() {
+    });
+  });
 
-// casper.thenEvaluate(function() {
-//     //find the first stream, then click on it
-//     var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
-//       .filter(function(elem) {
-//         return elem.textContent === 'muzak';
-//       }); 
-//       divs[0].classList.add('muzak');
-//     });
+  casper.then(function() {
+      var v = slimer.geckoVersion;
+      this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
+      this.echo(this.getCurrentUrl());
+      test.assertEvalEquals(function() {
+        var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+          .filter(function(elem) {
+            return elem.hasAttribute('title');
+          });
+          return divs.length;
+      }, 2, 'two title divs appear on broadcast live page');
+      //here, I need to check that name and description are correct
+  });
 
-//   casper.then(function() {
-//     this.click('.muzak');
-//   });
+  casper.thenEvaluate(function() {
+    var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+      .filter(function(elem) {
+        return elem.hasAttribute('title');
+      });
+      divs[1].classList.add('stream-title');
+      __utils__.echo(divs[1].parentNode.classList);
+      divs[1].parentNode.classList.add('.stream-description-wrapper');
+  });
 
+  casper.then(function() {
+    this.wait(1000, function() {
+
+    });
+  });
+
+  casper.then(function() {
+    test.assertSelectorHasText('.stream-title > span', 'Max', 'stream name displays correctly');
+    test.assertSelectorHasText('body', 'example stream goes here',
+      'stream description displays correctly');
+  });
+
+  //find the drop-down menu, find the built-in microphone, then select it
+});
+
+casper.run(function() {
+  this.test.done();
+});
+
+//create a profile ioRadioTester, and put the following there:
+// user_pref("media.navigator.permission.disabled", true);
+
+//before running, run this command from the command line:
+//export SLIMERJSLAUNCHER=/opt/firefox39/firefox (or wherever firefox39 is installed.)
+//*must* be 39, any lower, and no audio support, any higher, and Slimer won't work
+  //we need a firefox 39 or higher
+//casperjs test --engine=slimerjs -P  ioRadioTester listenerTest.js
 //doc this ^, not the obvious command
 //from Listen,  click on left navbar
 //click on Listen menu item, does nothing
