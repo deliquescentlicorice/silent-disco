@@ -20,10 +20,11 @@ import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
 
 window.protocol = (window.location.protocol === "https:") ? 'https://' : 'http://';
-
 var REQUEST_URL_ALL = window.protocol + document.location.host + '/api/streams';
-
 var BASE_URL = window.protocol + document.location.host;
+
+window.bProtocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+window.bClient = new BinaryClient(window.bProtocol + document.location.host + '/binary-endpoint');
 
 class Stream extends React.Component {
   constructor(props) {
