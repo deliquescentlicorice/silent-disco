@@ -12,20 +12,6 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 import Face from '../../node_modules/material-ui/lib/svg-icons/action/face';
 import Colors from '../../node_modules/material-ui/lib/styles/colors';
 
-const iconButtonElement = (
-  <IconButton
-    touch={true}
-    tooltip="more"
-    tooltipPosition="bottom-left">
-    <MoreVertIcon color={Colors.grey400} />
-  </IconButton>
-);
-
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Delete</MenuItem>
-  </IconMenu>
-);
 
 class BroadcastEntry extends React.Component {
   render() {
@@ -33,11 +19,11 @@ class BroadcastEntry extends React.Component {
     return (
       <div>
         <ListItem
-          rightIconButton={rightIconMenu}
+          disabled={true}
           primaryText={this.props.details.name + ' - ' + this.props.details.description.substr(0,60)}
           secondaryText={
             <p>
-              <span style={styles.count}>{this.props.details.listenerMaxCount.toLocaleString()}</span><span> Listens <Face /></span> 
+              <span style={styles.count}>{this.props.details.listenerMaxCount.toLocaleString()}</span><span> Listens <i style={styles.count}className="fa fa-headphones"></i></span> 
               <span style={styles.count}> | </span>
               <span style={styles.count}>{this.props.details.heartCountNum.toLocaleString()}</span><span>  Hearts <Favorite color={Colors.red500}/></span>
             </p>
