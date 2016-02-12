@@ -27,19 +27,21 @@ var port = process.env.PORT || 3000;
 // var binarySocketHandler = require('./binarySockets.js');
 
 // dev stuff
+var webpack = require('webpack');
 var version = process.env.version || 'DEV';
+var config;
 if (version === 'DEV') {
-  var webpack = require('webpack');
-  var config = require('../webpack.config.dev');
-  var compiler = webpack(config);
-
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }));
-
-  app.use(require('webpack-hot-middleware')(compiler));
+  config = require('../webpack.config.dev');
+} else {
+  config = require('../webpack.config.prod');
 }
+
+var compiler = webpack(config);
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: config.output.publicPath
+}));
+app.use(require('webpack-hot-middleware')(compiler));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -48,26 +50,35 @@ app.use(bodyParser.urlencoded({
 
 // auth + session
 app.use(cookieParser());
-app.use(session({ secret: 'disco' , resave: true, saveUninitialized: false}));
+app.use(session({
+  secret: 'disco',
+  resave: true,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
+
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
+
+//todo set url dynamically
 passport.use(new SoundCloudStrategy({
   clientID: apiKeys.clientID,
   clientSecret: apiKeys.clientSecret,
-  callbackURL: "http://localhost:" + port + "/auth/soundcloud"
+  callbackURL: api.clientHost + "/auth/soundcloud"
 }, function(accessToken, refreshToken, profile, done) {
-  scAuth.signup({profile: profile}, function (err, result){
+  scAuth.signup({
+    profile: profile
+  }, function(err, result) {
     console.log('done', result);
     return done(err, result);
   });
-  }
-));
+}));
 
 // routes
 app.use(express.static(__dirname + '/../src'));
