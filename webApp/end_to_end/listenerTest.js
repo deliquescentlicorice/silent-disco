@@ -8,11 +8,21 @@ casper.on('page.error', function(msg, trace) {
 
 // phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 34, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 35, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
     test.assertTitle('Socket Radio', 'title is expected title');
+    test.assertEvalEquals(function() {
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('button'))
+        .filter(function(elem) {
+          return window.getComputedStyle(elem)['background-color'] === 'rgb(255, 64, 129)';
+        });
+      return buttons.length;
+    }, 1, 'one pink button appears on landing page');
+  });
+
+  casper.thenOpen('http://localhost:3000/listen', function() {
     test.assertExists('h1', 'a header exists');
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
   });
@@ -130,7 +140,7 @@ casper.test.begin("Testing radio from listener's perspective", 34, function suit
     test.assertExists('.google-plus-signin');
   });
 
-  casper.thenOpen('http://localhost:3000', function() {
+  casper.thenOpen('http://localhost:3000/listen', function() {
     //dump spoofed data into localstorage
     this.evaluate(function() {
       var spoof = {
@@ -407,8 +417,7 @@ return elem.textContent === 'muzak';
     test.assertEvalEquals(function() {
       var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
         .filter(function(elem) {
-          return window.getComputedStyle(elem)['padding-left'] === '24px' 
-            && window.getComputedStyle(elem)['padding-right'] === '48px';
+          return window.getComputedStyle(elem)['padding-left'] === '24px' && window.getComputedStyle(elem)['padding-right'] === '48px';
         });
       return divs.length;
     }, 1, 'a single padded menu div exists on broadcast live page');
@@ -417,8 +426,7 @@ return elem.textContent === 'muzak';
   casper.thenEvaluate(function() {
     var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
       .filter(function(elem) {
-        return window.getComputedStyle(elem)['padding-left'] === '24px' 
-          && window.getComputedStyle(elem)['padding-right'] === '48px';
+        return window.getComputedStyle(elem)['padding-left'] === '24px' && window.getComputedStyle(elem)['padding-right'] === '48px';
       });
     divs[0].classList.add('select-audio');
   });
@@ -433,8 +441,7 @@ return elem.textContent === 'muzak';
     test.assertEvalEquals(function() {
       var possibButtons = Array.prototype.slice.call(document.querySelectorAll('span'))
         .filter(function(elem) {
-          return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' 
-            && window.getComputedStyle(elem)['font-size'] === '15px';
+          return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' && window.getComputedStyle(elem)['font-size'] === '15px';
         });
       return possibButtons.length;
     }, 3, 'there are three options in drop-down menu (assume no line-in)');
@@ -443,10 +450,9 @@ return elem.textContent === 'muzak';
   casper.thenEvaluate(function() {
     var possibButtons = Array.prototype.slice.call(document.querySelectorAll('span'))
       .filter(function(elem) {
-        return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' 
-          && window.getComputedStyle(elem)['font-size'] === '15px';
+        return elem.hasAttribute('type') && elem.getAttribute('type') === 'button' && window.getComputedStyle(elem)['font-size'] === '15px';
       });
-      possibButtons[2].classList.add('microphone');
+    possibButtons[2].classList.add('microphone');
   });
 
   casper.then(function() {
