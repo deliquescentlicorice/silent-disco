@@ -132,7 +132,7 @@ casper.test.begin("Testing radio from listener's perspective", 35, function suit
   });
 
   casper.then(function() {
-    this.wait(1000, function() {
+    this.wait(2000, function() {
 
     });
   });
@@ -140,6 +140,12 @@ casper.test.begin("Testing radio from listener's perspective", 35, function suit
   //the next two tests work irregularly; timing isn't guaranteed
   casper.waitForPopup('', function() {
     test.assertEquals(this.popups.length, 1, 'a single popup window appears');
+  });
+
+  casper.then(function() {
+    this.wait(1000, function() {
+
+    });
   });
 
   casper.withPopup('', function() {
