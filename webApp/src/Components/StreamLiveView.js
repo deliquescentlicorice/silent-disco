@@ -2,7 +2,6 @@ import React from 'react';
 
 // COMPONENTS
 import BroadcastStats from './BroadcastStats';
-import StreamLiveViewLinkbar from './StreamLiveViewLinkbar';
 
 // MATERIAL DESIGN
 import Card from '../../node_modules/material-ui/lib/card/card';
@@ -18,12 +17,28 @@ import Favorite from '../../node_modules/material-ui/lib/svg-icons/action/favori
 
 class StreamLiveView extends React.Component {
   render() {
+    var linkBlock = this.props.state.website ? (
+      <div>
+        <span>SoundCloud Profile: </span><a href={this.props.state.soundcloud} target="_blank">{this.props.state.soundcloud}</a><br />
+        <span>Broadcaster's Website: </span><a href={this.props.state.website} target="_blank">{this.props.state.websiteTitle || this.props.state.website}</a>
+      </div>
+    ) : (
+      <div>
+        <span>SoundCloud Profile: </span><a href={this.props.state.soundcloud} target="_blank">{this.props.state.soundcloud}</a>
+      </div>
+    )
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.mainBox}>
-          <CardMedia style={styles.streamImage}>
-            <img src={this.props.state.streamImage} />
-          </CardMedia>
+          <CardHeader
+            title="Broadcaster"
+            subtitle={this.props.state.broadcaster}
+            avatar={this.props.state.broadcasterImage}  />
+          <div style={styles.image}>
+            <CardMedia style={styles.streamImage}>
+              <img src={this.props.state.streamImage} />
+            </CardMedia>
+          </div>
           <CardTitle
             title={this.props.state.name}
            />
@@ -56,16 +71,12 @@ class StreamLiveView extends React.Component {
             listenerMaxCount={this.props.state.listenerMaxCount}
             heart={this.props.state.heartCount} />
           <br/>
-          <CardHeader
-            title={"You are listening to:"}
-            subtitle={
-              <StreamLiveViewLinkbar 
-                broadcaster={ this.props.state.broadcaster || this.props.state.fullname || 'pseudonymous'}
-                soundcloud={this.props.state.soundcloud} 
-                website={this.props.state.website}
-                websiteTitle={this.props.state.websiteTitle} />
-            }
-            avatar={this.props.state.broadcasterImage} />
+          <CardText>
+            <h2>BROADCASTER DETAILS</h2>
+            <div>
+              {linkBlock}
+            </div>
+          </CardText>   
         </Card>
       </div>
     )
@@ -86,11 +97,18 @@ var styles = {
   mainBox: {
     'flex': 2,
     'maxWidth': '600px',
-    'alignContent': 'center',
+    'alignContent': 'center'
+  },
+
+  image: {
+    'display': 'flex',
+    'justifyContent':'center'
   },
 
   streamImage:{
-    'maxWidth': '300px'
+    'maxWidth': '350px',
+    'border': 'solid 1px grey',
+    'padding': '5px'
   },
 
   card: {

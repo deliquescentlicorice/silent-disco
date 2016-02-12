@@ -116,7 +116,7 @@ var styles = {
   },
 
   streamImage:{
-    'maxWidth': '300px',
+    'maxWidth': '350px',
     'border': 'solid 1px grey',
     'padding': '5px'
   },

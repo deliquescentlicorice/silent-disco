@@ -59,7 +59,6 @@ class StreamLive extends React.Component {
       window.bClient.on('stream', this.handleStreamEvent.bind(this));
       enterStream(this.state.streamId);
       this.fetchStreamData();
-      this.playSong();
     });
   
   }
