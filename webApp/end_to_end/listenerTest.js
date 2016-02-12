@@ -429,12 +429,6 @@ return elem.textContent === 'muzak';
   });
 
   casper.then(function() {
-    this.reload(function() {
-      this.echo('reloaded!');
-    });
-  });
-
-  casper.then(function() {
     test.assertSelectorHasText('body', 'Built-in Audio Analog Stereo', 'at least the menu item appears somewhere');
     test.assertEvalEquals(function() {
       var possibButtons = Array.prototype.slice.call(document.querySelectorAll('span'))
