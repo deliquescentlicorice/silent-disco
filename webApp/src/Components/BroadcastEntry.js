@@ -29,11 +29,12 @@ const rightIconMenu = (
 
 class BroadcastEntry extends React.Component {
   render() {
+    console.log(this.props.details);
     return (
       <div>
         <ListItem
           rightIconButton={rightIconMenu}
-          primaryText={this.props.details.name + ' - ' + this.props.details.desc.substr(0,60)}
+          primaryText={this.props.details.name + ' - ' + this.props.details.description.substr(0,60)}
           secondaryText={
             <p>
               <span style={styles.count}>{this.props.details.listenerMaxCount.toLocaleString()}</span><span> Listens <Face /></span> 
