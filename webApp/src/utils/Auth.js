@@ -23,7 +23,7 @@ module.exports = {
   setUser() {
 
     SC.initialize({
-      client_id: '67e4bbe5a2b1b64416b0ed84366b34ca',
+      client_id: SC_CLIENT_ID,
       redirect_uri: window.protocol + document.location.host + '/auth/soundcloud'
     });
 

@@ -10,3 +10,4 @@ src/components/*-compiled.*
 src/*-compiled.*
 *-compiled.*
 server/config/apiKeys.js
+src/env/config.js
