@@ -38,6 +38,7 @@ casper.test.begin("Testing radio from listener's perspective", 35, function suit
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
   });
 
+
   casper.thenEvaluate(function() {
     //make sure user is logged out
     localStorage.removeItem('me');
