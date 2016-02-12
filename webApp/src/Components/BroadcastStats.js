@@ -24,10 +24,10 @@ class BroadcastStats extends React.Component {
       <CardText>
         <h2>STATS <TrendingUp /></h2>
         <div>
-          <span style={styles.count}>{this.props.listenerTotalCount.toLocaleString()}</span><span> Total Listener Count <Face style={styles.icon} /></span>
+          <span style={styles.count}>{this.props.listenerTotalCount.toLocaleString()}</span><span> Total Listener Count <i className="fa fa-users"></i></span>
         </div><br />
         <div>
-          <span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Currently Listening <Face style={styles.icon} /></span>
+          <span style={styles.count}>{this.props.listenerLiveCount.toLocaleString()}</span><span> Currently Listening <i className="fa fa-headphones"></i></span>
         </div><br/>
         <div>
           <span style={styles.count}>{this.props.heart.toLocaleString()}</span><span> Hearts <Favorite style={styles.icon} color={Colors.red500}/></span>

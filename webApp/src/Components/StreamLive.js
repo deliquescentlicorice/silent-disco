@@ -56,32 +56,10 @@ class StreamLive extends React.Component {
       data: ''
     })
     .done((responseData) => {
+      window.bClient.on('stream', this.handleStreamEvent.bind(this));
       enterStream(this.state.streamId);
       this.fetchStreamData();
     });
-
-    window.bClient.on('stream', function(data, meta) {
-      if (meta.type === 'event'
-      && (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart')
-      && meta.streamId === this.state.streamId) {
-        $.ajax({
-          url: BASE_URL + '/api/stream/' + this.state.streamId
-        })
-        .done((streamData) => {
-          $.ajax({
-            url: BASE_URL + '/api/user/' + streamData.creator
-          })
-          .done((userData) => {
-            this.setState({
-              listenerLiveCount: streamData.listenerLiveCount,
-              listenerMaxCount: streamData.listenerMaxCount,
-              listenerTotalCount: streamData.listenerTotalCount,
-              heartCount: streamData.heartCountNum
-            });
-          });
-        });
-      }
-    }.bind(this));
   
   }
 
@@ -94,7 +72,31 @@ class StreamLive extends React.Component {
       data: ''
     }).done((responseData) => {
       leaveStream(this.state.streamId);
+      window.bClient.off('stream', this.handleStreamEvent.bind(this));
     });
+  }
+
+  handleStreamEvent(data, meta) {
+    if (meta.type === 'event'
+    && (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart')
+    && meta.streamId === this.state.streamId) {
+      $.ajax({
+        url: BASE_URL + '/api/stream/' + this.state.streamId
+      })
+      .done((streamData) => {
+        $.ajax({
+          url: BASE_URL + '/api/user/' + streamData.creator
+        })
+        .done((userData) => {
+          this.setState({
+            listenerLiveCount: streamData.listenerLiveCount,
+            listenerMaxCount: streamData.listenerMaxCount,
+            listenerTotalCount: streamData.listenerTotalCount,
+            heartCount: streamData.heartCountNum
+          });
+        });
+      });
+    }
   }
 
   playSong() {
@@ -148,6 +150,7 @@ class StreamLive extends React.Component {
           listenerMaxCount: streamData.listenerMaxCount,
           listenerTotalCount: streamData.listenerTotalCount,
           isLoading: false,
+          fullname: userData.user.full_name,
           broadcasterImage: userData.user.scAvatarUri,
           streamImage: streamData.streamImage,
           soundcloud: userData.user.scPermalink,

@@ -38,26 +38,11 @@ class Stream extends React.Component {
 
   componentDidMount() {
     this.fetchData();
+    window.bClient.on('stream', this.handleStreamEvent.bind(this));
+  }
 
-    //add bclient on handler here
-    console.log(window.bClient)
-    window.bClient.on('stream', function(data, meta) {
-      if (meta.type === 'event') {
-        if (meta.action === 'streamEnd' || meta.action === 'streamStart') {
-          console.log("Stream Event")
-          $.ajax({
-            url: REQUEST_URL_ALL
-          })
-          .done((streamList) => {
-            this.setState({
-              streams: streamList,
-              isLoading: false
-            });
-          });
-        }
-      }
-    }.bind(this));
-
+  componentWillUnmount() {
+    window.bClient.off('stream', this.handleStreamEvent.bind(this));
   }
 
   fetchData() {
@@ -81,6 +66,23 @@ class Stream extends React.Component {
     });
   }
 
+  handleStreamEvent(data, meta) {
+    if (meta.type === 'event') {
+      if (meta.action === 'streamEnd' || meta.action === 'streamStart') {
+        console.log("Stream Event")
+        $.ajax({
+          url: REQUEST_URL_ALL
+        })
+        .done((streamList) => {
+          this.setState({
+            streams: streamList,
+            isLoading: false
+          });
+        });
+      }
+    }
+  }
+
   goToStream() {
     this.props.history.push({
       pathname: '/listen/' + this.props.stream._id,
@@ -98,6 +100,7 @@ class Stream extends React.Component {
         partial = (
           <NoStream
             fetchData={this.fetchData.bind(this)}
+            history={this.history}
           />
         )
       } else{
