@@ -40,13 +40,23 @@ import List from '../../node_modules/material-ui/lib/lists/list';
 
 class BroadcastLiveViewSC extends React.Component {
   searchSC() {
-    this.props.submitSearch(this.refs.soundQuery.getValue())
-    this.props.submitSearch(this.refs.soundQuery.setValue(""))
+    this.props.submitSearch(this.refs.soundQuery.getValue());
+  }
+
+  showVisualizerIfOnTheAir() {
+    // this is used to disable/enable broadcast buttons lower down
+    // rather than passing in another prop, we'll use this 
+    return this.props.disabled ? (
+      <canvas style={styles.visualizer} id="visualizer"></canvas>
+    ) : (
+      <div style={styles.offTheAir}>OFF THE AIR</div>
+    )
   }
 
   renderEntriesOrReturnPlaceholder(array, renderCallback, placeholderText) {
-    if (array.length === 0) {
-      return <ListItem>{placeholderText}</ListItem>
+    // second check allows this function to check currentSong
+    if (!array[0] || !array[0].title) {
+      return <ListItem style={styles.noSong}><div>{placeholderText}</div></ListItem>
     } else {
       return array.map(renderCallback);
     }
@@ -82,31 +92,38 @@ class BroadcastLiveViewSC extends React.Component {
     var moreSongsButton = this.props.searchResults < 10 ? (
       <span></span>
     ) : (
-      <FlatButton
-        onClick={this.props.loadMoreSongs}
-        label="More Songs"
-        primary={true} />
+      <CardActions style={styles.actions}>
+        <FlatButton
+          onClick={this.props.loadMoreSongs}
+          label="More Songs"
+          primary={true} />
+      </CardActions>
     )
 
     return (
       <div style={styles.cardContainer}>
         <Card style={styles.box}>
           <List subheader="Now Playing">
-            <ListItem
-              primaryText={this.props.currentSong.title}
-              secondaryText={this.props.currentSong.genre}
-              leftAvatar={<Avatar src={this.props.currentSong.artwork_url || this.props.currentSong.user.avatar_url} />}
-              disabled={true} />
+            {this.renderEntriesOrReturnPlaceholder([this.props.currentSong], this.renderPlayedEntry.bind(this), "Select a Song and Click the 'Mic' Button to Begin Broadcasting")}
           </List>
           <br/>
           <CardActions style={styles.controls}>
             <div>
-              <FloatingActionButton style={styles.button} onClick={this.props.startHTMLBroadcast} disabled={this.props.disabled}>
+              <FloatingActionButton
+                style={styles.button}
+                onClick={this.props.startHTMLBroadcast}
+                disabled={this.props.disabled}>
                 <Mic />
               </FloatingActionButton>
-              <FloatingActionButton style={styles.button} onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
+              <FloatingActionButton
+                style={styles.button}
+                onClick={this.props.stopBroadcast}
+                disabled={!this.props.disabled}>
                 <MicOff />
               </FloatingActionButton>
+            </div>
+            <div style={styles.visualizerContainer}>
+              {this.showVisualizerIfOnTheAir()}
             </div>
             <BroadcastAudioPlayer
               src={this.props.currentSong.stream_url + '?client_id=' + SC_Client.clientID}
@@ -158,6 +175,33 @@ var styles = {
     'display': 'flex',
     'justifyContent': 'space-around',
     'alignItems': 'center'
+  },
+
+  visualizer: {
+    'width': '100%',
+    'height': '100%'
+  },
+
+  visualizerContainer: {
+    'display': 'flex',
+    'width': '100px',
+    'height': '60px',
+    'alignItems': 'center'
+  },
+
+  offTheAir: {
+    'color': 'red'
+  },
+
+  noSong: {
+    'display': 'flex',
+    'justifyContent':'center'
+  },
+
+  action: {
+    'display': 'flex',
+    'flexDirection': 'row',
+    'justifyContent': 'flex-end'
   },
 
   button: {

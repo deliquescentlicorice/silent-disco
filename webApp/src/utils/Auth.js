@@ -1,23 +1,22 @@
 import $ from '../../public/js/jquery-1.11.1.min';
 
 module.exports = {
-
-  isAuth () {
-    return !!localStorage.getItem("me")
+  isAuth() {
+    return !!localStorage.getItem("me");
   },
 
-  logout () {
-    localStorage.removeItem("me")
-    localStorage.removeItem("favorites")
-    localStorage.removeItem("dbID")
-    localStorage.removeItem("result")
+  logout() {
+    localStorage.removeItem("me");
+    localStorage.removeItem("favorites");
+    localStorage.removeItem("dbID");
+    localStorage.removeItem("result");
   },
 
   checkAuth() {
-    return localStorage.getItem("me")
+    return localStorage.getItem("me");
   },
 
-  onChange () {
+  onChange() {
   },
 
   setUser() {
@@ -36,7 +35,7 @@ module.exports = {
     })
     .then(function(me) {
       localStorage.setItem("me", JSON.stringify(me));
-      var find = '/api/soundcloud/' + me.id
+      var find = '/api/soundcloud/' + me.id;
       return $.get(find);
     })
     .then(function(dbID) {

@@ -29,32 +29,33 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={styles.app}>
+        <NavBar title="Login" history={this.history}/>
+        <Card style={styles.cardContainer}>
+          <CardText>
 
-      <NavBar title="Login" history={this.history}/>
-      <Card style={styles.cardContainer}>
-        <CardText>
+          </CardText>
+          <RaisedButton
+            style={styles.mainBox}
+            primary={true}
+            onClick={this.login.bind(this)}
+            label="Login With SoundCloud"
+            icon={<FontIcon className="fa fa-soundcloud"/>}
+          />
+          <CardText>
 
-        </CardText>
-        <RaisedButton 
-          style={styles.mainBox}
-          primary={true} 
-          onClick={this.login.bind(this)} 
-          label="Login With SoundCloud"
-          icon={<FontIcon className="fa fa-soundcloud"/>}
-        />
-        <CardText>
-          
-        </CardText>
-      </Card>
-      
+          </CardText>
+        </Card>
       </div>
     )
   }
 }
 
 var styles = {
-
+  app: {
+    'maxWidth': '1280px',
+    'margin': '15px auto'
+  },
 
   cardContainer:{
     'display': 'flex',
@@ -64,11 +65,9 @@ var styles = {
     justifyContent:'center'
   },
 
-
   mainBox: {
     'flexGrow':1,
-  },
-
+  }
 }
 
 reactMixin.onClass(Login, History);

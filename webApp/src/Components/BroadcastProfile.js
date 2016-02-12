@@ -13,6 +13,9 @@ import Loading from './Loading.js'
 // UTILITIES
 import $ from '../../public/js/jquery-1.11.1.min';
 
+// MATERIAL UI
+import Card from 'material-ui/lib/card/card';
+
 class BroadcastProfile extends React.Component {
   constructor() {
     super();
@@ -101,18 +104,20 @@ class BroadcastProfile extends React.Component {
         isLoading={this.state.isLoading} />
     }
     return (
-      <div style={styles.container}>
+      <Card style={styles.container}>
         <NavBar title="Profile" history={this.history}/>
         {partial}
-      </div>
+      </Card>
     )
   } 
 }
 
 var styles = {
   container:{
+    'maxWidth': '1280px',
+    'margin': '15px auto',
     'display': 'flex',
-    'flexDirection' :'column',
+    'flexDirection' :'column'
   }
 }
 

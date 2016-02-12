@@ -24,7 +24,7 @@ class Broadcast extends React.Component {
     }
     return (
       <Card style={styles.app}>
-        <NavBar title="Broadcast" history={this.props.history} />
+        <NavBar title="Broadcast Setup" history={this.props.history} />
         {partial}
       </Card>
     )

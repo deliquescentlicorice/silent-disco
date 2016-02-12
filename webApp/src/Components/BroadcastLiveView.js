@@ -40,7 +40,7 @@ class BroadcastLiveView extends React.Component {
 
     if (this.props.isLive === "AUX") {
       partial = (
-        <div>
+        <div style={styles.aux}>
           <div style={styles.visualizerContainer}>
             <canvas style={styles.visualizer} id="visualizer"></canvas>
           </div>
@@ -77,25 +77,27 @@ class BroadcastLiveView extends React.Component {
             {partial}
           </Card>
           <Card style={styles.box}>
-            <a href="#">
-            <CardHeader
-              onClick={this.props.goProfile}
-              title={this.props.state.artistAlias}
-              subtitle={this.props.state.artist}
-              avatar={this.props.state.artistImage}
-            /></a>
-            <CardMedia style={styles.streamImage}>
-              <img src={this.props.state.streamImage}/>
-            </CardMedia>
-            <CardTitle title={this.props.state.name}/>
-            <CardText>
-              {this.props.state.description}
-            </CardText>
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
               listenerMaxCount={this.props.state.listenerMaxCount} 
               listenerTotalCount={this.props.state.listenerTotalCount}
               heart={this.props.state.heartCount} />
+            <a href="#">
+              <CardHeader
+                onClick={this.props.goProfile}
+                title={this.props.state.artistAlias}
+                subtitle={this.props.state.artist}
+                avatar={this.props.state.artistImage} />
+            </a>
+            <div style={styles.image}>
+              <CardMedia style={styles.streamImage}>
+                <img src={this.props.state.streamImage}/>
+              </CardMedia>
+            </div>
+            <CardTitle title={this.props.state.name}/>
+            <CardText>
+              {this.props.state.description}
+            </CardText>
           </Card>
         </div>
       </div>
@@ -104,6 +106,11 @@ class BroadcastLiveView extends React.Component {
 }
 
 var styles = {
+  aux: {
+    'position': 'absolute',
+    'top': '30%'
+  },
+
   cardContainer:{
     'display': 'flex',
     'flexDirection':'row',
@@ -118,8 +125,15 @@ var styles = {
     'flex': 3,
   },
 
+  image: {
+    'display':'flex',
+    'justifyContent':'center'
+  },
+
   streamImage:{
-    'maxWidth': '300px'
+    'maxWidth': '300px',
+    'border': 'solid 1px grey',
+    'padding': '5px'
   },
 
   count:{
@@ -128,12 +142,12 @@ var styles = {
 
   visualizer: {
     'width': '100%',
-    'height': 200
+    'height': '100%'
   },
 
   visualizerContainer: {
-    'height': 200,
-    'margin': '5px',
+    'height': '300px',
+    'margin': '10px',
     'border': '1px solid black'
   }
 }
