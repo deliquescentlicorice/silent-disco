@@ -40,18 +40,13 @@ class BroadcastLiveView extends React.Component {
 
     if (this.props.isLive === "AUX") {
       partial = (
-        <div style={styles.aux}>
-          <div style={styles.visualizerContainer}>
-            <canvas style={styles.visualizer} id="visualizer"></canvas>
-          </div>
-          <BroadcastLiveViewAUX
-            startBroadcast={this.props.startBroadcast}
-            stopBroadcast={this.props.stopBroadcast}
-            sourceInput={this.props.sourceInput}
-            audioSources={this.props.state.audioSources}
-            selectedSource={this.props.state.selectedSource}
-            disabled={this.props.state.disabled} />
-        </div>
+        <BroadcastLiveViewAUX
+          startBroadcast={this.props.startBroadcast}
+          stopBroadcast={this.props.stopBroadcast}
+          sourceInput={this.props.sourceInput}
+          audioSources={this.props.state.audioSources}
+          selectedSource={this.props.state.selectedSource}
+          disabled={this.props.state.disabled} />
       )
     } else if (this.props.isLive === "SC") {
       partial = <BroadcastLiveViewSC
@@ -73,9 +68,9 @@ class BroadcastLiveView extends React.Component {
     return (
       <div>
         <div style={styles.cardContainer}>
-          <Card style={styles.mainBox}>
+          <div style={styles.mainBox}>
             {partial}
-          </Card>
+          </div>
           <Card style={styles.box}>
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
@@ -106,14 +101,8 @@ class BroadcastLiveView extends React.Component {
 }
 
 var styles = {
-  aux: {
-    'position': 'absolute',
-    'top': '30%'
-  },
-
   cardContainer:{
     'display': 'flex',
-    'flexDirection':'row',
     'flexWrap': 'wrap'
   },
 
@@ -122,11 +111,14 @@ var styles = {
   },
 
   mainBox: {
+    'display': 'flex',
     'flex': 3,
+    'flexDirection': 'column',
+    'justifyContent': 'center'
   },
 
   image: {
-    'display':'flex',
+    'display': 'flex',
     'justifyContent':'center'
   },
 
@@ -138,17 +130,6 @@ var styles = {
 
   count:{
     'fontWeight': 'bold'
-  },
-
-  visualizer: {
-    'width': '100%',
-    'height': '100%'
-  },
-
-  visualizerContainer: {
-    'height': '300px',
-    'margin': '10px',
-    'border': '1px solid black'
   }
 }
 
