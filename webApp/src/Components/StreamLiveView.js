@@ -19,13 +19,11 @@ class StreamLiveView extends React.Component {
   render() {
     var linkBlock = this.props.state.website ? (
       <div>
-        <span>SoundCloud Profile: </span><a href={this.props.state.soundcloud} target="_blank">{this.props.state.soundcloud}</a><br />
-        <span>Broadcaster's Website: </span><a href={this.props.state.website} target="_blank">{this.props.state.websiteTitle || this.props.state.website}</a>
+        <p><a href={this.props.state.soundcloud} target="_blank">SoundCloud</a></p>
+        <p><a href={this.props.state.website} target="_blank">{this.props.state.websiteTitle || this.props.state.website}</a></p>
       </div>
     ) : (
-      <div>
-        <span>SoundCloud Profile: </span><a href={this.props.state.soundcloud} target="_blank">{this.props.state.soundcloud}</a>
-      </div>
+      <p><a href={this.props.state.soundcloud} target="_blank">SoundCloud</a></p>
     )
     return (
       <div style={styles.cardContainer}>
@@ -72,7 +70,7 @@ class StreamLiveView extends React.Component {
             heart={this.props.state.heartCount} />
           <br/>
           <CardText>
-            <h2>BROADCASTER DETAILS</h2>
+            <h2>DETAILS</h2>
             <div>
               {linkBlock}
             </div>
