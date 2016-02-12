@@ -126,7 +126,7 @@ describe('Stream Controller', function() {
             expect(res.body.heartCountNum).to.equal(0);
             expect(res.body.listenerLiveCount).to.equal(0);
             expect(res.body.listenerMaxCount).to.equal(0);
-            expect(res.body.playing).to.equal(true);
+            expect(res.body.playing).to.equal(false);
           })
           .end(done);
       });
