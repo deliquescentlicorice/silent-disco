@@ -16,6 +16,9 @@ import StreamLiveView from './StreamLiveView.js';
 import Sound from '../../node_modules/react-sound';
 import $ from '../../public/js/jquery-1.11.1.min';
 
+// MATERIAL UI
+import Card from 'material-ui/lib/card/card';
+
 var BASE_URL = window.protocol + document.location.host;
 
 class StreamLive extends React.Component {
@@ -46,31 +49,26 @@ class StreamLive extends React.Component {
   componentDidMount() {
     this.fetchStreamData();
 
-    //add bclient on handler here
     window.bClient.on('stream', function(data, meta) {
-      if (meta.type === 'event') {
-        if (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart') {
-          console.log('onEnterStream-' + meta.streamId);
-          if (meta.streamId === this.state.streamId) {
-
-            $.ajax({
-              url: BASE_URL + '/api/stream/' + this.state.streamId
-            })
-            .done((streamData) => {
-              $.ajax({
-                url: BASE_URL + '/api/user/' + streamData.creator
-              })
-              .done((userData) => {
-                this.setState({
-                  listenerLiveCount: streamData.listenerLiveCount,
-                  listenerMaxCount: streamData.listenerMaxCount,
-                  listenerTotalCount: streamData.listenerTotalCount,
-                  heartCount: streamData.heartCountNum
-                });
-              });
+      if (meta.type === 'event'
+      && (meta.action === 'enterStream' || meta.action === 'leaveStream' || meta.action === 'upHeart')
+      && meta.streamId === this.state.streamId) {
+        $.ajax({
+          url: BASE_URL + '/api/stream/' + this.state.streamId
+        })
+        .done((streamData) => {
+          $.ajax({
+            url: BASE_URL + '/api/user/' + streamData.creator
+          })
+          .done((userData) => {
+            this.setState({
+              listenerLiveCount: streamData.listenerLiveCount,
+              listenerMaxCount: streamData.listenerMaxCount,
+              listenerTotalCount: streamData.listenerTotalCount,
+              heartCount: streamData.heartCountNum
             });
-          }
-        }
+          });
+        });
       }
     }.bind(this));
   
@@ -162,10 +160,10 @@ class StreamLive extends React.Component {
     }
     return (
       <div>
-        <div style={styles.container}>  
+        <Card style={styles.container}>
           <NavBar title={'Now Playing'} history={this.history} />
           {partial}
-        </div>
+        </Card>
         
         <Sound
           url={'/stream/' + this.state.streamId}
