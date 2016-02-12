@@ -77,7 +77,7 @@ class BroadcastLiveViewSC extends React.Component {
   renderEntriesOrReturnPlaceholder(array, renderCallback, placeholderText) {
     // second check allows this function to check currentSong
     if (!array[0] || !array[0].title) {
-      return <ListItem style={styles.noSong}><div>{placeholderText}</div></ListItem>
+      return <ListItem disabled={true} style={styles.noSong}><div>{placeholderText}</div></ListItem>
     } else {
       return array.map(renderCallback);
     }
