@@ -87,7 +87,7 @@ class BroadcastProfileView extends React.Component {
                 <CardText style={styles.stats}>
                   <h2>LIFETIME STATS <TrendingUp style={styles.icon} /></h2>
                   <div style={styles.datum}>
-                    <span style={styles.label}>{this.listenerCountTotal()}</span><span> Listens <Face style={styles.icon} /></span>
+                    <span style={styles.label}>{this.listenerCountTotal()}</span><span> Listens <i className="fa fa-headphones"></i></span>
                   </div>
                   <div style={styles.datum}>
                     <span style={styles.label}>{this.heartCountTotal()}</span><span> Hearts <Favorite style={styles.icon} color={Colors.red500}/></span>
