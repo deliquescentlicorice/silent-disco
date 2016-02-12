@@ -10,6 +10,8 @@ import Broadcast from './Components/Broadcast.js';
 import BroadcastLive from './Components/BroadcastLive.js';
 import BroadcastProfile from './Components/BroadcastProfile.js';
 import Login from './Components/Login.js';
+import Stream from './Components/Stream.js';
+import Landing from './Components/Landing.js';
 
 import auth from './utils/Auth';
 
@@ -30,7 +32,8 @@ function redirectToLogin(nextState, replace) {
 
 var routes = (
   <Router history={createHistory()}>
-    <Route path="/" component={App}/>
+    <Route path="/" component={Landing}/>
+    <Route path="/listen" component={Stream}/>
     <Route path="/listen/:streamId" component={StreamLive}/>
     <Route path='/broadcast/setup' onEnter={redirectToLogin} component={Broadcast}/>
     <Route path='/broadcast/:streamId' onEnter={redirectToLogin} component={BroadcastLive}/>

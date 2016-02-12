@@ -1,6 +1,7 @@
 import $ from '../../public/js/jquery-1.11.1.min';
 
 module.exports = {
+
   isAuth() {
     return !!localStorage.getItem("me");
   },

@@ -53,7 +53,7 @@ class NavBar extends React.Component {
 
   goToListen() {
     this.props.history.push({
-      pathname: '/'
+      pathname: '/listen'
     });
   }
 
