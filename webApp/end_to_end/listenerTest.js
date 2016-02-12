@@ -1,4 +1,3 @@
-
 casper.on('remote.message', function(msg) {
   this.echo('remote.msg: ' + msg);
 });
@@ -9,13 +8,18 @@ casper.on('page.error', function(msg, trace) {
 
 // phantom.cookiesEnabled = true;
 
-casper.test.begin("Testing radio from listener's perspective", 20, function suite(test) {
+casper.test.begin("Testing radio from listener's perspective", 26, function suite(test) {
   casper.start();
 
   casper.thenOpen('http://localhost:3000', function() {
     test.assertTitle('Silent Disco', 'title is expected title');
     test.assertExists('h1', 'a header exists');
     test.assertSelectorHasText('h1', 'Listen', 'header reads listen');
+  });
+
+  casper.thenEvaluate(function() {
+    //make sure user is logged out
+    localStorage.removeItem('me');
   });
 
   casper.then(function() {
@@ -142,7 +146,7 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
         id: 203676733,
         kind: "user",
         last_modified: "2016/02/11 01:22:58 +0000",
-        last_name: "Kahn",
+        last_name: "Doe",
         locale: "",
         myspace_name: null,
         online: false,
@@ -212,24 +216,43 @@ casper.test.begin("Testing radio from listener's perspective", 20, function suit
     this.click('.hamburger');
   });
 
+  //ok, so muzak doesn't exist anymore, bcs I eliminated all the streams that aren't playing…
+  //how  do I check that something isn't there?
+  casper.then(function() {
+    test.assertSelectorDoesntHaveText('body', 'example', 'example stream has not yet been created');
+  });
+
+  casper.then(function() {
+    this.click('.hamburger');
+  });
+
+  //spoofing the MediaStreamTrack.getSources method that Chrome and Firefox have
   casper.thenEvaluate(function() {
-    //find the first stream, then click on it
-    var divs = divs.filter(function(elem){
-return elem.textContent === 'muzak';
-});
-    divs[0].classList.add('muzak');
+    __utils__.echo(navigator.mediaDevices.enumerateDevices);
+    var overSources = function(callback) {
+      navigator.mediaDevices.enumerateDevices()
+        .then(callback(devices));
+    };
+    MediaStreamTrack.getSources = MediaStreamTrack.getSources || overSources;
   });
 
   casper.then(function() {
-    this.click('.muzak');
+    //hitting create broadcast path
+    this.click('.left-navbar > div:last-child > div > div:last-child > div:first-child div');
+    this.echo(this.getCurrentUrl());
   });
 
+  //first things first: make sure I'm in the right place
   casper.then(function() {
-//except the stream should actually exist…
+    test.assertEvalEquals(function() {
+      return document.location.pathname;
+    }, '/broadcast/setup', 'landed on create broadcast page');
+    test.assertExists('h1', 'a header exists');
+    test.assertSelectorHasText('h1', 'Broadcast', 'header reads broadcast');
+    test.assertSelectorHasText('span', 'Tell Us About Your Stream', 'invitation to describe stream appears');
   });
 
-});
-
+<<<<<<< HEAD
 
   casper.thenEvaluate(function() {
     var buttonSpans = Array.prototype.slice.call(document.querySelectorAll('button span'))
@@ -393,46 +416,54 @@ casper.run(function() {
 // });
 
 // casper.userAgent('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36');
-
-// casper.test.begin("Testing Radio from listener's perspective", 1, function suite(test) {
-//   casper.start('http://localhost:3000', function() {
-//     this.echo(this.getPageContent());
-//     test.assertTitle('Silent Disco', 'application title is the one expected');
-//     //my guess is that casper only sees index.html, which has a single div
-//     // test.assertEvalEquals(function() {
-//     //   var divs = document.querySelectorAll('div');
-//     //   var rootDiv = document.getElementById('root');
-//     //   var mysteryDivZ = window.getComputedStyle(Array.prototype.slice.call(divs)[1]).zIndex;
-//     //   __utils__.echo(rootDiv.childElementCount);
-//     //   //returns 0; but everything I care about is a child of root!
-//     //   return true;
-//     // }, true, 'so helpless');
-//     //I seem to have an extra script tag and an extra div?
-//   });
-
-  // casper.wait(1000, function() {
+  // casper.then(function() {
   //   test.assertEvalEquals(function() {
-  //     var rootDiv = document.getElementById('root');
-  //     __utils__.echo(rootDiv.childElementCount);
-  //     return true;
-  //   }, true, 'so, so helpless');
+  //     var inputs = document.querySelectorAll('input');
+  //     return inputs.length;
+  //   }, 2, 'two input fields appear');
+  //   test.assertEvalEquals(function() {
+  //     var buttons = document.querySelectorAll('button');
+  //     return buttons.length;
+  //   }, 3, 'there are 3 buttons on the broadcast setup page');
+  // });
+
+  // casper.thenEvaluate(function() {
+  //   var inputs = document.querySelectorAll('input');
+  //   inputs[0].classList.add('name-input');
+  //   inputs[1].classList.add('description-input');
+  //   var buttons = document.querySelectorAll('button');
+  //   buttons[2].classList.add('start-broadcasting');
   // });
 
   // casper.then(function() {
-  //   test.assertEvalEquals(function() {
-  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //     var styles = divs.map(function(item) {
-  //       return window.getComputedStyle(item);
-  //     });
-  //     // .filter(function(elem) {
-  //     //   return elem.borderRadius === '15px';
-  //     // });
-  //     __utils__.echo(Object.keys(styles[0]));
-  //     return styles.length > 0;
-  //   }, true, 'there is a div with border radius 15');
+  //   this.sendKeys('.name-input', 'Max');
+  //   this.sendKeys('.description-input', 'example stream goes here');
   // });
 
-//casperjs --engine=slimerjs test listenerTest.js
+
+
+  // casper.then(function() {
+  //   this.click('.start-broadcasting');
+  // });
+
+  // casper.then(function() {
+  //     var v = slimer.geckoVersion;
+  //     this.echo('version: ' + v.major + '.' + v.minor + '.' + v.patch);
+  // });
+
+// casper.thenEvaluate(function() {
+//     //find the first stream, then click on it
+//     var divs = Array.prototype.slice.call(document.querySelectorAll('div'))
+//       .filter(function(elem) {
+//         return elem.textContent === 'muzak';
+//       }); 
+//       divs[0].classList.add('muzak');
+//     });
+
+//   casper.then(function() {
+//     this.click('.muzak');
+//   });
+
 //doc this ^, not the obvious command
 //from Listen,  click on left navbar
 //click on Listen menu item, does nothing
@@ -470,56 +501,6 @@ casper.run(function() {
 //     //I seem to have an extra script tag and an extra div?
 //   });
 
-  // casper.wait(1000, function() {
-  //   test.assertEvalEquals(function() {
-  //     var rootDiv = document.getElementById('root');
-  //     __utils__.echo(rootDiv.childElementCount);
-  //     return true;
-  //   }, true, 'so, so helpless');
-  // });
-
-  // casper.then(function() {
-  //   test.assertEvalEquals(function() {
-  //     var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //     var styles = divs.map(function(item) {
-  //       return window.getComputedStyle(item);
-  //     });
-  //     // .filter(function(elem) {
-  //     //   return elem.borderRadius === '15px';
-  //     // });
-  //     __utils__.echo(Object.keys(styles[0]));
-  //     return styles.length > 0;
-  //   }, true, 'there is a div with border radius 15');
-  // });
-
-  //theory; I'm hitting the loading page, then not leaving. That would be bad
-
-  // casper.waitForSelector('button', function() {
-  //   test.assertEvalEquals(function() {
-  //     return __utils__.findOne('h1').textContent;
-  //   }, 'Listen', 'user lands at Listen page');
-  //   });
-
-  // casper.then(function() {
-  //   this.click('.penguin button');
-  // });
-
-  // casper.then(function() {
-  //   this.wait(1000, function() {
-  //     test.assertEvalEquals(function() {
-  //       var navbarPossibs = [];
-  //       var divs = Array.prototype.slice.call(document.querySelectorAll('div'));
-  //       for (var i = 0; i < divs.length; i++) {
-  //         //so at least I can get the element by reactId
-  //         // if (divs[i].getAttribute('data-reactid') === '.0.0.0.1') {
-  //         if (divs[i].style.left === '0px' && divs[i].style.width === '256px') {
-  //           navbarPossibs.push(divs[i]);
-  //         }
-  //       }
-  //       return navbarPossibs.length;
-  //     }, 1, 'navbar appears on left side');
-  //   });
-  // });
 
 //   casper.run(function() {
 //     test.done();
