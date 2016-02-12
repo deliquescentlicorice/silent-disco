@@ -21,9 +21,6 @@ class NoStream extends React.Component {
   render() {
     return (
       <Card>
-        <CardMedia style={styles.image}>
-          <img src={'https://media.giphy.com/media/nIAdXLs0ylpvy/giphy.gif'}/>
-        </CardMedia>
         <CardText>
           No Streams Are Currently Available
         </CardText>

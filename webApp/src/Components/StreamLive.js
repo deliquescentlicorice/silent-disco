@@ -47,7 +47,18 @@ class StreamLive extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchStreamData();
+
+    var PUT_LISTENER = BASE_URL + '/api/listener/' + this.state.streamId;
+     $.ajax({
+      url: PUT_LISTENER,
+      method: 'PUT',
+      contentType: "application/x-www-form-urlencoded",
+      data: ''
+    })
+    .done((responseData) => {
+      enterStream(this.state.streamId);
+      this.fetchStreamData();
+    });
 
     window.bClient.on('stream', function(data, meta) {
       if (meta.type === 'event'

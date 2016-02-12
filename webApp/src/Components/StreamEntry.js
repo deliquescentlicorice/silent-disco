@@ -15,7 +15,7 @@ class StreamEntry extends React.Component {
           onClick={this.props.goToStream.bind(this)}
           primaryText={this.props.stream.name}
           secondaryText={this.props.stream.broadcaster}
-          leftAvatar={<Avatar src={this.props.stream.image} />}
+          leftAvatar={<Avatar src={this.props.stream.broadcasterImage} />}
           rightIcon={<PlayCircleOutline />} />
         <Divider />
       </div>

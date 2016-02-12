@@ -17,7 +17,7 @@ class NavBarView extends React.Component {
           onRequestChange={this.props.toggle}
           open={this.props.open}
           docked={false}>
-          <div style={styles.leftNavTitle}>silent disco</div>
+          <a href='/' style={{textDecoration:'none'}}><div style={styles.leftNavTitle}>Socket Radio</div></a>
           <MenuItem onClick={this.props.goListen}>Listen</MenuItem>
           {
             this.props.isAuth ? (
@@ -59,7 +59,8 @@ class NavBarView extends React.Component {
         <AppBar
           title={this.props.title} 
           titleStyle={styles.title} 
-          onLeftIconButtonTouchTap={this.props.toggle} />
+          onLeftIconButtonTouchTap={this.props.toggle} 
+          zDepth={0}/>
       </div>
     )
   }

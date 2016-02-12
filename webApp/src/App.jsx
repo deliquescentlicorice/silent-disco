@@ -14,7 +14,6 @@ import Loading from './Components/Loading.js';
 import NoStream from './Components/NoStream.js';
 
 // MATERIAL UI
-import Card from 'material-ui/lib/card/card';
 import List from '../node_modules/material-ui/lib/lists/list';
 import Card from '../node_modules/material-ui/lib/card/card';
 import CardText from '../node_modules/material-ui/lib/card/card-text';

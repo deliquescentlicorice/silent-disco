@@ -80,19 +80,8 @@ class Stream extends React.Component {
   }
 
   goToStream() {
-    
-    var PUT_LISTENER = BASE_URL + '/api/listener/' + this.props.stream._id;
-     $.ajax({
-      url: PUT_LISTENER,
-      method: 'PUT',
-      contentType: "application/x-www-form-urlencoded",
-      data: ''
-    })
-    .done((responseData) => {
-      enterStream(this.props.stream._id);
-      this.props.history.push({
-        pathname: '/listen/' + this.props.stream._id,
-      });
+    this.props.history.push({
+      pathname: '/listen/' + this.props.stream._id,
     });
   }
 
