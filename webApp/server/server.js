@@ -70,7 +70,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SoundCloudStrategy({
   clientID: apiKeys.clientID,
   clientSecret: apiKeys.clientSecret,
-  callbackURL: api.clientHost + "/auth/soundcloud"
+  callbackURL: apiKeys.clientHost + "/auth/soundcloud"
 }, function(accessToken, refreshToken, profile, done) {
   scAuth.signup({
     profile: profile
