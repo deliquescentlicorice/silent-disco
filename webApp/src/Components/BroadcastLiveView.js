@@ -46,7 +46,8 @@ class BroadcastLiveView extends React.Component {
           sourceInput={this.props.sourceInput}
           audioSources={this.props.state.audioSources}
           selectedSource={this.props.state.selectedSource}
-          disabled={this.props.state.disabled} />
+          disabled={this.props.state.disabled}
+          hasBroadcasted={this.props.state.hasBroadcasted} />
       )
     } else if (this.props.isLive === "SC") {
       partial = <BroadcastLiveViewSC
@@ -62,15 +63,14 @@ class BroadcastLiveView extends React.Component {
         endedSongQueue={this.props.state.endedSongQueue}
         favorites={this.props.state.favorites}
         searchResults={this.props.state.searchResults}
-        disabled={this.props.state.disabled} />
+        disabled={this.props.state.disabled}
+        hasBroadcasted={this.props.state.hasBroadcasted} />
     }
 
     return (
       <div>
         <div style={styles.cardContainer}>
-          <div style={styles.mainBox}>
-            {partial}
-          </div>
+          {partial}
           <Card style={styles.box}>
             <BroadcastStats 
               listenerLiveCount={this.props.state.listenerLiveCount} 
@@ -108,13 +108,6 @@ var styles = {
 
   box: {
     'flex': 2
-  },
-
-  mainBox: {
-    'display': 'flex',
-    'flex': 3,
-    'flexDirection': 'column',
-    'justifyContent': 'center'
   },
 
   image: {

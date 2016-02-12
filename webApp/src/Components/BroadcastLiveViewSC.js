@@ -53,6 +53,27 @@ class BroadcastLiveViewSC extends React.Component {
     )
   }
 
+  forceNewBroadcastAfterStop() {
+    return this.props.hasBroadcasted ? (
+      <div>Thank you for broadcasting!</div>
+    ) : (
+      <div>
+        <FloatingActionButton
+          style={styles.button}
+          onClick={this.props.startHTMLBroadcast}
+          disabled={this.props.disabled}>
+          <Mic />
+        </FloatingActionButton>
+        <FloatingActionButton
+          style={styles.button}
+          onClick={this.props.stopBroadcast}
+          disabled={!this.props.disabled}>
+          <MicOff />
+        </FloatingActionButton>
+      </div>
+    )
+  }
+
   renderEntriesOrReturnPlaceholder(array, renderCallback, placeholderText) {
     // second check allows this function to check currentSong
     if (!array[0] || !array[0].title) {
@@ -108,20 +129,7 @@ class BroadcastLiveViewSC extends React.Component {
           </List>
           <br/>
           <CardActions style={styles.controls}>
-            <div>
-              <FloatingActionButton
-                style={styles.button}
-                onClick={this.props.startHTMLBroadcast}
-                disabled={this.props.disabled}>
-                <Mic />
-              </FloatingActionButton>
-              <FloatingActionButton
-                style={styles.button}
-                onClick={this.props.stopBroadcast}
-                disabled={!this.props.disabled}>
-                <MicOff />
-              </FloatingActionButton>
-            </div>
+            {this.forceNewBroadcastAfterStop()}
             <div style={styles.visualizerContainer}>
               {this.showVisualizerIfOnTheAir()}
             </div>
@@ -166,9 +174,7 @@ class BroadcastLiveViewSC extends React.Component {
 
 var styles = {
   cardContainer: {
-    'display': 'flex',
-    'flexDirection':'row',
-    'flexWrap': 'wrap'
+    'flex': 3
   },
 
   controls: {
