@@ -18,6 +18,9 @@ import SC_Client from '../../server/config/apiKeys';
 // AJAX GET CALL
 import $ from '../../public/js/jquery-1.11.1.min';
 
+// MATERIAL UI
+import Card from 'material-ui/lib/card/card';
+
 class BroadcastLive extends React.Component {
   constructor(props) {
     var user = JSON.parse(localStorage.getItem("me"));
@@ -125,7 +128,7 @@ class BroadcastLive extends React.Component {
   }
 
   startHTMLBroadcast() {
-    if (this.state.songQueue) {
+    if (this.state.currentSong.title) {
       this.setState({
         disabled: true
       }, () => {
@@ -264,18 +267,20 @@ class BroadcastLive extends React.Component {
         state={this.state} />
     }
     return (
-      <div style={styles.container}>
-        <NavBar history={this.history}/>
+      <Card style={styles.container}>
+        <NavBar title="Broadcast" history={this.history}/>
         {partial}
-      </div>
+      </Card>
     )
   } 
 }
 
 var styles = {
   container:{
+    'maxWidth': '1280px',
+    'margin': '15px auto',
     'display': 'flex',
-    'flexDirection' :'column',
+    'flexDirection' :'column'
   }
 }
 
