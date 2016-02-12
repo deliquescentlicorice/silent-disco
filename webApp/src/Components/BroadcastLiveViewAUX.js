@@ -20,13 +20,15 @@ class BroadcastAUX extends React.Component {
 
   render() {
     return (
-      <CardActions>
-        <FloatingActionButton onClick={this.props.startBroadcast} disabled={this.props.disabled}>
-          <Mic />
-        </FloatingActionButton>
-        <FloatingActionButton onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
-         <MicOff />
-        </FloatingActionButton>
+      <CardActions style={styles.controls}>
+        <div>
+          <FloatingActionButton style={styles.button} onClick={this.props.startBroadcast} disabled={this.props.disabled}>
+            <Mic />
+          </FloatingActionButton>
+          <FloatingActionButton style={styles.button} onClick={this.props.stopBroadcast} disabled={!this.props.disabled}>
+           <MicOff />
+          </FloatingActionButton>
+        </div>
         <DropDownMenu value={this.props.selectedSource} onChange={this.props.sourceInput}>
           <MenuItem value={null} key={null} primaryText={"Select a source..."} />
           {this.props.audioSources.map(source => <MenuItem value={source.id} key={source.id} primaryText={source.label} />)}
@@ -34,6 +36,18 @@ class BroadcastAUX extends React.Component {
       </CardActions>
     )
   } 
+}
+
+var styles = {
+  controls: {
+    'display': 'flex',
+    'justifyContent': 'space-around',
+    'alignItems': 'center'
+  },
+
+  button: {
+    'margin': '8px'
+  }
 }
 
 export default BroadcastAUX;
