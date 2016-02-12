@@ -150,6 +150,7 @@ class StreamLive extends React.Component {
           listenerMaxCount: streamData.listenerMaxCount,
           listenerTotalCount: streamData.listenerTotalCount,
           isLoading: false,
+          fullname: userData.user.full_name,
           broadcasterImage: userData.user.scAvatarUri,
           streamImage: streamData.streamImage,
           soundcloud: userData.user.scPermalink,

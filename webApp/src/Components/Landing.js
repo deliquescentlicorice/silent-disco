@@ -30,6 +30,18 @@ class Landing extends React.Component {
     };
   }
 
+  goToListen() {
+    this.history.push({
+      pathname: '/listen'
+    });
+  }
+
+  createBroadcast() {
+    this.history.push({
+      pathname: '/broadcast/setup'
+    });
+  }
+
 
   render() {
 
@@ -43,10 +55,10 @@ class Landing extends React.Component {
           </div>
           <div style={styles.boxCenter}>
             <h1 style={styles.titleFont}>Socket Radio</h1>
-            <h2 style={styles.subtextFont}>Real Time Radio</h2>
+            <h2 style={styles.subtextFont}>Be Heard. Listen In.</h2>
           </div>
           <div style={styles.boxCenter}>
-            <a href='/listen' style={{textDecoration:'none'}}><RaisedButton label="Tune In" primary={true} style={styles.buttonCover}/></a>
+            <RaisedButton onClick={this.goToListen.bind(this)} label="Let's Go" primary={true} style={styles.buttonCover}/>
           </div>
         </div>
 
@@ -55,14 +67,14 @@ class Landing extends React.Component {
 
             <div style={styles.boxLeft}>
               <div style={styles.boxLeft}>
-                <h1 style={styles.titleFontBlack}>Listen</h1>
+                <h1 style={styles.titleFontBlack}>Listen Together... Wherever, Whenever</h1>
                 <h2 style={styles.subtextFontBlack}>
-                  Listen to live broadcasts from your any of your devices and send your favorite DJs hearts 
+                  Join live streams from any of your devices and send hearts to your favorite broadcasters
                   <Favorite style={styles.icon} color={Colors.red500}/>
                 </h2>
               </div>
               <div style={styles.boxLeft}>
-                <a href='/listen' style={{textDecoration:'none'}}><FlatButton label="Listen" secondary={true} style={styles.buttonSection}/></a>
+                <FlatButton onClick={this.goToListen.bind(this)} label="Listen" secondary={true} style={styles.buttonSection}/>
               </div>
             </div>
 
@@ -78,19 +90,19 @@ class Landing extends React.Component {
 
             <div style={styles.boxLeft}>
               <div style={styles.LeftRight}>
-                <img style={styles.img} src='http://digitalsynopsis.com/wp-content/uploads/2013/12/flat-design-apple-icon-devices.jpg'/>
+                <img style={styles.img} src='http://i.imgur.com/FPXsrKD.png'/>
               </div>
             </div>
 
             <div style={styles.boxRight}>
               <div style={styles.boxRight}>
-                <h1 style={styles.titleFontBlack}>Broadcast</h1>
+                <h1 style={styles.titleFontBlack}>Share Your Sound with the World</h1>
                 <h2 style={styles.subtextFontBlack}>
-                  Create a live broadcast from your desktop or laptop using your microphone, line-in or SoundCloud
+                  Create a live broadcast from your desktop or laptop using your microphone, line-in, or SoundCloud
                 </h2>
               </div>
               <div style={styles.boxRight}>
-                <a href='/broadcast/setup' style={{textDecoration:'none'}}><FlatButton label="Broadcast" primary={true} style={styles.buttonSection}/></a>
+                <FlatButton onClick={this.createBroadcast.bind(this)} label="Broadcast" primary={true} style={styles.buttonSection}/>
               </div>
             </div>
             

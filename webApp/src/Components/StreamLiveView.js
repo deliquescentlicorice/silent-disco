@@ -8,6 +8,7 @@ import StreamLiveViewLinkbar from './StreamLiveViewLinkbar';
 import Card from '../../node_modules/material-ui/lib/card/card';
 import CardActions from '../../node_modules/material-ui/lib/card/card-actions';
 import CardMedia from '../../node_modules/material-ui/lib/card/card-media';
+import CardHeader from '../../node_modules/material-ui/lib/card/card-header';
 import CardText from '../../node_modules/material-ui/lib/card/card-text';
 import CardTitle from '../../node_modules/material-ui/lib/card/card-title';
 import FloatingActionButton from '../../node_modules/material-ui/lib/floating-action-button';
@@ -25,13 +26,7 @@ class StreamLiveView extends React.Component {
           </CardMedia>
           <CardTitle
             title={this.props.state.name}
-            subtitle={
-              <StreamLiveViewLinkbar 
-                broadcaster={this.props.state.broadcaster || 'pseudonymous'}
-                soundcloud={this.props.state.soundcloud} 
-                website={this.props.state.website}
-                websiteTitle={this.props.state.websiteTitle} />
-            } />
+           />
           <CardText>
             {this.props.state.desc}
           </CardText>
@@ -60,6 +55,17 @@ class StreamLiveView extends React.Component {
             listenerTotalCount={this.props.state.listenerTotalCount}
             listenerMaxCount={this.props.state.listenerMaxCount}
             heart={this.props.state.heartCount} />
+          <br/>
+          <CardHeader
+            title={"You are listening to:"}
+            subtitle={
+              <StreamLiveViewLinkbar 
+                broadcaster={ this.props.state.broadcaster || this.props.state.fullname || 'pseudonymous'}
+                soundcloud={this.props.state.soundcloud} 
+                website={this.props.state.website}
+                websiteTitle={this.props.state.websiteTitle} />
+            }
+            avatar={this.props.state.broadcasterImage} />
         </Card>
       </div>
     )
