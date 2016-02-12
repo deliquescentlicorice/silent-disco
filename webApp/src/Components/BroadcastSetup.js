@@ -29,7 +29,7 @@ class BroadcastSetup extends React.Component {
 
 
   startBroadcast(streamData) {
-    var serverURL = "http://localhost:3000/api/stream";
+    var serverURL = "/api/stream";
 
     this.setState({
       name: streamData.name,

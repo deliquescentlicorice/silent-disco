@@ -16,10 +16,12 @@ import Loading from './Components/Loading.js';
 import Card from 'material-ui/lib/card/card';
 import List from '../node_modules/material-ui/lib/lists/list';
 
-//for development; we'll change this in production
-var REQUEST_URL_ALL = 'http://' + document.location.host + '/api/streams';
+window.protocol = (window.location.protocol === "https:") ? 'https://' : 'http://';
 
-var BASE_URL = 'http://' + document.location.host;
+//for development; we'll change this in production
+var REQUEST_URL_ALL = window.protocol + document.location.host + '/api/streams';
+
+var BASE_URL = window.protocol + document.location.host;
 
 class App extends React.Component {
   constructor(props) {

@@ -1,5 +1,5 @@
-var protocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
-window.bClient = new BinaryClient(protocol + document.location.host + '/binary-endpoint');
+window.bProtocol = (window.location.protocol === "https:") ? 'wss://' : 'ws://';
+window.bClient = new BinaryClient(window.bProtocol + document.location.host + '/binary-endpoint');
 
 //event handlers
 window.bClient.on('stream', function(data, meta) {
