@@ -32,9 +32,8 @@ class BroadcastEntry extends React.Component {
     return (
       <div>
         <ListItem
-          onClick={this.props.goToBroadcast.bind(this)}
           rightIconButton={rightIconMenu}
-          primaryText={this.props.details.name}
+          primaryText={this.props.details.name + ' - ' + this.props.details.desc.substr(0,60)}
           secondaryText={
             <p>
               <span style={styles.count}>{this.props.details.listenerMaxCount.toLocaleString()}</span><span> Listens <Face /></span> 
