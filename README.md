@@ -16,7 +16,7 @@ Steven Law: Full-stack developer
 Joshua Wong:  Product owner and full-stack developer
 
 ## Challenges
-Our core technical challenge was streaming audio in real-time from client to server. We experimented with several possibilities and eventually settled on binary sockets,
+Our core technical challenge was streaming audio in real-time from client to server. We experimented with several possibilities and eventually settled on binary sockets.
 
 ## Codebase
 Our web client and server are in the folder webApp, and our mobile client is in the folder client.
