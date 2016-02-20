@@ -1,10 +1,10 @@
 import auth from '../utils/Auth';
 import App from '../App.jsx';
-import StreamLive from '../Components/StreamLive.js';
-import Broadcast from '../Components/Broadcast.js';
-import BroadcastLive from '../Components/BroadcastLive.js';
-import BroadcastProfile from '../Components/BroadcastProfile.js';
-import Login from '../Components/Login.js';
+import StreamLive from '../components/StreamLive.js';
+import Broadcast from '../components/Broadcast.js';
+import BroadcastLive from '../components/BroadcastLive.js';
+import BroadcastProfile from '../components/BroadcastProfile.js';
+import Login from '../components/Login.js';
 
 function redirectToLogin(nextState, replace) {
   if (!auth.isAuth()) {

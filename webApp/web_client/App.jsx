@@ -8,10 +8,10 @@ import _ from 'lodash';
 import $ from '../public/js/jquery-1.11.1.min';
 
 // COMPONENTS
-import StreamEntry from './Components/StreamEntry.js';
-import NavBar from './Components/NavBar.js';
-import Loading from './Components/Loading.js';
-import NoStream from './Components/NoStream.js';
+import StreamEntry from './components/StreamEntry.js';
+import NavBar from './components/NavBar.js';
+import Loading from './components/Loading.js';
+import NoStream from './components/NoStream.js';
 
 // MATERIAL UI
 import List from '../node_modules/material-ui/lib/lists/list';

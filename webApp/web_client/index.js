@@ -5,13 +5,13 @@ import { createHistory } from 'history';
 import injectTapEventPlugin from '../node_modules/react-tap-event-plugin';
 
 import App from './App.jsx';
-import StreamLive from './Components/StreamLive.js';
-import Broadcast from './Components/Broadcast.js';
-import BroadcastLive from './Components/BroadcastLive.js';
-import BroadcastProfile from './Components/BroadcastProfile.js';
-import Login from './Components/Login.js';
-import Stream from './Components/Stream.js';
-import Landing from './Components/Landing.js';
+import StreamLive from './components/StreamLive.js';
+import Broadcast from './components/Broadcast.js';
+import BroadcastLive from './components/BroadcastLive.js';
+import BroadcastProfile from './components/BroadcastProfile.js';
+import Login from './components/Login.js';
+import Stream from './components/Stream.js';
+import Landing from './components/Landing.js';
 
 import auth from './utils/Auth';
 
