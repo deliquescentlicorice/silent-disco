@@ -1,1 +1,0 @@
-var SC_CLIENT_ID = '67e4bbe5a2b1b64416b0ed84366b34ca';
