@@ -7,7 +7,10 @@ node_modules
 npm-debug.log
 dist
 src/components/*-compiled.*
+web_client/*-compiled.*
 src/*-compiled.*
+web_client/*-compiled.*
 *-compiled.*
 server/config/apiKeys.js
 src/env/config.js
+web_client/env/config.js
