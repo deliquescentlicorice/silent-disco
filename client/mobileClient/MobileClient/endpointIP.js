@@ -1,1 +1,0 @@
-module.exports = 'http://10.6.32.127:3000'

@@ -85,7 +85,7 @@ passport.use(new SoundCloudStrategy({
 }));
 
 // routes
-app.use(express.static(__dirname + '/../src'));
+app.use(express.static(__dirname + '/../web_client'));
 
 require('./routes.js')(app, express, scAuth.ensureAuth);
 

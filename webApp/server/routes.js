@@ -43,6 +43,6 @@ module.exports = function(app, express, ensureAuth) {
 
   app.get('*', function(req, res) {
     console.log('hitting the catchall route');
-    res.sendFile(path.join(__dirname + '/../src', 'index.html'));
+    res.sendFile(path.join(__dirname + '/../web_client', 'index.html'));
   });
 };
